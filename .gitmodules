@@ -1,3 +1,0 @@
-[submodule "glr"]
-	path = glr
-	url = https://github.com/dveselov/python-glr-parser.git
