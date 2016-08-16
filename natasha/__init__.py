@@ -3,14 +3,16 @@ from collections import deque
 
 from yargy import FactParser
 
-from natasha.grammars import Person, Geo
+from natasha.grammars import Person, Geo, Money, Date
 
 
 class Combinator(object):
 
     DEFAULT_GRAMMARS = [
+        Money,
         Person,
         Geo,
+        Date,
     ]
 
     def __init__(self, grammars=None, cache_size=50000):
