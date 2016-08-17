@@ -5,11 +5,13 @@ PREFIX_DICTIONARY = {
     'тысяча',
     'миллион',
     'миллиард',
+    'триллион',
 }
 
 CURRENCY_DICTIONARY = {
     'рубль',
     'доллар',
+    'евро',
 }
 
 PREFIX_GRAMMAR = ('word', {'labels': [
