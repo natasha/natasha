@@ -3,7 +3,7 @@ from collections import deque
 
 from yargy import FactParser
 
-from natasha.grammars import Person, Geo, Money, Date
+from natasha.grammars import Person, Geo, Money, Date, Brand, Event
 
 
 class Combinator(object):
@@ -13,6 +13,8 @@ class Combinator(object):
         Person,
         Geo,
         Date,
+        Brand,
+        Event,
     ]
 
     def __init__(self, grammars=None, cache_size=50000):
