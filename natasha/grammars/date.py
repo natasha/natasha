@@ -45,6 +45,18 @@ class Date(Enum):
         TERM,
     )
 
+    FullWithDigits = (
+        DAY_GRAMMAR,
+        ('int', {
+            'labels': [
+                ('gte', 1),
+                ('lte', 12),
+            ],
+        }),
+        YEAR_GRAMMAR,
+        TERM,
+    )
+
     DayAndMonth = (
         DAY_GRAMMAR,
         MONTH_GRAMMAR,
