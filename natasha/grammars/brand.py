@@ -8,6 +8,7 @@ class Brand(Enum):
         ('word', {
             'labels': [
                 ('gram', 'LATN'),
+                ('is-capitalized', True),
             ],
             'repeat': True,
         }),
