@@ -2,7 +2,54 @@ from enum import Enum
 from natasha.grammars.base import TERM
 
 
+FEDERAL_DISTRICT_DICTIONARY = {
+    'центральный',
+    'северо-западный',
+    'южный',
+    'северо-кавказский',
+    'приволжский',
+    'уральский',
+    'сибирский',
+    'дальневосточный',
+}
+
+
 class Geo(Enum):
+
+    FederalDistrict = (
+        ('word', {
+            'labels': [
+                ('gram', 'ADJF'),
+                ('dictionary', FEDERAL_DISTRICT_DICTIONARY),
+            ],
+        }),
+        ('word', {
+            'labels': [
+                ('dictionary', {'федеральный', }),
+            ],
+        }),
+        ('word', {
+            'labels': [
+                ('dictionary', {'округ', }),
+            ],
+        }),
+        TERM,
+    )
+
+    FederalDistrictAbbr = (
+        ('word', {
+            'labels': [
+                ('gram', 'ADJF'),
+                ('dictionary', FEDERAL_DISTRICT_DICTIONARY),
+            ],
+        }),
+        ('word', {
+            'labels': [
+                ('eq', 'ФО'),
+            ],
+        }),
+        TERM,
+    )
 
     Region = (
         ('word', {
@@ -16,7 +63,7 @@ class Geo(Enum):
                     'край',
                     'область',
                     'губерния',
-                    'уезд'
+                    'уезд',
                 ]),
                 ('gender-match', -1),
             ],
