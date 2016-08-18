@@ -17,6 +17,22 @@ MONTH_DICTIONARY = {
     'декабрь',
 }
 
+DAY_OF_WEEK_DICTIONARY = {
+    'понедельник',
+    'вторник',
+    'среда',
+    'четверг',
+    'пятница',
+    'суббота',
+    'воскресенье',
+}
+
+PARTIAL_DATE_DICTIONARY = {
+    'начало',
+    'серидина',
+    'конец',
+}
+
 DAY_GRAMMAR = ('int', {
     'labels': [
         ('gte', 1),
@@ -30,9 +46,27 @@ MONTH_GRAMMAR = ('word', {
     ],
 })
 
+DAY_OF_WEEK_GRAMMAR = ('word', {
+    'labels': [
+        ('dictionary', DAY_OF_WEEK_DICTIONARY),
+    ],
+})
+
 YEAR_GRAMMAR = ('int', {
     'labels': [
         ('gte', 1),
+    ],
+})
+
+YEAR_SUFFIX_GRAMMAR = ('word', {
+    'labels': [
+        ('dictionary', {'год', })
+    ],
+})
+
+PARTIAL_DATE_GRAMMAR = ('word', {
+    'labels': [
+        ('dictionary', PARTIAL_DATE_DICTIONARY),
     ],
 })
 
@@ -65,11 +99,30 @@ class Date(Enum):
 
     Year = (
         YEAR_GRAMMAR,
-        ('word', {
-            'labels': [
-                ('dictionary', {'год', })
-            ]
-        }),
+        YEAR_SUFFIX_GRAMMAR,
         TERM,
 
+    )
+
+    PartialYearObject = (
+        PARTIAL_DATE_GRAMMAR,
+        YEAR_GRAMMAR,
+        YEAR_SUFFIX_GRAMMAR,
+        TERM,
+    )
+
+    PartialMonthObject = (
+        PARTIAL_DATE_GRAMMAR,
+        MONTH_GRAMMAR,
+        TERM,
+    )
+
+    Month = (
+        MONTH_GRAMMAR,
+        TERM,
+    )
+
+    DayOfWeek = (
+        DAY_OF_WEEK_GRAMMAR,
+        TERM,
     )
