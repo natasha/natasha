@@ -58,6 +58,12 @@ YEAR_GRAMMAR = ('int', {
     ],
 })
 
+YEAR_FLOAT_GRAMMAR = ('float', {
+    'labels': [
+        ('gte', 0.0),
+    ],
+})
+
 YEAR_SUFFIX_GRAMMAR = ('word', {
     'labels': [
         ('dictionary', {'год', })
@@ -101,7 +107,12 @@ class Date(Enum):
         YEAR_GRAMMAR,
         YEAR_SUFFIX_GRAMMAR,
         TERM,
+    )
 
+    YearFloat = (
+        YEAR_FLOAT_GRAMMAR,
+        YEAR_SUFFIX_GRAMMAR,
+        TERM,
     )
 
     PartialYearObject = (
