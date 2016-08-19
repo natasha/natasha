@@ -137,9 +137,19 @@ class Geo(Enum):
     Object = (
         ('word', {
             'labels': [
-                ('is-capitalized', None),
+                ('is-capitalized', True),
                 ('gram', 'Geox'),
                 ('gram-not', 'Abbr'),
+            ],
+        }),
+        TERM,
+    )
+
+    AbbrObject = (
+        ('word', {
+            'labels': [
+                ('gram', 'Geox'),
+                ('is-upper', True),
             ],
         }),
         TERM,
