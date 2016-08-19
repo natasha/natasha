@@ -22,4 +22,10 @@ setup(
     install_requires=[
         'yargy'
     ],
+    extras_require={
+        'web': [
+            'ujson',
+            'aiohttp',
+        ],
+    },
 )
