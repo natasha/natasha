@@ -2,7 +2,7 @@ from copy import copy
 from collections import deque
 
 from yargy import FactParser, Combinator
-from natasha.grammars import Person, Geo, Money, Date, Brand, Event
+from natasha.grammars import Person, Geo, Money, Date, Brand, Event, Organisation
 
 
 DEFAULT_GRAMMARS = [
@@ -12,4 +12,5 @@ DEFAULT_GRAMMARS = [
     Date,
     Brand,
     Event,
+    Organisation,
 ]
