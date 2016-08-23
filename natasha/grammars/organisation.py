@@ -36,3 +36,30 @@ class Organisation(Enum):
         }),
         TERM,
     )
+
+    IndividualEntrepreneur = (
+        ('word', {
+            'labels': [
+                ('eq', 'ИП'),
+            ],
+        }),
+        ('word', {
+            'labels': [
+                ('gram', 'Surn'),
+            ],
+        }),
+        ('word', {
+            'labels': [
+                ('gram', 'Name'),
+                ('gram-not', 'Abbr'),
+                ('gender-match', -1),
+            ],
+        }),
+        ('word', {
+            'labels': [
+                ('gram', 'Patr'),
+                ('gram-not', 'Abbr'),
+                ('gender-match', -1),
+            ],
+        }),
+    )
