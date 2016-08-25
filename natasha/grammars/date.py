@@ -33,6 +33,13 @@ PARTIAL_DATE_DICTIONARY = {
     'конец',
 }
 
+TIME_WORD_DICTIONARY = {
+    'утро',
+    'полдень',
+    'вечер',
+    'ночь',
+}
+
 DAY_GRAMMAR = ('int', {
     'labels': [
         ('gte', 1),
