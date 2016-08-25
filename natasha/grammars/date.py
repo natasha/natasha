@@ -29,7 +29,7 @@ DAY_OF_WEEK_DICTIONARY = {
 
 PARTIAL_DATE_DICTIONARY = {
     'начало',
-    'серидина',
+    'середина',
     'конец',
 }
 
