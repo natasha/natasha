@@ -78,6 +78,7 @@ class Organisation(Enum):
             'labels': [
                 ('gram', 'LATN'),
             ],
-        }, 'repeat': True),
+            'repeat': True,
+        }),
         TERM,
     )
