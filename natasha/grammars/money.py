@@ -51,3 +51,9 @@ class Money(Enum):
         CURRENCY_GRAMMAR,
         TERM,
     )
+
+    ObjectWithoutActualNumber = (
+        PREFIX_GRAMMAR,
+        CURRENCY_GRAMMAR,
+        TERM,
+    )
