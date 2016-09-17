@@ -10,10 +10,14 @@ ABBR_PREFIX_DICTIONARY = {
     'АО',
 }
 
+ORG_TYPE_DICTIONARY = {
+    'агентство',
+    'компания',
+}
 
 class Organisation(Enum):
 
-    AbbrPrefixQuoted = (
+    OfficialAbbrQuoted = (
         ('word', {
             'labels': [
                 ('dictionary', ABBR_PREFIX_DICTIONARY),
@@ -62,4 +66,18 @@ class Organisation(Enum):
                 ('gender-match', -1),
             ],
         }),
+    )
+
+    SimpleLatin = (
+        ('word', {
+            'labels': [
+                ('dictionary', ORG_TYPE_DICTIONARY),
+            ],
+        }),
+        ('word', {
+            'labels': [
+                ('gram', 'LATN'),
+            ],
+        }, 'repeat': True),
+        TERM,
     )
