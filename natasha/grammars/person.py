@@ -79,3 +79,19 @@ class Person(Enum):
         ]}),
         TERM
     )
+    # Иванов
+    Lastname = (
+        ('word', {'labels': [
+            ('gram', 'Surn'),
+            ('gram-not', 'Abbr'),
+        ]}),
+        TERM
+    )
+    # Иван
+    Firstname = (
+        ('word', {'labels': [
+            ('gram', 'Name'),
+            ('gram-not', 'Abbr'),
+        ]}),
+        TERM
+    )
