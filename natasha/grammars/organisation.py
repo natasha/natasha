@@ -66,6 +66,7 @@ class Organisation(Enum):
                 ('gender-match', -1),
             ],
         }),
+        TERM,
     )
 
     SimpleLatin = (
