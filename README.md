@@ -1,6 +1,6 @@
 # natasha
 
-![](http://i.imgur.com/KQFqqVL.png)
+![](http://i.imgur.com/p5rRV85.png)
 
 Наташа извлекает именованные сущности из текста на русском языке, включая:
 
