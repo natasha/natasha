@@ -4,6 +4,7 @@ from collections import deque
 from yargy import FactParser, Combinator
 from natasha.grammars import Person, Geo, Money, Date, Brand, Event, Organisation
 
+__version__ = '0.1.0'
 
 DEFAULT_GRAMMARS = [
     Money,

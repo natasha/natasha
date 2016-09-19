@@ -17,7 +17,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    keywords='natural language processing russian morphology named entity recognition tomita',
+    keywords='natural language processing, russian morphology, named entity recognition, tomita',
     packages=find_packages(),
     install_requires=[
         'yargy'
