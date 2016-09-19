@@ -19,6 +19,8 @@ $ pip install natasha
 
 # Использование
 
+Для первого знакомства можно использовать [онлайн версию](https://bureaucratic-labs.github.io/natasha/).
+
 ```python
 from natasha import Combinator, DEFAULT_GRAMMARS
 from natasha.grammars import Geo, Date
