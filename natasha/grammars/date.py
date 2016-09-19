@@ -94,12 +94,14 @@ class Date(Enum):
 
     FullWithDigits = (
         DAY_GRAMMAR,
+        ('punct', {'optional': True}),
         ('int', {
             'labels': [
                 ('gte', 1),
                 ('lte', 12),
             ],
         }),
+        ('punct', {'optional': True}),
         YEAR_GRAMMAR,
         TERM,
     )
