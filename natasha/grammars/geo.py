@@ -95,6 +95,8 @@ class Geo(Enum):
             'labels': [
                 ('dictionary', REGION_TYPE_DICTIONARY),
                 ('gender-match', -1),
+                ('number-match', -1),
+                ('case-match', -1),
             ],
         }),
         TERM,
@@ -112,6 +114,8 @@ class Geo(Enum):
                 ('gram', 'NOUN'),
                 ('gram', 'Geox'),
                 ('gender-match', -1),
+                ('number-match', -1),
+                ('case-match', -1),
             ],
         }),
         TERM,
@@ -129,6 +133,8 @@ class Geo(Enum):
                 ('gram', 'NOUN'),
                 ('gram', 'Geox'),
                 ('gender-match', -1),
+                ('number-match', -1),
+                ('case-match', -1),
             ],
         }),
         TERM,
@@ -140,16 +146,6 @@ class Geo(Enum):
                 ('is-capitalized', True),
                 ('gram', 'Geox'),
                 ('gram-not', 'Abbr'),
-            ],
-        }),
-        TERM,
-    )
-
-    AbbrObject = (
-        ('word', {
-            'labels': [
-                ('gram', 'Geox'),
-                ('is-upper', True),
             ],
         }),
         TERM,
