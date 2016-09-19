@@ -87,3 +87,39 @@ class DateTestCase(BaseTestCase):
         grammar, rule, _ = next(self.combinator.extract("в пятницу"))
         self.assertEqual(grammar, natasha.Date)
         self.assertEqual(rule, "DayOfWeek")
+
+class GeoTestCase(BaseTestCase):
+
+    def test_federal_district(self):
+        grammar, rule, _ = next(self.combinator.extract("северо-западный федеральный округ"))
+        self.assertEqual(grammar, natasha.Geo)
+        self.assertEqual(rule, "FederalDistrict")
+
+    def test_federal_district_abbr(self):
+        grammar, rule, _ = next(self.combinator.extract("северо-западный ФО"))
+        self.assertEqual(grammar, natasha.Geo)
+        self.assertEqual(rule, "FederalDistrictAbbr")
+
+    def test_region(self):
+        grammar, rule, _ = next(self.combinator.extract("северо-западная область"))
+        self.assertEqual(grammar, natasha.Geo)
+        self.assertEqual(rule, "Region")
+        with self.assertRaises(StopIteration):
+            next(self.combinator.extract("северо-западный область"))
+
+    def test_complex_object(self):
+        grammar, rule, _ = next(self.combinator.extract("северный кипр"))
+        self.assertEqual(grammar, natasha.Geo)
+        self.assertEqual(rule, "ComplexObject")
+        with self.assertRaises(StopIteration):
+            next(self.combinator.extract("северная кипр"))
+
+    def test_partial_object(self):
+        grammar, rule, _ = next(self.combinator.extract("на юго-западе кипра"))
+        self.assertEqual(grammar, natasha.Geo)
+        self.assertEqual(rule, "PartialObject")
+
+    def test_object(self):
+        grammar, rule, _ = next(self.combinator.extract("Москва́"))
+        self.assertEqual(grammar, natasha.Geo)
+        self.assertEqual(rule, "Object")
