@@ -88,6 +88,16 @@ class DateTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Date)
         self.assertEqual(rule, "DayOfWeek")
 
+    def test_day_range(self):
+        grammar, rule, _ = next(self.combinator.extract("18-19 ноября"))
+        self.assertEqual(grammar, natasha.Date)
+        self.assertEqual(rule, "DayRange")
+
+    def test_year_range(self):
+        grammar, rule, _ = next(self.combinator.extract("18-20 лет"))
+        self.assertEqual(grammar, natasha.Date)
+        self.assertEqual(rule, "YearRange")
+
 class GeoTestCase(BaseTestCase):
 
     def test_federal_district(self):

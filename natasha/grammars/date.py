@@ -137,6 +137,22 @@ class Date(Enum):
         TERM,
     )
 
+    DayRange = (
+        ('range', {}),
+        MONTH_GRAMMAR,
+        TERM,
+    )
+
+    YearRange = (
+        ('range', {}),
+        ('word', {
+            'labels': [
+                ('dictionary', {'год', }),
+            ],
+        }),
+        TERM,
+    )
+
     Month = (
         MONTH_GRAMMAR,
         TERM,
