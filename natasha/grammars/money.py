@@ -29,6 +29,7 @@ class Money(Enum):
     IntObjectWithPrefix = (
         ('int', {}),
         PREFIX_GRAMMAR,
+        ('punct', {'optional': True}),
         CURRENCY_GRAMMAR,
         TERM,
     )
@@ -36,6 +37,7 @@ class Money(Enum):
     FloatObjectWithPrefix = (
         ('float', {}),
         PREFIX_GRAMMAR,
+        ('punct', {'optional': True}),
         CURRENCY_GRAMMAR,
         TERM,
     )

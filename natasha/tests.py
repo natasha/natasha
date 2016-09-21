@@ -133,3 +133,40 @@ class GeoTestCase(BaseTestCase):
         grammar, rule, _ = next(self.combinator.extract("Москва́"))
         self.assertEqual(grammar, natasha.Geo)
         self.assertEqual(rule, "Object")
+
+class MoneyTestCase(BaseTestCase):
+
+    def test_int_object_with_prefix(self):
+        grammar, rule, _ = next(self.combinator.extract("1 миллион долларов"))
+        self.assertEqual(grammar, natasha.Money)
+        self.assertEqual(rule, "IntObjectWithPrefix")
+
+    def test_int_object_with_abbr_prefix(self):
+        grammar, rule, _ = next(self.combinator.extract("1 млрд. долларов"))
+        self.assertEqual(grammar, natasha.Money)
+        self.assertEqual(rule, "IntObjectWithPrefix")
+
+    def test_float_object_with_prefix(self):
+        grammar, rule, _ = next(self.combinator.extract("1.2 миллиона долларов"))
+        self.assertEqual(grammar, natasha.Money)
+        self.assertEqual(rule, "FloatObjectWithPrefix")
+
+    def test_float_object_with_abbr_prefix(self):
+        grammar, rule, _ = next(self.combinator.extract("1.2 млрд. долларов"))
+        self.assertEqual(grammar, natasha.Money)
+        self.assertEqual(rule, "FloatObjectWithPrefix")
+
+    def test_int_object(self):
+        grammar, rule, _ = next(self.combinator.extract("10 долларов"))
+        self.assertEqual(grammar, natasha.Money)
+        self.assertEqual(rule, "IntObject")
+
+    def test_float_object(self):
+        grammar, rule, _ = next(self.combinator.extract("1.5 рубля"))
+        self.assertEqual(grammar, natasha.Money)
+        self.assertEqual(rule, "FloatObject")
+
+    def test_object_without_actual_number(self):
+        grammar, rule, _ = next(self.combinator.extract("миллион долларов"))
+        self.assertEqual(grammar, natasha.Money)
+        self.assertEqual(rule, "ObjectWithoutActualNumber")
