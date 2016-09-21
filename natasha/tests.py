@@ -170,3 +170,25 @@ class MoneyTestCase(BaseTestCase):
         grammar, rule, _ = next(self.combinator.extract("миллион долларов"))
         self.assertEqual(grammar, natasha.Money)
         self.assertEqual(rule, "ObjectWithoutActualNumber")
+
+class OrganisationTestCase(BaseTestCase):
+
+    def test_official_abbr_quoted(self):
+        grammar, rule, _ = next(self.combinator.extract("ПАО «Газпром»"))
+        self.assertEqual(grammar, natasha.Organisation)
+        self.assertEqual(rule, "OfficialAbbrQuoted")
+
+    def test_abbr(self):
+        grammar, rule, _ = next(self.combinator.extract("МВД"))
+        self.assertEqual(grammar, natasha.Organisation)
+        self.assertEqual(rule, "Abbr")
+
+    def test_individual_entrepreneur(self):
+        grammar, rule, _ = list(self.combinator.extract("ИП Иванов Иван Иванович"))[-1]
+        self.assertEqual(grammar, natasha.Organisation)
+        self.assertEqual(rule, "IndividualEntrepreneur")
+
+    def test_simple_latin(self):
+        grammar, rule, _ = list(self.combinator.extract("агентство Bloomberg"))[-1]
+        self.assertEqual(grammar, natasha.Organisation)
+        self.assertEqual(rule, "SimpleLatin")
