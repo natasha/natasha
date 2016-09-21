@@ -1,4 +1,5 @@
 from enum import Enum
+from natasha.grammars import Person
 from natasha.grammars.base import TERM
 
 
@@ -20,7 +21,7 @@ class Organisation(Enum):
     OfficialAbbrQuoted = (
         ('word', {
             'labels': [
-                ('dictionary', ABBR_PREFIX_DICTIONARY),
+                ('in', ABBR_PREFIX_DICTIONARY),
             ],
         }),
         ('quote', {}),
@@ -47,25 +48,7 @@ class Organisation(Enum):
                 ('eq', 'ИП'),
             ],
         }),
-        ('word', {
-            'labels': [
-                ('gram', 'Surn'),
-            ],
-        }),
-        ('word', {
-            'labels': [
-                ('gram', 'Name'),
-                ('gram-not', 'Abbr'),
-                ('gender-match', -1),
-            ],
-        }),
-        ('word', {
-            'labels': [
-                ('gram', 'Patr'),
-                ('gram-not', 'Abbr'),
-                ('gender-match', -1),
-            ],
-        }),
+        *Person.Full.value[:-1],
         TERM,
     )
 
