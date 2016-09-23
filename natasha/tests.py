@@ -64,14 +64,16 @@ class DateTestCase(BaseTestCase):
         self.assertEqual(rule, "DayAndMonth")
 
     def test_year(self):
-        grammar, rule, _ = next(self.combinator.extract("21 год"))
+        grammar, rule, ((_, match, *_), *_) = next(self.combinator.extract("21 год"))
         self.assertEqual(grammar, natasha.Date)
+        self.assertEqual(type(match), int)
         self.assertEqual(rule, "Year")
 
     def test_year_float(self):
-        grammar, rule, _ = next(self.combinator.extract("1.5 года"))
+        grammar, rule, ((_, match, *_), *_) = next(self.combinator.extract("1.5 года"))
         self.assertEqual(grammar, natasha.Date)
-        self.assertEqual(rule, "YearFloat")
+        self.assertEqual(type(match), float)
+        self.assertEqual(rule, "Year")
 
     def test_partial_year(self):
         grammar, rule, _ = list(self.combinator.extract("в конце 2015 года"))[-1]
@@ -142,34 +144,40 @@ class GeoTestCase(BaseTestCase):
 class MoneyTestCase(BaseTestCase):
 
     def test_int_object_with_prefix(self):
-        grammar, rule, _ = next(self.combinator.extract("1 миллион долларов"))
+        grammar, rule, ((_, match, *_), *_) = next(self.combinator.extract("1 миллион долларов"))
         self.assertEqual(grammar, natasha.Money)
-        self.assertEqual(rule, "IntObjectWithPrefix")
+        self.assertEqual(type(match), int)
+        self.assertEqual(rule, "ObjectWithPrefix")
 
     def test_int_object_with_abbr_prefix(self):
-        grammar, rule, _ = next(self.combinator.extract("1 млрд. долларов"))
+        grammar, rule, ((_, match, *_), *_) = next(self.combinator.extract("1 млрд. долларов"))
         self.assertEqual(grammar, natasha.Money)
-        self.assertEqual(rule, "IntObjectWithPrefix")
+        self.assertEqual(type(match), int)
+        self.assertEqual(rule, "ObjectWithPrefix")
 
     def test_float_object_with_prefix(self):
-        grammar, rule, _ = next(self.combinator.extract("1.2 миллиона долларов"))
+        grammar, rule, ((_, match, *_), *_) = next(self.combinator.extract("1.2 миллиона долларов"))
         self.assertEqual(grammar, natasha.Money)
-        self.assertEqual(rule, "FloatObjectWithPrefix")
+        self.assertEqual(type(match), float)
+        self.assertEqual(rule, "ObjectWithPrefix")
 
     def test_float_object_with_abbr_prefix(self):
-        grammar, rule, _ = next(self.combinator.extract("1.2 млрд. долларов"))
+        grammar, rule, ((_, match, *_), *_) = next(self.combinator.extract("1.2 млрд. долларов"))
         self.assertEqual(grammar, natasha.Money)
-        self.assertEqual(rule, "FloatObjectWithPrefix")
+        self.assertEqual(type(match), float)
+        self.assertEqual(rule, "ObjectWithPrefix")
 
     def test_int_object(self):
-        grammar, rule, _ = next(self.combinator.extract("10 долларов"))
+        grammar, rule, ((_, match, *_), *_) = next(self.combinator.extract("10 долларов"))
         self.assertEqual(grammar, natasha.Money)
-        self.assertEqual(rule, "IntObject")
+        self.assertEqual(type(match), int)
+        self.assertEqual(rule, "Object")
 
     def test_float_object(self):
-        grammar, rule, _ = next(self.combinator.extract("1.5 рубля"))
+        grammar, rule, ((_, match, *_), *_) = next(self.combinator.extract("1.5 рубля"))
         self.assertEqual(grammar, natasha.Money)
-        self.assertEqual(rule, "FloatObject")
+        self.assertEqual(type(match), float)
+        self.assertEqual(rule, "Object")
 
     def test_object_without_actual_number(self):
         grammar, rule, _ = next(self.combinator.extract("миллион долларов"))

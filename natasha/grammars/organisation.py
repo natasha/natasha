@@ -1,6 +1,6 @@
 from enum import Enum
 from natasha.grammars import Person
-from natasha.grammars.base import TERM
+from natasha.grammars.base import Token, TERM
 
 
 ABBR_PREFIX_DICTIONARY = {
@@ -19,21 +19,21 @@ ORG_TYPE_DICTIONARY = {
 class Organisation(Enum):
 
     OfficialAbbrQuoted = (
-        ('word', {
+        (Token.Word, {
             'labels': [
                 ('in', ABBR_PREFIX_DICTIONARY),
             ],
         }),
-        ('quote', {}),
-        ('word', {
+        (Token.Quote, {}),
+        (Token.Word, {
             'repeat': True,
         }),
-        ('quote', {}),
+        (Token.Quote, {}),
         TERM,
     )
 
     Abbr = (
-        ('word', {
+        (Token.Word, {
             'labels': [
                 ('gram', 'Abbr'),
                 ('gram', 'Orgn'),
@@ -43,7 +43,7 @@ class Organisation(Enum):
     )
 
     IndividualEntrepreneur = (
-        ('word', {
+        (Token.Word, {
             'labels': [
                 ('eq', 'ИП'),
             ],
@@ -53,12 +53,12 @@ class Organisation(Enum):
     )
 
     SimpleLatin = (
-        ('word', {
+        (Token.Word, {
             'labels': [
                 ('dictionary', ORG_TYPE_DICTIONARY),
             ],
         }),
-        ('word', {
+        (Token.Word, {
             'labels': [
                 ('gram', 'LATN'),
             ],

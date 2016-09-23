@@ -1,5 +1,5 @@
 from enum import Enum
-from natasha.grammars.base import TERM
+from natasha.grammars.base import Token, TERM
 
 
 MONTH_DICTIONARY = {
@@ -40,44 +40,38 @@ TIME_WORD_DICTIONARY = {
     'ночь',
 }
 
-DAY_GRAMMAR = ('int', {
+DAY_GRAMMAR = (Token.Number, {
     'labels': [
         ('gte', 1),
         ('lte', 31),
     ],
 })
 
-MONTH_GRAMMAR = ('word', {
+MONTH_GRAMMAR = (Token.Word, {
     'labels': [
         ('dictionary', MONTH_DICTIONARY),
     ],
 })
 
-DAY_OF_WEEK_GRAMMAR = ('word', {
+DAY_OF_WEEK_GRAMMAR = (Token.Word, {
     'labels': [
         ('dictionary', DAY_OF_WEEK_DICTIONARY),
     ],
 })
 
-YEAR_GRAMMAR = ('int', {
+YEAR_GRAMMAR = (Token.Number, {
     'labels': [
         ('gte', 1),
     ],
 })
 
-YEAR_FLOAT_GRAMMAR = ('float', {
-    'labels': [
-        ('gte', 0.0),
-    ],
-})
-
-YEAR_SUFFIX_GRAMMAR = ('word', {
+YEAR_SUFFIX_GRAMMAR = (Token.Word, {
     'labels': [
         ('dictionary', {'год', })
     ],
 })
 
-PARTIAL_DATE_GRAMMAR = ('word', {
+PARTIAL_DATE_GRAMMAR = (Token.Word, {
     'labels': [
         ('dictionary', PARTIAL_DATE_DICTIONARY),
     ],
@@ -94,14 +88,14 @@ class Date(Enum):
 
     FullWithDigits = (
         DAY_GRAMMAR,
-        ('punct', {'optional': True}),
-        ('int', {
+        (Token.Punct, {'optional': True}),
+        (Token.Number, {
             'labels': [
                 ('gte', 1),
                 ('lte', 12),
             ],
         }),
-        ('punct', {'optional': True}),
+        (Token.Punct, {'optional': True}),
         YEAR_GRAMMAR,
         TERM,
     )
@@ -114,12 +108,6 @@ class Date(Enum):
 
     Year = (
         YEAR_GRAMMAR,
-        YEAR_SUFFIX_GRAMMAR,
-        TERM,
-    )
-
-    YearFloat = (
-        YEAR_FLOAT_GRAMMAR,
         YEAR_SUFFIX_GRAMMAR,
         TERM,
     )
@@ -138,14 +126,14 @@ class Date(Enum):
     )
 
     DayRange = (
-        ('range', {}),
+        (Token.Range, {}),
         MONTH_GRAMMAR,
         TERM,
     )
 
     YearRange = (
-        ('range', {}),
-        ('word', {
+        (Token.Range, {}),
+        (Token.Word, {
             'labels': [
                 ('dictionary', {'год', }),
             ],

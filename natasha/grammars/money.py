@@ -1,5 +1,5 @@
 from enum import Enum
-from natasha.grammars.base import TERM
+from natasha.grammars.base import Token, TERM
 
 PREFIX_DICTIONARY = {
     'тысяча',
@@ -14,42 +14,28 @@ CURRENCY_DICTIONARY = {
     'евро',
 }
 
-PREFIX_GRAMMAR = ('word', {'labels': [
+PREFIX_GRAMMAR = (Token.Word, {'labels': [
         ('dictionary', PREFIX_DICTIONARY),
     ]
 })
 
-CURRENCY_GRAMMAR = ('word', {'labels': [
+CURRENCY_GRAMMAR = (Token.Word, {'labels': [
         ('dictionary', CURRENCY_DICTIONARY),
     ]
 })
 
 class Money(Enum):
 
-    IntObjectWithPrefix = (
-        ('int', {}),
+    ObjectWithPrefix = (
+        (Token.Number, {}),
         PREFIX_GRAMMAR,
-        ('punct', {'optional': True}),
+        (Token.Punct, {'optional': True}),
         CURRENCY_GRAMMAR,
         TERM,
     )
 
-    FloatObjectWithPrefix = (
-        ('float', {}),
-        PREFIX_GRAMMAR,
-        ('punct', {'optional': True}),
-        CURRENCY_GRAMMAR,
-        TERM,
-    )
-
-    IntObject = (
-        ('int', {}),
-        CURRENCY_GRAMMAR,
-        TERM,
-    )
-
-    FloatObject = (
-        ('float', {}),
+    Object = (
+        (Token.Number, {}),
         CURRENCY_GRAMMAR,
         TERM,
     )

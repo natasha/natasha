@@ -1,11 +1,11 @@
 from enum import Enum
-from natasha.grammars.base import TERM
+from natasha.grammars.base import Token, TERM
 
 
 class Brand(Enum):
 
     Default = (
-        ('word', {
+        (Token.Word, {
             'labels': [
                 ('gram', 'LATN'),
                 ('is-capitalized', True),
