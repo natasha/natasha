@@ -40,6 +40,24 @@ class Person(Enum):
         ]}),
         TERM
     )
+
+    # Л. А. Раневская
+    InitialsAndLastname = (
+        ('word', {'labels': [
+            ('gram-in', ['Name', 'Abbr']),
+        ]}),
+        ('punct', {}),
+        ('word', {'labels': [
+            ('gram-in', ['Patr', 'Abbr']),
+        ]}),
+        ('punct', {}),
+        ('word', {'labels': [
+            ('gram', 'Surn'),
+            ('gram-not', 'Abbr'),
+        ]}),
+        TERM,
+    )
+
     # Иван Иванов
     FisrtnameAndLastname = (
         ('word', {'labels': [

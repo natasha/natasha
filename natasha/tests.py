@@ -38,6 +38,11 @@ class PersonGrammarsTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Person)
         self.assertEqual(rule, "Firstname")
 
+    def test_initials_and_lastname(self):
+        grammar, rule, _ = next(self.combinator.extract("в имении Л. А. Раневской"))
+        self.assertEqual(grammar, natasha.Person)
+        self.assertEqual(rule, "InitialsAndLastname")
+
 class DateTestCase(BaseTestCase):
 
     def test_full(self):
