@@ -94,9 +94,7 @@ class Geo(Enum):
         ('word', {
             'labels': [
                 ('dictionary', REGION_TYPE_DICTIONARY),
-                ('gender-match', -1),
-                ('number-match', -1),
-                ('case-match', -1),
+                ('gnc-match', -1),
             ],
         }),
         TERM,
@@ -113,9 +111,7 @@ class Geo(Enum):
             'labels': [
                 ('gram', 'NOUN'),
                 ('gram', 'Geox'),
-                ('gender-match', -1),
-                ('number-match', -1),
-                ('case-match', -1),
+                ('gnc-match', -1),
             ],
         }),
         TERM,
@@ -132,9 +128,7 @@ class Geo(Enum):
             'labels': [
                 ('gram', 'NOUN'),
                 ('gram', 'Geox'),
-                ('gender-match', -1),
-                ('number-match', -1),
-                ('case-match', -1),
+                ('gnc-match', -1),
             ],
         }),
         TERM,

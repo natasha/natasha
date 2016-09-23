@@ -13,16 +13,12 @@ class Person(Enum):
         ('word', {'labels': [
             ('gram', 'Name'),
             ('gram-not', 'Abbr'),
-            ('gender-match', -1),
-            ('number-match', -1),
-            ('case-match', -1),
+            ('gnc-match', -1),
         ]}),
         ('word', {'labels': [
             ('gram', 'Patr'),
             ('gram-not', 'Abbr'),
-            ('gender-match', -1),
-            ('number-match', -1),
-            ('case-match', -1),
+            ('gnc-match', -1),
         ]}),
         TERM
     )
@@ -35,16 +31,12 @@ class Person(Enum):
         ('word', {'labels': [
             ('gram', 'Patr'),
             ('gram-not', 'Abbr'),
-            ('gender-match', -1),
-            ('number-match', -1),
-            ('case-match', -1),
+            ('gnc-match', -1),
         ]}),
         ('word', {'labels': [
             ('gram', 'Surn'),
             ('gram-not', 'Abbr'),
-            ('gender-match', -1),
-            ('number-match', -1),
-            ('case-match', -1),
+            ('gnc-match', -1),
         ]}),
         TERM
     )
@@ -57,9 +49,7 @@ class Person(Enum):
         ('word', {'labels': [
             ('gram', 'Surn'),
             ('gram-not', 'Abbr'),
-            ('gender-match', -1),
-            ('number-match', -1),
-            ('case-match', -1),
+            ('gnc-match', -1),
         ]}),
         TERM
     )
@@ -72,9 +62,7 @@ class Person(Enum):
         ('word', {'labels': [
             ('gram', 'Name'),
             ('gram-not', 'Abbr'),
-            ('gender-match', -1),
-            ('number-match', -1),
-            ('case-match', -1),
+            ('gnc-match', -1),
         ]}),
         TERM
     )
@@ -87,9 +75,7 @@ class Person(Enum):
         ('word', {'labels': [
             ('gram', 'Patr'),
             ('gram-not', 'Abbr'),
-            ('gender-match', -1),
-            ('number-match', -1),
-            ('case-match', -1),
+            ('gnc-match', -1),
         ]}),
         TERM
     )
