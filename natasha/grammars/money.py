@@ -24,12 +24,35 @@ CURRENCY_GRAMMAR = (Token.Word, {'labels': [
     ]
 })
 
+OPTIONAL_PUNCT_GRAMMAR = (Token.Punct, {'optional': True})
+
+HAND_WRITTEN_NUMBER_GRAMMAR = (Token.Word, {
+    'labels': [
+        ('gram', 'NUMR')
+    ],
+    'repeat': True,
+})
+
 class Money(Enum):
+
+    HandwrittenNumberWithPrefix = (
+        HAND_WRITTEN_NUMBER_GRAMMAR,
+        PREFIX_GRAMMAR,
+        OPTIONAL_PUNCT_GRAMMAR,
+        CURRENCY_GRAMMAR,
+        TERM,
+    )
+
+    HandwrittenNumber = (
+        HAND_WRITTEN_NUMBER_GRAMMAR,
+        CURRENCY_GRAMMAR,
+        TERM,
+    )
 
     ObjectWithPrefix = (
         (Token.Number, {}),
         PREFIX_GRAMMAR,
-        (Token.Punct, {'optional': True}),
+        OPTIONAL_PUNCT_GRAMMAR,
         CURRENCY_GRAMMAR,
         TERM,
     )
