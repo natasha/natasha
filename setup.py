@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='natasha',
-    version='0.1.0',
+    version='0.2.0',
     description='Named-entity recognition for russian language',
     url='https://github.com/bureaucratic-labs/natasha',
     author='Dmitry Veselov',
@@ -20,7 +20,7 @@ setup(
     keywords='natural language processing, russian morphology, named entity recognition, tomita',
     packages=find_packages(),
     install_requires=[
-        'yargy'
+        'yargy==0.3.0'
     ],
     extras_require={
         'web': [
