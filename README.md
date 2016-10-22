@@ -21,7 +21,7 @@
 
 # Где используется?
 
-Например, в [Rent-a-room](https://rent-a-room.ru) - аггрегаторе объявлений о сдаче в аренду жилой недвижимости, извлекается [стоимость, метраж, адреса](https://rent-a-room.ru/kirov/2143-arendazhiliakirov-sdaiu-1-k-kvartiru-v-raione-tsirka-i-tsentral/).
+Например, в [Rent-a-room](https://rent-a-room.ru) - агрегаторе объявлений о сдаче в аренду жилой недвижимости, извлекается [стоимость, метраж, адреса](https://rent-a-room.ru/kirov/2143-arendazhiliakirov-sdaiu-1-k-kvartiru-v-raione-tsirka-i-tsentral/).
 
 # Установка
 
