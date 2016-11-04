@@ -1,5 +1,4 @@
 from enum import Enum
-from natasha.grammars.base import Token, TERM
 
 
 MONTH_DICTIONARY = {
@@ -40,113 +39,114 @@ TIME_WORD_DICTIONARY = {
     'ночь',
 }
 
-DAY_GRAMMAR = (Token.Number, {
+DAY_GRAMMAR = {
     'labels': [
+        ('gram', 'INT'),
         ('gte', 1),
         ('lte', 31),
     ],
-})
+}
 
-MONTH_GRAMMAR = (Token.Word, {
+MONTH_GRAMMAR = {
     'labels': [
         ('dictionary', MONTH_DICTIONARY),
     ],
-})
+}
 
-DAY_OF_WEEK_GRAMMAR = (Token.Word, {
+DAY_OF_WEEK_GRAMMAR = {
     'labels': [
         ('dictionary', DAY_OF_WEEK_DICTIONARY),
     ],
-})
+}
 
-YEAR_GRAMMAR = (Token.Number, {
+YEAR_GRAMMAR = {
     'labels': [
+        ('gram', 'INT'),
         ('gte', 1),
     ],
-})
+}
 
-YEAR_SUFFIX_GRAMMAR = (Token.Word, {
+YEAR_SUFFIX_GRAMMAR = {
     'labels': [
         ('dictionary', {'год', })
     ],
-})
+}
 
-PARTIAL_DATE_GRAMMAR = (Token.Word, {
+PARTIAL_DATE_GRAMMAR = {
     'labels': [
         ('dictionary', PARTIAL_DATE_DICTIONARY),
     ],
-})
+}
 
 class Date(Enum):
 
-    Full = (
+    Full = [
         DAY_GRAMMAR,
         MONTH_GRAMMAR,
         YEAR_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    FullWithDigits = (
+    FullWithDigits = [
         DAY_GRAMMAR,
-        (Token.Punct, {'optional': True}),
-        (Token.Number, {
+        {'optional': True},
+        {
             'labels': [
+                ('gram', 'INT'),
                 ('gte', 1),
                 ('lte', 12),
             ],
-        }),
-        (Token.Punct, {'optional': True}),
+        },
+        {'optional': True},
         YEAR_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    DayAndMonth = (
+    DayAndMonth = [
         DAY_GRAMMAR,
         MONTH_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    Year = (
+    Year = [
         YEAR_GRAMMAR,
         YEAR_SUFFIX_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    PartialYearObject = (
+    PartialYearObject = [
         PARTIAL_DATE_GRAMMAR,
         YEAR_GRAMMAR,
         YEAR_SUFFIX_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    PartialMonthObject = (
+    PartialMonthObject = [
         PARTIAL_DATE_GRAMMAR,
         MONTH_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    DayRange = (
-        (Token.Range, {}),
+    DayRange = [
+        {
+            'labels': [
+                ('gram', 'INT-RANGE')
+            ]
+        },
         MONTH_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    YearRange = (
-        (Token.Range, {}),
-        (Token.Word, {
+    YearRange = [
+        {
+            'labels': [
+                ('gram', 'INT-RANGE')
+            ]
+        },
+        {
             'labels': [
                 ('dictionary', {'год', }),
             ],
-        }),
-        TERM,
-    )
+        },
+    ]
 
-    Month = (
+    Month = [
         MONTH_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    DayOfWeek = (
+    DayOfWeek = [
         DAY_OF_WEEK_GRAMMAR,
-        TERM,
-    )
+    ]

@@ -1,117 +1,121 @@
 from enum import Enum
-from natasha.grammars.base import Token, TERM
 
 
 class Person(Enum):
 
     # Иван Иванович Иванов
-    Full = (
-        (Token.Word, {'labels': [
+    Full = [
+        {'labels': [
             ('gram', 'Surn'),
             ('gram-not', 'Abbr'),
-        ]}),
-        (Token.Word, {'labels': [
+        ]},
+        {'labels': [
             ('gram', 'Name'),
             ('gram-not', 'Abbr'),
             ('gnc-match', -1),
-        ]}),
-        (Token.Word, {'labels': [
+        ]},
+        {'labels': [
             ('gram', 'Patr'),
             ('gram-not', 'Abbr'),
             ('gnc-match', -1),
-        ]}),
-        TERM
-    )
+        ]},
+    ]
+
     # Иванов Иван Иванович
-    FullReversed = (
-        (Token.Word, {'labels': [
+    FullReversed = [
+        {'labels': [
             ('gram', 'Name'),
             ('gram-not', 'Abbr'),
-        ]}),
-        (Token.Word, {'labels': [
+        ]},
+        {'labels': [
             ('gram', 'Patr'),
             ('gram-not', 'Abbr'),
             ('gnc-match', -1),
-        ]}),
-        (Token.Word, {'labels': [
+        ]},
+        {'labels': [
             ('gram', 'Surn'),
             ('gram-not', 'Abbr'),
             ('gnc-match', -1),
-        ]}),
-        TERM
-    )
+        ]},
+    ]
 
     # Л. А. Раневская
-    InitialsAndLastname = (
-        (Token.Word, {'labels': [
+    InitialsAndLastname = [
+        {'labels': [
             ('gram-in', ['Name', 'Abbr']),
-        ]}),
-        (Token.Punct, {}),
-        (Token.Word, {'labels': [
+        ]},
+        {
+            'labels': [
+                ('gram', 'PUNCT'),
+            ],
+        },
+        {'labels': [
             ('gram-in', ['Patr', 'Abbr']),
-        ]}),
-        (Token.Punct, {}),
-        (Token.Word, {'labels': [
+        ]},
+        {
+            'labels': [
+                ('gram', 'PUNCT'),
+            ],
+        },
+        {'labels': [
             ('gram', 'Surn'),
             ('gram-not', 'Abbr'),
-        ]}),
-        TERM,
-    )
+        ]},
+    ]
 
     # Иван Иванов
-    FisrtnameAndLastname = (
-        (Token.Word, {'labels': [
+    FisrtnameAndLastname = [
+        {'labels': [
             ('gram', 'Name'),
             ('gram-not', 'Abbr'),
-        ]}),
-        (Token.Word, {'labels': [
+        ]},
+        {'labels': [
             ('gram', 'Surn'),
             ('gram-not', 'Abbr'),
             ('gnc-match', -1),
-        ]}),
-        TERM
-    )
+        ]},
+    ]
+
     # Иванов Иван
-    LastnameAndFirstname = (
-        (Token.Word, {'labels': [
+    LastnameAndFirstname = [
+        {'labels': [
             ('gram', 'Surn'),
             ('gram-not', 'Abbr'),
-        ]}),
-        (Token.Word, {'labels': [
+        ]},
+        {'labels': [
             ('gram', 'Name'),
             ('gram-not', 'Abbr'),
             ('gnc-match', -1),
-        ]}),
-        TERM
-    )
+        ]},
+    ]
+
     # Иван Иванович
-    FirstnameAndMiddlename = (
-        (Token.Word, {'labels': [
+    FirstnameAndMiddlename = [
+        {'labels': [
             ('gram', 'Name'),
             ('gram-not', 'Abbr'),
-        ]}),
-        (Token.Word, {'labels': [
+        ]},
+        {'labels': [
             ('gram', 'Patr'),
             ('gram-not', 'Abbr'),
             ('gnc-match', -1),
-        ]}),
-        TERM
-    )
+        ]},
+    ]
+
     # Иванов
-    Lastname = (
-        (Token.Word, {'labels': [
+    Lastname = [
+        {'labels': [
             ('gram', 'Surn'),
             ('gram-not', 'Abbr'),
             ('is-capitalized', True),
-        ]}),
-        TERM
-    )
+        ]},
+    ]
+
     # Иван
-    Firstname = (
-        (Token.Word, {'labels': [
+    Firstname = [
+        {'labels': [
             ('gram', 'Name'),
             ('gram-not', 'Abbr'),
             ('is-capitalized', True),
-        ]}),
-        TERM
-    )
+        ]},
+    ]

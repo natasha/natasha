@@ -1,5 +1,5 @@
 from enum import Enum
-from natasha.grammars.base import Token, TERM
+
 
 PREFIX_DICTIONARY = {
     'тысяча',
@@ -14,57 +14,54 @@ CURRENCY_DICTIONARY = {
     'евро',
 }
 
-PREFIX_GRAMMAR = (Token.Word, {'labels': [
+PREFIX_GRAMMAR = {'labels': [
         ('dictionary', PREFIX_DICTIONARY),
     ]
-})
+}
 
-CURRENCY_GRAMMAR = (Token.Word, {'labels': [
+CURRENCY_GRAMMAR = {'labels': [
         ('dictionary', CURRENCY_DICTIONARY),
     ]
-})
+}
 
-OPTIONAL_PUNCT_GRAMMAR = (Token.Punct, {'optional': True})
+OPTIONAL_PUNCT_GRAMMAR = {'labels': [('gram', 'PUNCT')], 'optional': True}
 
-HAND_WRITTEN_NUMBER_GRAMMAR = (Token.Word, {
+NUMBER_GRAMMAR = {'labels': [('gram', 'NUMBER')]}
+
+HAND_WRITTEN_NUMBER_GRAMMAR = {
     'labels': [
         ('gram', 'NUMR')
     ],
-    'repeat': True,
-})
+    'repeatable': True,
+}
 
 class Money(Enum):
 
-    HandwrittenNumberWithPrefix = (
+    HandwrittenNumberWithPrefix = [
         HAND_WRITTEN_NUMBER_GRAMMAR,
         PREFIX_GRAMMAR,
         OPTIONAL_PUNCT_GRAMMAR,
         CURRENCY_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    HandwrittenNumber = (
+    HandwrittenNumber = [
         HAND_WRITTEN_NUMBER_GRAMMAR,
         CURRENCY_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    ObjectWithPrefix = (
-        (Token.Number, {}),
+    ObjectWithPrefix = [
+        NUMBER_GRAMMAR,
         PREFIX_GRAMMAR,
         OPTIONAL_PUNCT_GRAMMAR,
         CURRENCY_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    Object = (
-        (Token.Number, {}),
+    Object = [
+        NUMBER_GRAMMAR,
         CURRENCY_GRAMMAR,
-        TERM,
-    )
+    ]
 
-    ObjectWithoutActualNumber = (
+    ObjectWithoutActualNumber = [
         PREFIX_GRAMMAR,
         CURRENCY_GRAMMAR,
-        TERM,
-    )
+    ]

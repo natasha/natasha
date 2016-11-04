@@ -1,5 +1,4 @@
 from enum import Enum
-from natasha.grammars.base import Token, TERM
 
 EVENT_TYPE_DICTIONARY = {
     'фестиваль',
@@ -8,17 +7,24 @@ EVENT_TYPE_DICTIONARY = {
 
 class Event(Enum):
 
-    Object = (
-        (Token.Word, {
+    Object = [
+        {
             'labels': [
                 ('gram', 'NOUN'),
                 ('dictionary', EVENT_TYPE_DICTIONARY),
             ],
-        }),
-        (Token.Quote, {}),
-        (Token.Word, {
-            "repeat": True,
-        }),
-        (Token.Quote, {}),
-        TERM,
-    )
+        },
+        {
+            'labels': [
+                ('gram', 'QUOTE'),
+            ],
+        },
+        {
+            'repeatable': True,
+        },
+        {
+            'labels': [
+                ('gram', 'QUOTE'),
+            ],
+        },
+    ]

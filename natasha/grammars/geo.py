@@ -1,5 +1,4 @@
 from enum import Enum
-from natasha.grammars.base import Token, TERM
 
 
 FEDERAL_DISTRICT_DICTIONARY = {
@@ -50,97 +49,91 @@ PARTIAL_OBJECT_PREFIX_DICTIONARY = {
 
 class Geo(Enum):
 
-    FederalDistrict = (
-        (Token.Word, {
+    FederalDistrict = [
+        {
             'labels': [
                 ('gram', 'ADJF'),
                 ('dictionary', FEDERAL_DISTRICT_DICTIONARY),
             ],
-        }),
-        (Token.Word, {
+        },
+        {
             'labels': [
                 ('dictionary', {'федеральный', }),
             ],
-        }),
-        (Token.Word, {
+        },
+        {
             'labels': [
                 ('dictionary', {'округ', }),
             ],
-        }),
-        TERM,
-    )
+        },
+    ]
 
-    FederalDistrictAbbr = (
-        (Token.Word, {
+    FederalDistrictAbbr = [
+        {
             'labels': [
                 ('gram', 'ADJF'),
                 ('dictionary', FEDERAL_DISTRICT_DICTIONARY),
             ],
-        }),
-        (Token.Word, {
+        },
+        {
             'labels': [
                 ('eq', 'ФО'),
             ],
-        }),
-        TERM,
-    )
+        },
+    ]
 
-    Region = (
-        (Token.Word, {
+    Region = [
+        {
             'labels': [
                 ('gram', 'ADJF'),
             ],
-        }),
-        (Token.Word, {
+        },
+        {
             'labels': [
                 ('dictionary', REGION_TYPE_DICTIONARY),
                 ('gnc-match', -1),
             ],
-        }),
-        TERM,
-    )
+        },
+    ]
 
-    ComplexObject = (
-        (Token.Word, {
+    ComplexObject = [
+        {
             'labels': [
                 ('gram', 'ADJF'),
                 ('dictionary', COMPLEX_OBJECT_PREFIX_DICTIONARY),
             ],
-        }),
-        (Token.Word, {
+        },
+        {
             'labels': [
                 ('gram', 'NOUN'),
                 ('gram', 'Geox'),
                 ('gnc-match', -1),
             ],
-        }),
-        TERM,
-    )
+        },
+    ]
 
-    PartialObject = (
-        (Token.Word, {
+    PartialObject = [
+        {
             'labels': [
                 ('gram', 'NOUN'),
                 ('dictionary', PARTIAL_OBJECT_PREFIX_DICTIONARY),
             ],
-        }),
-        (Token.Word, {
+        },
+        {
             'labels': [
                 ('gram', 'NOUN'),
                 ('gram', 'Geox'),
                 ('gnc-match', -1),
             ],
-        }),
-        TERM,
-    )
+        },
+    ]
 
-    Object = (
-        (Token.Word, {
+    Object = [
+        {
             'labels': [
                 ('is-capitalized', True),
                 ('gram', 'Geox'),
                 ('gram-not', 'Abbr'),
             ],
-        }),
-        TERM,
-    )
+        },
+    ]

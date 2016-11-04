@@ -1,7 +1,4 @@
-from copy import copy
-from collections import deque
-
-from yargy import FactParser, Combinator
+from yargy import Parser, Combinator
 from natasha.grammars import Person, Geo, Money, Date, Brand, Event, Organisation
 
 __version__ = '0.2.0'
