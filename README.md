@@ -70,5 +70,5 @@ for (grammar, rule, tokens) in combinator.extract(text):
 Исходный код распространяется под лицензией MIT.
 
 # У меня остались вопросы
-[Telegram-конференция](https://telegram.me/joinchat/DOBFyQlYnYVClzat73JzFw), где можно найти ответы на все вопросы (на самом деле нет)
+[Telegram-конференция](https://telegram.me/natural_language_processing), где можно найти ответы на все вопросы (на самом деле нет)
 
