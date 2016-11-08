@@ -56,7 +56,9 @@ class Organisation(Enum):
                 ('eq', 'ИП'),
             ],
         },
-        *Person.Full.value,
+        Person.Full.value[0],
+        Person.Full.value[1],
+        Person.Full.value[2],
     ]
 
     SimpleLatin = [
