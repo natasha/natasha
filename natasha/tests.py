@@ -183,5 +183,5 @@ class OrganisationTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Organisation.IndividualEntrepreneur)
 
     def test_simple_latin(self):
-        grammar, rule = next(self.combinator.extract('агентство Bloomberg'))
+        grammar, rule = list(self.combinator.extract('агентство Bloomberg'))[-1]
         self.assertEqual(grammar, natasha.Organisation.SimpleLatin)

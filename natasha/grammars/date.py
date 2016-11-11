@@ -61,7 +61,7 @@ DAY_OF_WEEK_GRAMMAR = {
 
 YEAR_GRAMMAR = {
     'labels': [
-        ('gram', 'INT'),
+        ('gram', 'NUMBER'),
         ('gte', 1),
     ],
 }
@@ -88,7 +88,12 @@ class Date(Enum):
 
     FullWithDigits = [
         DAY_GRAMMAR,
-        {'optional': True},
+        {
+            'labels': [
+                ('gram', 'PUNCT'),
+            ],
+            'optional': True
+        },
         {
             'labels': [
                 ('gram', 'INT'),
@@ -96,7 +101,12 @@ class Date(Enum):
                 ('lte', 12),
             ],
         },
-        {'optional': True},
+        {
+            'labels': [
+                ('gram', 'PUNCT'),
+            ],
+            'optional': True
+        },
         YEAR_GRAMMAR,
     ]
 
