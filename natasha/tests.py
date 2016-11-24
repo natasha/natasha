@@ -1,3 +1,6 @@
+# coding: utf-8
+from __future__ import unicode_literals
+
 import unittest
 import natasha
 
@@ -10,20 +13,20 @@ class BaseTestCase(unittest.TestCase):
 class PersonGrammarsTestCase(BaseTestCase):
 
     def test_full(self):
-        grammar, match = list(self.combinator.extract('Шерер Анна Павловна'))[3]
-        self.assertEqual(grammar, natasha.Person.Full)
+        grammars = (x[0] for x in self.combinator.extract('Шерер Анна Павловна'))
+        self.assertIn(natasha.Person.Full, grammars)
 
     def test_full_reversed(self):
-        grammar, match = list(self.combinator.extract('Анна Павловна Шерер'))[2]
-        self.assertEqual(grammar, natasha.Person.FullReversed)
+        grammars = (x[0] for x in self.combinator.extract('Анна Павловна Шерер'))
+        self.assertIn(natasha.Person.FullReversed, grammars)
 
     def test_firstname_and_lastname(self):
-        grammar, match = list(self.combinator.extract('Анна Шерер'))[1]
-        self.assertEqual(grammar, natasha.Person.FisrtnameAndLastname)
+        grammars = (x[0] for x in self.combinator.extract('Анна Шерер'))
+        self.assertIn(natasha.Person.FisrtnameAndLastname, grammars)
 
     def test_lastname_and_firstname(self):
-        grammar, match = list(self.combinator.extract('Шерер Анна'))[1]
-        self.assertEqual(grammar, natasha.Person.LastnameAndFirstname)
+        grammars = (x[0] for x in self.combinator.extract('Шерер Анна'))
+        self.assertIn(natasha.Person.LastnameAndFirstname, grammars)
 
     def test_lastname(self):
         grammar, match = next(self.combinator.extract('Шерер'))
@@ -34,39 +37,37 @@ class PersonGrammarsTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Person.Firstname)
 
     def test_initials_and_lastname(self):
-        grammar, match = next(self.combinator.extract('в имении Л. А. Раневской'))
-        self.assertEqual(grammar, natasha.Person.InitialsAndLastname)
+        grammars = (x[0] for x in self.combinator.extract('в имении Л. А. Раневской'))
+        self.assertIn(natasha.Person.InitialsAndLastname, grammars)
 
 class DateTestCase(BaseTestCase):
 
     def test_full(self):
-        grammar, match = list(self.combinator.extract('21 мая 1996 года'))[2]
-        self.assertEqual(grammar, natasha.Date.Full)
+        grammars = (x[0] for x in self.combinator.extract('21 мая 1996 года'))
+        self.assertIn(natasha.Date.Full, grammars)
 
     def test_full_with_digits(self):
-        grammar, match = next(self.combinator.extract('21/05/1996'))
-        self.assertEqual(grammar, natasha.Date.FullWithDigits)
-        grammar, match = next(self.combinator.extract('21 05 1996'))
-        print(grammar, match)
-        self.assertEqual(grammar, natasha.Date.FullWithDigits)
+        grammars = (x[0] for x in self.combinator.extract('21/05/1996'))
+        self.assertIn(natasha.Date.FullWithDigits, grammars)
+        grammars = (x[0] for x in self.combinator.extract('21 05 1996'))
+        self.assertIn(natasha.Date.FullWithDigits, grammars)
 
     def test_day_and_month(self):
-        grammar, match = next(self.combinator.extract('21 мая'))
-        self.assertEqual(grammar, natasha.Date.DayAndMonth)
+        grammars = (x[0] for x in self.combinator.extract('21 мая'))
+        self.assertIn(natasha.Date.DayAndMonth, grammars)
 
     def test_year(self):
-        grammar, ((match, *_), *_) = next(self.combinator.extract('21 год'))
-        self.assertEqual(grammar, natasha.Date.Year)
-        self.assertEqual(type(match), int)
+        grammars = (x[0] for x in self.combinator.extract('21 год'))
+        self.assertIn(natasha.Date.Year, grammars)
 
     def test_year_float(self):
-        grammar, ((match, *_), *_) = next(self.combinator.extract('1.5 года'))
+        grammar, tokens = next(self.combinator.extract('1.5 года'))
         self.assertEqual(grammar, natasha.Date.Year)
-        self.assertEqual(type(match), float)
+        self.assertEqual(type(tokens[0].value), float)
 
     def test_partial_year(self):
-        grammar, rule = list(self.combinator.extract('в конце 2015 года'))[-1]
-        self.assertEqual(grammar, natasha.Date.PartialYearObject)
+        grammars = (x[0] for x in self.combinator.extract('в конце 2015 года'))
+        self.assertIn(natasha.Date.PartialYearObject, grammars)
 
     def test_partial_month(self):
         grammar, match = next(self.combinator.extract('в конце мая'))
@@ -81,12 +82,12 @@ class DateTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Date.DayOfWeek)
 
     def test_day_range(self):
-        grammar, match = next(self.combinator.extract('18-19 ноября'))
-        self.assertEqual(grammar, natasha.Date.DayRange)
+        grammars = (x[0] for x in self.combinator.extract('18-19 ноября'))
+        self.assertIn(natasha.Date.DayRange, grammars)
 
     def test_year_range(self):
-        grammar, match = next(self.combinator.extract('18-20 лет'))
-        self.assertEqual(grammar, natasha.Date.YearRange)
+        grammars = (x[0] for x in self.combinator.extract('18-20 лет'))
+        self.assertIn(natasha.Date.YearRange, grammars)
 
 class GeoTestCase(BaseTestCase):
 
@@ -121,52 +122,46 @@ class GeoTestCase(BaseTestCase):
 class MoneyTestCase(BaseTestCase):
 
     def test_int_object_with_prefix(self):
-        grammar, ((match, *_), *_) = next(self.combinator.extract('1 миллион долларов'))
-        self.assertEqual(grammar, natasha.Money.ObjectWithPrefix)
-        self.assertEqual(type(match), int)
+        grammars = (x[0] for x in self.combinator.extract('1 миллион долларов'))
+        self.assertIn(natasha.Money.ObjectWithPrefix, grammars)
 
     def test_int_object_with_abbr_prefix(self):
-        grammar, ((match, *_), *_) = next(self.combinator.extract('1 млрд. долларов'))
+        grammar, tokens = next(self.combinator.extract('1 млрд. долларов'))
         self.assertEqual(grammar, natasha.Money.ObjectWithPrefix)
-        self.assertEqual(type(match), int)
+        self.assertEqual(type(tokens[0].value), int)
 
     def test_float_object_with_prefix(self):
-        grammar, ((match, *_), *_) = next(self.combinator.extract('1.2 миллиона долларов'))
-        self.assertEqual(grammar, natasha.Money.ObjectWithPrefix)
-        self.assertEqual(type(match), float)
+        grammars = (x[0] for x in self.combinator.extract('1.2 миллиона долларов'))
+        self.assertIn(natasha.Money.ObjectWithPrefix, grammars)
 
     def test_float_object_with_abbr_prefix(self):
-        grammar, ((match, *_), *_) = next(self.combinator.extract('1.2 млрд. долларов'))
-        self.assertEqual(grammar, natasha.Money.ObjectWithPrefix)
-        self.assertEqual(type(match), float)
+        grammars = (x[0] for x in self.combinator.extract('1.2 млрд. долларов'))
+        self.assertIn(natasha.Money.ObjectWithPrefix, grammars)
 
     def test_int_object(self):
-        grammar, ((match, *_), *_) = next(self.combinator.extract('10 долларов'))
+        grammar, tokens = next(self.combinator.extract('10 долларов'))
         self.assertEqual(grammar, natasha.Money.Object)
-        self.assertEqual(type(match), int)
+        self.assertEqual(type(tokens[0].value), int)
 
     def test_float_object(self):
-        grammar, ((match, *_), *_) = next(self.combinator.extract('1.5 рубля'))
+        grammar, tokens = next(self.combinator.extract('1.5 рубля'))
         self.assertEqual(grammar, natasha.Money.Object)
-        self.assertEqual(type(match), float)
+        self.assertEqual(type(tokens[0].value), float)
 
     def test_object_without_actual_number(self):
         grammar, match = next(self.combinator.extract('миллион долларов'))
         self.assertEqual(grammar, natasha.Money.ObjectWithoutActualNumber)
 
     def test_hand_written_numbers(self):
-        grammar, ((match, *_), *_) = next(self.combinator.extract('сто рублей'))
-        self.assertEqual(match, 'сто')
+        grammar, tokens = next(self.combinator.extract('сто рублей'))
+        self.assertEqual(tokens[0].value, 'сто')
         self.assertEqual(grammar, natasha.Money.HandwrittenNumber)
 
     def test_hand_written_numbers_with_prefix(self):
-        grammar, ((match, *_), *_) = next(self.combinator.extract('два миллиона долларов'))
-        self.assertEqual(match, 'два')
-        self.assertEqual(grammar, natasha.Money.HandwrittenNumberWithPrefix)
-        grammar, ((head, *_), (tail, *_), *_) = next(self.combinator.extract('семьдесят пять тысяч рублей'))
-        self.assertEqual(head, 'семьдесят')
-        self.assertEqual(tail, 'пять')
-        self.assertEqual(grammar, natasha.Money.HandwrittenNumberWithPrefix)
+        grammars = (x[0] for x in self.combinator.extract('два миллиона долларов'))
+        self.assertIn(natasha.Money.HandwrittenNumberWithPrefix, grammars)
+        grammars = (x[0] for x in self.combinator.extract('семьдесят пять тысяч рублей'))
+        self.assertIn(natasha.Money.HandwrittenNumberWithPrefix, grammars)
 
 class OrganisationTestCase(BaseTestCase):
 
@@ -179,9 +174,9 @@ class OrganisationTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Organisation.Abbr)
 
     def test_individual_entrepreneur(self):
-        grammar, match = list(self.combinator.extract('ИП Иванов Иван Иванович'))[-1]
-        self.assertEqual(grammar, natasha.Organisation.IndividualEntrepreneur)
+        grammars = (x[0] for x in self.combinator.extract('ИП Иванов Иван Иванович'))
+        self.assertIn(natasha.Organisation.IndividualEntrepreneur, grammars)
 
     def test_simple_latin(self):
-        grammar, rule = list(self.combinator.extract('агентство Bloomberg'))[-1]
-        self.assertEqual(grammar, natasha.Organisation.SimpleLatin)
+        grammars = (x[0] for x in self.combinator.extract('агентство Bloomberg'))
+        self.assertIn(natasha.Organisation.SimpleLatin, grammars)
