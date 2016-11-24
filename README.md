@@ -59,9 +59,8 @@ MY_GRAMMARS_LIST = [
 text = "23 августа в Нижнем Новгороде пройдет очередной день"
 
 combinator = Combinator(MY_GRAMMARS_LIST)
-for (grammar, rule, tokens) in combinator.extract(text):
-    print("Тип:", grammar)
-    print("Правило:", rule)
+for (grammar, tokens) in combinator.extract(text):
+    print("Правило:", grammar)
     print("Токены:", tokens)
 ```
 
