@@ -26,7 +26,7 @@
 
 # Установка
 
-*Важно:* `natasha` поддерживает версии Python 2.7+ и 3.3+, включая PyPy.
+*Важно:* `natasha` поддерживает версии Python 2.7+ и 3.3+, включая интерпретаторы PyPy и PyPy3.
 
 ```bash
 $ pip install natasha==0.3.0
@@ -59,7 +59,7 @@ MY_GRAMMARS_LIST = [
 text = "23 августа в Нижнем Новгороде пройдет очередной день"
 
 combinator = Combinator(MY_GRAMMARS_LIST)
-for (grammar, tokens) in combinator.extract(text):
+for grammar, tokens in combinator.extract(text):
     print("Правило:", grammar)
     print("Токены:", tokens)
 ```
