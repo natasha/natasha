@@ -23,6 +23,9 @@ class Event(Enum):
             ],
         },
         {
+            'labels': [
+                ('gram-not', 'QUOTE'),
+            ],
             'repeatable': True,
         },
         {

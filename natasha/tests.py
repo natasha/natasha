@@ -181,3 +181,10 @@ class OrganisationTestCase(BaseTestCase):
     def test_simple_latin(self):
         grammars = (x[0] for x in self.combinator.extract('агентство Bloomberg'))
         self.assertIn(natasha.Organisation.SimpleLatin, grammars)
+
+class EventsTestCase(BaseTestCase):
+
+    def test_object(self):
+        grammar, match = next(self.combinator.extract('шоу «Пятая империя»'))
+        self.assertEqual(grammar, natasha.Event.Object)
+
