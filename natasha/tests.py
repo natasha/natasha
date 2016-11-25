@@ -111,6 +111,7 @@ class GeoTestCase(BaseTestCase):
         with self.assertRaises(StopIteration):
             next(self.combinator.extract('северная кипр'))
 
+    @unittest.skip('skip for now, because need to know something about gent(2?)+loct(2?) cases concordance')
     def test_partial_object(self):
         grammar, match = next(self.combinator.extract('на юго-западе кипра'))
         self.assertEqual(grammar, natasha.Geo.PartialObject)
