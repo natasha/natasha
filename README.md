@@ -1,4 +1,4 @@
-# Natasha
+# Natasha [![Build Status](https://travis-ci.org/bureaucratic-labs/natasha.svg?branch=master)](https://travis-ci.org/bureaucratic-labs/natasha)
 
 ![](http://i.imgur.com/jQtaSTV.png)
 
