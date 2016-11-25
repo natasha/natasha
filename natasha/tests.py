@@ -70,8 +70,8 @@ class DateTestCase(BaseTestCase):
         self.assertIn(natasha.Date.PartialYearObject, grammars)
 
     def test_partial_month(self):
-        grammar, match = next(self.combinator.extract('в конце мая'))
-        self.assertEqual(grammar, natasha.Date.PartialMonthObject)
+        grammars = (x[0] for x in self.combinator.extract('в конце мая'))
+        self.assertIn(natasha.Date.PartialMonthObject, grammars)
 
     def test_month(self):
         grammar, match = next(self.combinator.extract('мая'))
