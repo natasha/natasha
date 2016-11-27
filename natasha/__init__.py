@@ -1,7 +1,7 @@
 from yargy import Parser, Combinator
 from natasha.grammars import Person, Geo, Money, Date, Brand, Event, Organisation
 
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 DEFAULT_GRAMMARS = [
     Money,

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='natasha',
-    version='0.3.0',
+    version='0.3.1',
     description='Named-entity recognition for russian language',
     url='https://github.com/bureaucratic-labs/natasha',
     author='Dmitry Veselov',
