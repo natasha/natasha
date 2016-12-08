@@ -1,6 +1,12 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
+try:
+    range = xrange
+except NameError:
+    range = range
+
+import sys
 import unittest
 import natasha
 
@@ -126,6 +132,7 @@ class DateTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Date.DayOfWeek)
         self.assertEqual(match[0].value, 'пятницу')
 
+    @unittest.skip(sys.version_info.major < 3)
     def test_day_range(self):
         results = list(self.combinator.extract('18-19 ноября'))
         grammars = (x[0] for x in results)
@@ -133,6 +140,7 @@ class DateTestCase(BaseTestCase):
         self.assertIn(natasha.Date.DayRange, grammars)
         self.assertIn([range(18, 19), 'ноября'], values)
 
+    @unittest.skip(sys.version_info.major < 3)
     def test_year_range(self):
         results = list(self.combinator.extract('18-20 лет'))
         grammars = (x[0] for x in results)
