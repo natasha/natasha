@@ -20,6 +20,6 @@ setup(
     keywords='natural language processing, russian morphology, named entity recognition, tomita',
     packages=find_packages(),
     install_requires=[
-        'yargy==0.4.4'
+        'yargy==0.4.6'
     ],
 )
