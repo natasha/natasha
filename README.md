@@ -16,20 +16,15 @@
 # Зачем?
 
 При всех хороших качествах существующих решений для выделения сущностей, большинство из них трудно использовать в python-проектах, многие имеют закрытый исходный код, неудобную лицензию, бедную документацию и словари.  
-`Natasha` призвана решить эту проблему - код написан исключительно на python, все используемые библиотеки имеют открытый исходный код, а морфологический анализатор - свободный словарь [OpenCorpora](http://opencorpora.org/).  
+`Natasha` призвана решить эту проблему - код написан исключительно на python, все используемые библиотеки имеют открытый исходный код, а [морфологический анализатор](https://github.com/kmike/pymorphy2) использует свободный словарь [OpenCorpora](http://opencorpora.org/).  
 Если вдаваться в технические детали, `natasha` - всего лишь набор частоиспользуемых грамматик для [GLR-парсера](https://github.com/bureaucratic-labs/yargy). Это позволяет избавить разработчика, желающего научить своё приложение понимать натуральный язык, от необходимости писать лингвистические правила, ведь это скучно.
-
-# Где используется?
-
-Например, в [Rent-a-room](https://rent-a-room.ru) - агрегаторе объявлений о сдаче в аренду жилой недвижимости:  
-![Imgur](http://i.imgur.com/iTsBtCS.png)
 
 # Установка
 
 *Важно:* `natasha` поддерживает версии Python 2.7+ и 3.3+, включая интерпретаторы PyPy и PyPy3.
 
 ```bash
-$ pip install natasha==0.3.0
+$ pip install natasha==0.3.1
 ```
 
 # Использование
@@ -62,6 +57,23 @@ combinator = Combinator(MY_GRAMMARS_LIST)
 for grammar, tokens in combinator.extract(text):
     print("Правило:", grammar)
     print("Токены:", tokens)
+```
+
+Иногда бывает так, что некоторые словосочитания попадают под несколько грамматик, например, в предложении `иван иванович иванов меняет...` `natasha` найдет четыре результата - `Person.Full`, `Person.Firstname`, `Person.Middlename`, `Person.Lastname`. Если необходимо получить только один результат, можно использовать метод `resolve_matches`, который вернет правило, включившее в себя наибольшее количество слов, т.е. в данном случае - `Person.Full`:
+
+```python
+from natasha import Combinator
+from natasha.grammars import Person
+
+text = "Иван иванович иванов меняет..."
+
+combinator = Combinator([Person])
+
+matches = combinator.extract(text)
+
+for grammar, tokens in combinator.resolve_matches(matches):
+   print(grammar, tokens)
+
 ```
 
 # Лицензия
