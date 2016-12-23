@@ -10,12 +10,20 @@ from yargy.labels import (
 
 class Brand(Enum):
 
-    Default = [
+    Latin = [
         {
             'labels': [
                 gram('LATN'),
                 is_capitalized(True),
             ],
             'repeatable': True,
+        }
+    ]
+
+    Trademark = [
+        {
+            'labels': [
+                gram('Trad'),
+            ],
         }
     ]

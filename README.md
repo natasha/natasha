@@ -24,7 +24,7 @@
 *Важно:* `natasha` поддерживает версии Python 2.7+ и 3.3+, включая интерпретаторы PyPy и PyPy3.
 
 ```bash
-$ pip install natasha==0.3.2
+$ pip install natasha==0.4.0
 ```
 
 # Использование
