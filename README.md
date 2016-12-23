@@ -37,12 +37,13 @@ from natasha.grammars import Geo, Date
 
 # DEFAULT_GRAMMARS содержит стандартный набор правил:
 # [
-#    <enum 'Money'>,
-#    <enum 'Person'>,
-#    <enum 'Geo'>,
-#    <enum 'Date'>,
 #    <enum 'Brand'>,
+#    <enum 'Date'>,
 #    <enum 'Event'>
+#    <enum 'Geo'>,
+#    <enum 'Money'>,
+#    <enum 'Organisation'>
+#    <enum 'Person'>,
 # ]
 
 # Можно использовать их частично или использовать свои правила
