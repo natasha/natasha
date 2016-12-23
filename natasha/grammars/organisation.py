@@ -1,41 +1,77 @@
 # coding: utf-8
 from __future__ import unicode_literals
+import re
 
 from enum import Enum
 from yargy.labels import (
     gram,
     gram_not,
     in_,
+    not_in,
     dictionary,
     eq,
     is_capitalized,
+    custom
 )
 from natasha.grammars import Person
-
-
-ABBR_PREFIX_DICTIONARY = {
-    'ООО',
-    'ОАО',
-    'ПАО',
-    'ЗАО',
-    'АО',
-    'ГК',
-}
 
 ORG_TYPE_DICTIONARY = {
     'агентство',
     'компания',
     'организация',
     'концерн',
+    'фирма',
+    'завод',
+    'торговый дом',
+    'предприятие',
+    'корпорация',
+    'группа',
+    'группа компаний',
+    'санаторий',
+    'производственное объединение',
+    'бюро',
+    'подразделение',
+    'филиал',
+    'представительство',
+    'ф-л',
 }
 
-class Organisation(Enum):
+ABBR_INTERFIX_DICTIONARY = {
+    'ООО',
+    'ЗАО',
+    'ОАО',
+    'АО',
+    'ТОО',
+    'ФГУП',
+    'ПАО',
+    'УФПС'
+}
 
+ABBR_REGEXP = re.compile('[А-ЯA-Z]{2,4}')
+
+
+def is_abbr(token, stack):
+    return bool(ABBR_REGEXP.fullmatch(str(token.value)))
+
+
+class Organisation(Enum):
     OfficialAbbrQuoted = [
         {
             'labels': [
-                in_(ABBR_PREFIX_DICTIONARY),
+                dictionary(ORG_TYPE_DICTIONARY),
             ],
+            'optional': True
+        },
+        {
+            'labels': [
+                in_(ABBR_INTERFIX_DICTIONARY),
+            ],
+        },
+        {
+            'labels': [
+                custom(is_abbr),
+            ],
+            'optional': True
         },
         {
             'labels': [
@@ -66,6 +102,7 @@ class Organisation(Enum):
                 gram('NOUN'),
                 gram('gent'),
                 is_capitalized(True),
+                not_in(ABBR_INTERFIX_DICTIONARY)
             ]
         },
     ]

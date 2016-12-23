@@ -12,12 +12,11 @@ import natasha
 
 
 class BaseTestCase(unittest.TestCase):
-
     def setUp(self):
         self.combinator = natasha.Combinator(natasha.DEFAULT_GRAMMARS)
 
-class PersonGrammarsTestCase(BaseTestCase):
 
+class PersonGrammarsTestCase(BaseTestCase):
     def test_full(self):
         results = list(self.combinator.extract('Шерер Анна Павловна'))
         grammars = (x[0] for x in results)
@@ -67,8 +66,8 @@ class PersonGrammarsTestCase(BaseTestCase):
         results = list(self.combinator.extract('есть даже марки машин'))
         self.assertEqual(results, [])
 
-class DateTestCase(BaseTestCase):
 
+class DateTestCase(BaseTestCase):
     def test_full(self):
         results = list(self.combinator.extract('21 мая 1996 года'))
         grammars = (x[0] for x in results)
@@ -148,8 +147,8 @@ class DateTestCase(BaseTestCase):
         self.assertIn(natasha.Date.YearRange, grammars)
         self.assertIn([range(18, 20), 'лет'], values)
 
-class GeoTestCase(BaseTestCase):
 
+class GeoTestCase(BaseTestCase):
     def test_federal_district(self):
         grammar, match = next(self.combinator.extract('северо-западный федеральный округ'))
         self.assertEqual(grammar, natasha.Geo.FederalDistrict)
@@ -183,8 +182,8 @@ class GeoTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Geo.Object)
         self.assertEqual(['Москва'], [x.value for x in match])
 
-class MoneyTestCase(BaseTestCase):
 
+class MoneyTestCase(BaseTestCase):
     def test_int_object_with_prefix(self):
         results = list(self.combinator.extract('1 миллион долларов'))
         grammars = (x[0] for x in results)
@@ -244,12 +243,17 @@ class MoneyTestCase(BaseTestCase):
         self.assertIn(natasha.Money.HandwrittenNumberWithPrefix, grammars)
         self.assertIn(['семьдесят', 'пять', 'тысяч', 'рублей'], values)
 
-class OrganisationTestCase(BaseTestCase):
 
+class OrganisationTestCase(BaseTestCase):
     def test_official_abbr_quoted(self):
         grammar, match = next(self.combinator.extract('ПАО «Газпром»'))
         self.assertEqual(grammar, natasha.Organisation.OfficialAbbrQuoted)
         self.assertEqual(['ПАО', '«', 'Газпром', '»'], [x.value for x in match])
+
+        # TODO Wrong first matching from Geo grammar, maybe it needs separated combinator for each Test Case?
+        grammar, match = list(self.combinator.extract('филиал ОАО «МРСК Юга«'))[1]
+        self.assertEqual(grammar, natasha.Organisation.OfficialAbbrQuoted)
+        self.assertEqual(['филиал', 'ОАО', '«', 'МРСК', 'Юга', '«'], [x.value for x in match])
 
     def test_abbr(self):
         grammar, match = next(self.combinator.extract('МВД'))
@@ -270,8 +274,8 @@ class OrganisationTestCase(BaseTestCase):
         self.assertIn(natasha.Organisation.SimpleLatin, grammars)
         self.assertIn(['агентство', 'Bloomberg'], values)
 
-class EventsTestCase(BaseTestCase):
 
+class EventsTestCase(BaseTestCase):
     def test_object(self):
         grammar, match = next(self.combinator.extract('шоу «Пятая империя»'))
         self.assertEqual(grammar, natasha.Event.Object)
