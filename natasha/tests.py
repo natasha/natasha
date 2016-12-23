@@ -270,6 +270,24 @@ class OrganisationTestCase(BaseTestCase):
         self.assertIn(natasha.Organisation.SimpleLatin, grammars)
         self.assertIn(['агентство', 'Bloomberg'], values)
 
+    def test_education(self):
+        results = list(self.combinator.extract('в стенах Санкт-Петербургского государственного университета'))
+        grammars = (x[0] for x in results)
+        values = ([y.forms[0]['normal_form'] for y in x[1]] for x in results)
+        self.assertIn(natasha.Organisation.Educational, grammars)
+        self.assertEqual(list(values), [['санкт-петербургский', 'государственный', 'университет']])
+
+    def test_social(self):
+        results = list(self.combinator.extract('в стенах общества андрологии и сексуальной медицины, возле министерства любви и цензуры РФ'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Organisation.Social, grammars)
+        self.assertEqual(list(values), [
+            ['общества', 'андрологии', 'и', 'сексуальной', 'медицины'],
+            ['министерства', 'любви', 'и', 'цензуры', 'РФ'],
+        ])
+
+
 class EventsTestCase(BaseTestCase):
 
     def test_object(self):
