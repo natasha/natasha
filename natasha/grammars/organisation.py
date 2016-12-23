@@ -2,6 +2,14 @@
 from __future__ import unicode_literals
 
 from enum import Enum
+from yargy.labels import (
+    gram,
+    gram_not,
+    in_,
+    dictionary,
+    eq,
+    is_capitalized,
+)
 from natasha.grammars import Person
 
 
@@ -11,11 +19,14 @@ ABBR_PREFIX_DICTIONARY = {
     'ПАО',
     'ЗАО',
     'АО',
+    'ГК',
 }
 
 ORG_TYPE_DICTIONARY = {
     'агентство',
     'компания',
+    'организация',
+    'концерн',
 }
 
 class Organisation(Enum):
@@ -23,32 +34,47 @@ class Organisation(Enum):
     OfficialAbbrQuoted = [
         {
             'labels': [
-                ('in', ABBR_PREFIX_DICTIONARY),
+                in_(ABBR_PREFIX_DICTIONARY),
             ],
         },
         {
             'labels': [
-                ('gram', 'QUOTE'),
+                gram('QUOTE'),
             ],
         },
         {
             'labels': [
-                ('gram-not', 'QUOTE'),
+                gram_not('QUOTE'),
             ],
             'repeatable': True,
         },
         {
             'labels': [
-                ('gram', 'QUOTE'),
+                gram('QUOTE'),
             ],
+        },
+    ]
+
+    PrefixAndNoun = [
+        {
+            'labels': [
+                dictionary(ORG_TYPE_DICTIONARY),
+            ],
+        },
+        {
+            'labels': [
+                gram('NOUN'),
+                gram('gent'),
+                is_capitalized(True),
+            ]
         },
     ]
 
     Abbr = [
         {
             'labels': [
-                ('gram', 'Abbr'),
-                ('gram', 'Orgn'),
+                gram('Abbr'),
+                gram('Orgn'),
             ]
         },
     ]
@@ -56,7 +82,7 @@ class Organisation(Enum):
     IndividualEntrepreneur = [
         {
             'labels': [
-                ('eq', 'ИП'),
+                eq('ИП'),
             ],
         },
         Person.Full.value[0],
@@ -67,12 +93,12 @@ class Organisation(Enum):
     SimpleLatin = [
         {
             'labels': [
-                ('dictionary', ORG_TYPE_DICTIONARY),
+                dictionary(ORG_TYPE_DICTIONARY),
             ],
         },
         {
             'labels': [
-                ('gram', 'LATN'),
+                gram('LATN'),
             ],
             'repeatable': True,
         },

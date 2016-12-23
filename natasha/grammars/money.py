@@ -2,6 +2,10 @@
 from __future__ import unicode_literals
 
 from enum import Enum
+from yargy.labels import (
+    gram,
+    dictionary,
+)
 
 
 PREFIX_DICTIONARY = {
@@ -18,22 +22,31 @@ CURRENCY_DICTIONARY = {
 }
 
 PREFIX_GRAMMAR = {'labels': [
-        ('dictionary', PREFIX_DICTIONARY),
+        dictionary(PREFIX_DICTIONARY),
     ]
 }
 
 CURRENCY_GRAMMAR = {'labels': [
-        ('dictionary', CURRENCY_DICTIONARY),
+        dictionary(CURRENCY_DICTIONARY),
     ]
 }
 
-OPTIONAL_PUNCT_GRAMMAR = {'labels': [('gram', 'PUNCT')], 'optional': True}
+OPTIONAL_PUNCT_GRAMMAR = {
+    'labels': [
+        gram('PUNCT'),
+    ],
+    'optional': True,
+}
 
-NUMBER_GRAMMAR = {'labels': [('gram', 'NUMBER')]}
+NUMBER_GRAMMAR = {
+    'labels': [
+        gram('NUMBER'),
+    ],
+}
 
 HAND_WRITTEN_NUMBER_GRAMMAR = {
     'labels': [
-        ('gram', 'NUMR')
+        gram('NUMR')
     ],
     'repeatable': True,
 }

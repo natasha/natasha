@@ -2,6 +2,12 @@
 from __future__ import unicode_literals
 
 from enum import Enum
+from yargy.labels import (
+    gram,
+    dictionary,
+    gte,
+    lte,
+)
 
 
 MONTH_DICTIONARY = {
@@ -44,40 +50,40 @@ TIME_WORD_DICTIONARY = {
 
 DAY_GRAMMAR = {
     'labels': [
-        ('gram', 'INT'),
-        ('gte', 1),
-        ('lte', 31),
+        gram('INT'),
+        gte(1),
+        lte(31),
     ],
 }
 
 MONTH_GRAMMAR = {
     'labels': [
-        ('dictionary', MONTH_DICTIONARY),
+        dictionary(MONTH_DICTIONARY),
     ],
 }
 
 DAY_OF_WEEK_GRAMMAR = {
     'labels': [
-        ('dictionary', DAY_OF_WEEK_DICTIONARY),
+        dictionary(DAY_OF_WEEK_DICTIONARY),
     ],
 }
 
 YEAR_GRAMMAR = {
     'labels': [
-        ('gram', 'NUMBER'),
-        ('gte', 1),
+        gram('NUMBER'),
+        gte(1),
     ],
 }
 
 YEAR_SUFFIX_GRAMMAR = {
     'labels': [
-        ('dictionary', {'год', })
+        dictionary({'год', })
     ],
 }
 
 PARTIAL_DATE_GRAMMAR = {
     'labels': [
-        ('dictionary', PARTIAL_DATE_DICTIONARY),
+        dictionary(PARTIAL_DATE_DICTIONARY),
     ],
 }
 
@@ -93,20 +99,20 @@ class Date(Enum):
         DAY_GRAMMAR,
         {
             'labels': [
-                ('gram', 'PUNCT'),
+                gram('PUNCT'),
             ],
             'optional': True
         },
         {
             'labels': [
-                ('gram', 'INT'),
-                ('gte', 1),
-                ('lte', 12),
+                gram('INT'),
+                gte(1),
+                lte(12),
             ],
         },
         {
             'labels': [
-                ('gram', 'PUNCT'),
+                gram('PUNCT'),
             ],
             'optional': True
         },
@@ -137,7 +143,7 @@ class Date(Enum):
     DayRange = [
         {
             'labels': [
-                ('gram', 'INT-RANGE')
+                gram('INT-RANGE')
             ]
         },
         MONTH_GRAMMAR,
@@ -146,12 +152,12 @@ class Date(Enum):
     YearRange = [
         {
             'labels': [
-                ('gram', 'INT-RANGE')
+                gram('INT-RANGE')
             ]
         },
         {
             'labels': [
-                ('dictionary', {'год', }),
+                dictionary({'год', }),
             ],
         },
     ]

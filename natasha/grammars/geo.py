@@ -2,6 +2,14 @@
 from __future__ import unicode_literals
 
 from enum import Enum
+from yargy.labels import (
+    gram,
+    gram_not,
+    dictionary,
+    is_capitalized,
+    gnc_match,
+    eq,
+)
 
 
 FEDERAL_DISTRICT_DICTIONARY = {
@@ -55,18 +63,18 @@ class Geo(Enum):
     FederalDistrict = [
         {
             'labels': [
-                ('gram', 'ADJF'),
-                ('dictionary', FEDERAL_DISTRICT_DICTIONARY),
+                gram('ADJF'),
+                dictionary(FEDERAL_DISTRICT_DICTIONARY),
             ],
         },
         {
             'labels': [
-                ('dictionary', {'федеральный', }),
+                dictionary({'федеральный', }),
             ],
         },
         {
             'labels': [
-                ('dictionary', {'округ', }),
+                dictionary({'округ', }),
             ],
         },
     ]
@@ -74,13 +82,13 @@ class Geo(Enum):
     FederalDistrictAbbr = [
         {
             'labels': [
-                ('gram', 'ADJF'),
-                ('dictionary', FEDERAL_DISTRICT_DICTIONARY),
+                gram('ADJF'),
+                dictionary(FEDERAL_DISTRICT_DICTIONARY),
             ],
         },
         {
             'labels': [
-                ('eq', 'ФО'),
+                eq('ФО'),
             ],
         },
     ]
@@ -88,13 +96,13 @@ class Geo(Enum):
     Region = [
         {
             'labels': [
-                ('gram', 'ADJF'),
+                gram('ADJF'),
             ],
         },
         {
             'labels': [
-                ('dictionary', REGION_TYPE_DICTIONARY),
-                ('gnc-match', -1),
+                dictionary(REGION_TYPE_DICTIONARY),
+                gnc_match(-1, solve_disambiguation=True),
             ],
         },
     ]
@@ -102,15 +110,15 @@ class Geo(Enum):
     ComplexObject = [
         {
             'labels': [
-                ('gram', 'ADJF'),
-                ('dictionary', COMPLEX_OBJECT_PREFIX_DICTIONARY),
+                gram('ADJF'),
+                dictionary(COMPLEX_OBJECT_PREFIX_DICTIONARY),
             ],
         },
         {
             'labels': [
-                ('gram', 'NOUN'),
-                ('gram', 'Geox'),
-                ('gnc-match', -1),
+                gram('NOUN'),
+                gram('Geox'),
+                gnc_match(-1, solve_disambiguation=True),
             ],
         },
     ]
@@ -118,15 +126,15 @@ class Geo(Enum):
     PartialObject = [
         {
             'labels': [
-                ('gram', 'NOUN'),
-                ('dictionary', PARTIAL_OBJECT_PREFIX_DICTIONARY),
+                gram('NOUN'),
+                dictionary(PARTIAL_OBJECT_PREFIX_DICTIONARY),
             ],
         },
         {
             'labels': [
-                ('gram', 'NOUN'),
-                ('gram', 'Geox'),
-                ('gnc-match', -1),
+                gram('NOUN'),
+                gram('Geox'),
+                gnc_match(-1, solve_disambiguation=True),
             ],
         },
     ]
@@ -134,9 +142,9 @@ class Geo(Enum):
     Object = [
         {
             'labels': [
-                ('is-capitalized', True),
-                ('gram', 'Geox'),
-                ('gram-not', 'Abbr'),
+                is_capitalized(True),
+                gram('Geox'),
+                gram_not('Abbr'),
             ],
         },
     ]

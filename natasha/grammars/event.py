@@ -2,6 +2,11 @@
 from __future__ import unicode_literals
 
 from enum import Enum
+from yargy.labels import (
+    gram,
+    gram_not,
+    dictionary,
+)
 
 EVENT_TYPE_DICTIONARY = {
     'фестиваль',
@@ -13,24 +18,24 @@ class Event(Enum):
     Object = [
         {
             'labels': [
-                ('gram', 'NOUN'),
-                ('dictionary', EVENT_TYPE_DICTIONARY),
+                gram('NOUN'),
+                dictionary(EVENT_TYPE_DICTIONARY),
             ],
         },
         {
             'labels': [
-                ('gram', 'QUOTE'),
+                gram('QUOTE'),
             ],
         },
         {
             'labels': [
-                ('gram-not', 'QUOTE'),
+                gram_not('QUOTE'),
             ],
             'repeatable': True,
         },
         {
             'labels': [
-                ('gram', 'QUOTE'),
+                gram('QUOTE'),
             ],
         },
     ]
