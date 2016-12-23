@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from enum import Enum
 from yargy.labels import (
+    eq,
     gram,
     gram_not,
     gram_in,
@@ -71,6 +72,7 @@ class Person(Enum):
         {
             'labels': [
                 gram('PUNCT'),
+                eq('.'),
             ],
         },
         {
@@ -81,6 +83,7 @@ class Person(Enum):
         {
             'labels': [
                 gram('PUNCT'),
+                eq('.'),
             ],
         },
         {
@@ -151,6 +154,17 @@ class Person(Enum):
                 is_capitalized(True),
             ],
         },
+    ]
+
+    # Иванович
+    Middlename = [
+        {
+            'labels': [
+                gram('Patr'),
+                gram_not('Abbr'),
+                is_capitalized(True),
+            ]
+        }
     ]
 
     # Иван
