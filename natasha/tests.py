@@ -67,6 +67,14 @@ class PersonGrammarsTestCase(BaseTestCase):
         results = list(self.combinator.extract('есть даже марки машин'))
         self.assertEqual(results, [])
 
+    def test_firstname_and_lastname_with_particle(self):
+        results = list(self.combinator.extract('Немецкий канцлер Отто фон Бисмарк'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Person.FirstnameAndLastnameWithParticle, grammars)
+        self.assertIn(['Отто', 'фон', 'Бисмарк'], values)
+
+
 class DateTestCase(BaseTestCase):
 
     def test_full(self):

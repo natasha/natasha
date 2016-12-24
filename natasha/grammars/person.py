@@ -9,8 +9,17 @@ from yargy.labels import (
     gram_in,
     gnc_match,
     is_capitalized,
+    dictionary,
 )
 
+NAME_PARTICLE_DICTIONARY = {
+    'да',
+    'де',
+    'ди',
+    'ван',
+    'фон',
+    'дель',
+}
 
 class Person(Enum):
 
@@ -174,6 +183,23 @@ class Person(Enum):
                 gram('Name'),
                 gram_not('Abbr'),
                 is_capitalized(True),
+            ],
+        },
+    ]
+
+    # Отто фон Бисмарк
+    FirstnameAndLastnameWithParticle = [
+        FullReversed[0],
+        {
+            'labels': [
+                dictionary(NAME_PARTICLE_DICTIONARY),
+            ],
+        },
+        {
+            'labels': [
+                gram('Surn'),
+                gram_not('Abbr'),
+                gnc_match(0, solve_disambiguation=True)
             ],
         },
     ]
