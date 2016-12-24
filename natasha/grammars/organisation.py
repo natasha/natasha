@@ -9,6 +9,7 @@ from yargy.labels import (
     gram_not_in,
     gnc_match,
     in_,
+    is_lower,
     dictionary,
     eq,
     is_capitalized,
@@ -16,58 +17,12 @@ from yargy.labels import (
 from natasha.grammars import Person
 
 
-ABBR_PREFIX_DICTIONARY = {
-    'ООО',
-    'ОАО',
-    'ПАО',
-    'ЗАО',
-    'АО',
-    'ГК',
-}
-
-ORG_TYPE_DICTIONARY = {
-    'агентство',
-    'компания',
-    'организация',
-    'издательство',
-    'газета',
-    'концерн',
-    'фонд',
-}
-
-EDUCATION_TYPE_DICTIONARY = {
-    'обсерватория',
-    'университет',
-    'институт',
-    'политех',
-    'колледж',
-}
-
-SOCIAL_TYPE_DICTIONARY = {
-    'ассамблея',
-    'оргкомитет',
-    'пресс-служба',
-    'подразделение',
-    'комитет',
-    'редакция',
-    'храм',
-    'центр',
-    'союз',
-    'совет',
-    'общество',
-    'объединение',
-    'министерство',
-    'правительство',
-    'руководство',
-    'администрация',
-}
-
 class Organisation(Enum):
 
     OfficialAbbrQuoted = [
         {
             'labels': [
-                in_(ABBR_PREFIX_DICTIONARY),
+                gram('Orgn/Abbr'),
             ],
         },
         {
@@ -91,7 +46,7 @@ class Organisation(Enum):
     PrefixAndNoun = [
         {
             'labels': [
-                dictionary(ORG_TYPE_DICTIONARY),
+                gram('Orgn/Commercial'),
             ],
         },
         {
@@ -109,6 +64,7 @@ class Organisation(Enum):
             'labels': [
                 gram('Abbr'),
                 gram('Orgn'),
+                gram_not('Orgn/Abbr'),
             ]
         },
     ]
@@ -127,12 +83,15 @@ class Organisation(Enum):
     SimpleLatin = [
         {
             'labels': [
-                dictionary(ORG_TYPE_DICTIONARY),
+                gram('Orgn/Commercial'),
             ],
         },
         {
             'labels': [
-                gram('LATN'),
+                gram_any({
+                    'LATN',
+                    'NUMBER',
+                }),
             ],
             'repeatable': True,
         },
@@ -156,7 +115,7 @@ class Organisation(Enum):
         },
         {
             'labels': [
-                dictionary(EDUCATION_TYPE_DICTIONARY),
+                gram('Orgn/Educational'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
         }
@@ -166,7 +125,7 @@ class Organisation(Enum):
     Social = [
         {
             'labels': [
-                dictionary(SOCIAL_TYPE_DICTIONARY),
+                gram('Orgn/Social'),
             ],
         },
         {
@@ -185,7 +144,8 @@ class Organisation(Enum):
                     'Patr',
                     'Surn',
                 }),
-            ]
+                gnc_match(-1, solve_disambiguation=True),
+            ],
         },
         {
             'labels': [
@@ -201,6 +161,23 @@ class Organisation(Enum):
                     'Surn',
                 }),
             ],
+            'optional': True,
             'repeatable': True,
         },
+    ]
+
+    AdjSocial = [
+        {
+            'labels': [
+                gram('ADJF'),
+            ],
+        },
+        {
+            'labels': [
+                gram('Orgn/Social'),
+                is_lower(True),
+                gnc_match(-1, solve_disambiguation=True),
+            ]
+        },
+        Social[-1],
     ]

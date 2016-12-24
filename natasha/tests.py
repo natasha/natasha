@@ -14,7 +14,10 @@ import natasha
 class BaseTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.combinator = natasha.Combinator(natasha.DEFAULT_GRAMMARS)
+        self.combinator = natasha.Combinator(
+            classes=natasha.DEFAULT_GRAMMARS,
+            pipelines=natasha.BUILD_DEFAULT_PIPELINES(),
+        )
 
 class PersonGrammarsTestCase(BaseTestCase):
 
