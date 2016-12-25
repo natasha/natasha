@@ -103,6 +103,11 @@ class Person(Enum):
         },
     ]
 
+    # Раневская Л. А.
+    LastnameAndInitials = [
+        InitialsAndLastname[-1],
+    ] + InitialsAndLastname[:4]
+
     # Иван Иванов
     FisrtnameAndLastname = [
         {

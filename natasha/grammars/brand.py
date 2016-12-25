@@ -17,7 +17,7 @@ class Brand(Enum):
                 is_capitalized(True),
             ],
             'repeatable': True,
-        }
+        },
     ]
 
     Trademark = [

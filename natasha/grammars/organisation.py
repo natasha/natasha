@@ -17,9 +17,16 @@ from yargy.labels import (
 from natasha.grammars import Person
 
 
+
 class Organisation(Enum):
 
     OfficialAbbrQuoted = [
+        {
+            'labels': [
+                gram('Orgn/Commercial'),
+            ],
+            'optional': True,
+        },
         {
             'labels': [
                 gram('Orgn/Abbr'),
@@ -52,10 +59,32 @@ class Organisation(Enum):
         {
             'labels': [
                 gram('NOUN'),
+                gram_not('Orgn/Abbr'),
                 is_capitalized(True),
                 gnc_match(-1, solve_disambiguation=True)
             ],
             'repeatable': True,
+        },
+    ]
+
+    # "Коммерсантъ" сообщил ...
+    NounQuoted = [
+        {
+            'labels': [
+                gram('QUOTE'),
+            ],
+        },
+        {
+            'labels': [
+                gram('NOUN'),
+                is_capitalized(True),
+            ],
+            'repeatable': True,
+        },
+        {
+            'labels': [
+                gram('QUOTE'),
+            ],
         },
     ]
 

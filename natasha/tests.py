@@ -66,6 +66,13 @@ class PersonGrammarsTestCase(BaseTestCase):
         self.assertIn(natasha.Person.InitialsAndLastname, grammars)
         self.assertIn(['Л', '.', 'А', '.', 'Раневской'], values)
 
+    def test_lastname_and_initials(self):
+        results = list(self.combinator.extract('в имении Раневской Л. А.'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Person.LastnameAndInitials, grammars)
+        self.assertIn(['Раневской', 'Л', '.', 'А', '.'], values)
+
     def test_gnc_matching(self):
         results = list(self.combinator.extract('есть даже марки машин'))
         self.assertEqual(results, [])
@@ -261,6 +268,13 @@ class OrganisationTestCase(BaseTestCase):
         grammar, match = next(self.combinator.extract('ПАО «Газпром»'))
         self.assertEqual(grammar, natasha.Organisation.OfficialAbbrQuoted)
         self.assertEqual(['ПАО', '«', 'Газпром', '»'], [x.value for x in match])
+
+        # TODO Wrong first matching from Geo grammar, maybe it needs separated combinator for each Test Case?
+        results = list(self.combinator.extract('филиал ОАО «МРСК Юга»'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Organisation.OfficialAbbrQuoted, grammars)
+        self.assertIn(['филиал', 'ОАО', '«', 'МРСК', 'Юга', '»'], list(values))
 
     def test_abbr(self):
         grammar, match = next(self.combinator.extract('МВД'))

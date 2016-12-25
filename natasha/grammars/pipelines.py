@@ -39,6 +39,8 @@ class CommercialOrganisationPipeline(CustomGrammemesPipeline):
         'представительство',
         'ф-л',
         'фонд',
+        'банк',
+        'биржа',
         'бар',
         'ресторан',
         'клуб',
@@ -71,6 +73,9 @@ class SocialOrganisationPipeline(CustomGrammemesPipeline):
         'администрация',
         'кабинет_министр',
         'правительство',
+        'больница',
+        'госпиталь',
+        'клиника',
     }
     Path = os.path.join(DICTIONARY_DIRECTORY, 'orgn_social.dawg')
 
