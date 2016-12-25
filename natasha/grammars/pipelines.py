@@ -20,6 +20,8 @@ class CommercialOrganisationPipeline(CustomGrammemesPipeline):
         'агентство',
         'компания',
         'организация',
+        'издание',
+        'интернет-издание',
         'издательство',
         'газета',
         'концерн',
