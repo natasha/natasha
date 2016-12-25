@@ -265,16 +265,18 @@ class MoneyTestCase(BaseTestCase):
 class OrganisationTestCase(BaseTestCase):
 
     def test_official_abbr_quoted(self):
-        grammar, match = next(self.combinator.extract('ПАО «Газпром»'))
-        self.assertEqual(grammar, natasha.Organisation.OfficialAbbrQuoted)
-        self.assertEqual(['ПАО', '«', 'Газпром', '»'], [x.value for x in match])
+        results = list(self.combinator.extract('ПАО «Газпром»'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Organisation.OfficialAbbrQuoted, grammars)
+        self.assertIn(['ПАО', '«', 'Газпром', '»'], values)
 
         # TODO Wrong first matching from Geo grammar, maybe it needs separated combinator for each Test Case?
         results = list(self.combinator.extract('филиал ОАО «МРСК Юга»'))
         grammars = (x[0] for x in results)
         values = ([y.value for y in x[1]] for x in results)
         self.assertIn(natasha.Organisation.OfficialAbbrQuoted, grammars)
-        self.assertIn(['филиал', 'ОАО', '«', 'МРСК', 'Юга', '»'], list(values))
+        self.assertIn(['филиал', 'ОАО', '«', 'МРСК', 'Юга', '»'], values)
 
     def test_abbr(self):
         grammar, match = next(self.combinator.extract('МВД'))
