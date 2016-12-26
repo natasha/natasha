@@ -1,4 +1,4 @@
-from yargy import Parser, Combinator
+from yargy import Combinator as DefaultCombinator
 
 from natasha.grammars import (
     Person,
@@ -35,7 +35,19 @@ DEFAULT_PIPELINES = [
     AbbreviationalOrganisationPipeline,
 ]
 
-def BUILD_DEFAULT_PIPELINES():
-    return [
-        pipeline() for pipeline in DEFAULT_PIPELINES
-    ]
+
+class Combinator(DefaultCombinator):
+
+    '''
+    Modified version of yargy.Combinator with applied default pipelines
+    '''
+
+    def __init__(self, classes, pipelines=None, *args, **kwargs):
+        if pipelines is None:
+            pipelines = self.build_default_pipelines()
+        return super(Combinator, self).__init__(classes, pipelines=pipelines, *args, **kwargs)
+
+    def build_default_pipelines(self):
+        return [
+            pipeline() for pipeline in DEFAULT_PIPELINES
+        ]
