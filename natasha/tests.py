@@ -165,6 +165,45 @@ class DateTestCase(BaseTestCase):
         self.assertIn(natasha.Date.YearRange, grammars)
         self.assertIn([range(18, 20), 'лет'], values)
 
+    def test_month_with_offset(self):
+        results = list(self.combinator.extract('в прошлом январе'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Date.MonthWithOffset, grammars)
+        self.assertIn(['прошлом', 'январе'], values)
+
+        results = list(self.combinator.extract('в следующая январь'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertNotIn(natasha.Date.MonthWithOffset, grammars)
+        self.assertNotIn(['следующая', 'январе'], values)
+
+    def test_day_of_week_with_offset(self):
+        results = list(self.combinator.extract('в прошлую пятницу'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Date.DayOfWeekWithOffset, grammars)
+        self.assertIn(['прошлую', 'пятницу'], values)
+
+        results = list(self.combinator.extract('в следующая понедельник'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertNotIn(natasha.Date.DayOfWeekWithOffset, grammars)
+        self.assertNotIn(['следующая', 'понедельник'], values)
+
+    def test_current_month_with_offset(self):
+        results = list(self.combinator.extract('в следующем месяце'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Date.CurrentMonthWithOffset, grammars)
+        self.assertIn(['следующем', 'месяце'], values)
+
+        results = list(self.combinator.extract('в прошлых месяц'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertNotIn(natasha.Date.CurrentMonthWithOffset, grammars)
+        self.assertNotIn(['прошлых', 'месяц'], values)
+
 class GeoTestCase(BaseTestCase):
 
     def test_federal_district(self):

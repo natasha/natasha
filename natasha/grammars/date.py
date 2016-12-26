@@ -7,6 +7,7 @@ from yargy.labels import (
     dictionary,
     gte,
     lte,
+    gnc_match,
 )
 
 
@@ -48,6 +49,17 @@ TIME_WORD_DICTIONARY = {
     'ночь',
 }
 
+DATE_OFFSET_PREFIX_DICTIONARY = {
+    'следующий',
+    'прошлый',
+}
+
+DATE_OFFSET_PREFIX_GRAMMAR = {
+    'labels': [
+        dictionary(DATE_OFFSET_PREFIX_DICTIONARY),
+    ],
+}
+
 DAY_GRAMMAR = {
     'labels': [
         gram('INT'),
@@ -62,10 +74,24 @@ MONTH_GRAMMAR = {
     ],
 }
 
+MONTH_WITH_GNC_MATCHING_GRAMMAR = {
+    'labels': [
+        dictionary(MONTH_DICTIONARY),
+        gnc_match(-1, solve_disambiguation=True),
+    ]
+}
+
 DAY_OF_WEEK_GRAMMAR = {
     'labels': [
         dictionary(DAY_OF_WEEK_DICTIONARY),
     ],
+}
+
+DAY_OF_WEEK_WITH_GNC_MATCHING_GRAMMAR = {
+    'labels': [
+        dictionary(DAY_OF_WEEK_DICTIONARY),
+        gnc_match(-1, solve_disambiguation=True),
+    ]
 }
 
 YEAR_GRAMMAR = {
@@ -168,4 +194,26 @@ class Date(Enum):
 
     DayOfWeek = [
         DAY_OF_WEEK_GRAMMAR,
+    ]
+
+    MonthWithOffset = [
+        DATE_OFFSET_PREFIX_GRAMMAR,
+        MONTH_WITH_GNC_MATCHING_GRAMMAR,
+    ]
+
+    DayOfWeekWithOffset = [
+        DATE_OFFSET_PREFIX_GRAMMAR,
+        DAY_OF_WEEK_WITH_GNC_MATCHING_GRAMMAR,
+    ]
+
+    CurrentMonthWithOffset = [
+        DATE_OFFSET_PREFIX_GRAMMAR,
+        {
+            'labels': [
+                dictionary({
+                    'месяц',
+                }),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+        }
     ]
