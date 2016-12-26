@@ -1,29 +1,9 @@
 from setuptools import (
-    Command,
     setup,
     find_packages,
 )
-from natasha import (
-    __version__,
-    BUILD_DEFAULT_PIPELINES,
-)
-
-
-class BuildDictionariesCommand(Command):
-
-    user_options = []
-
-    def initialize_options(self):
-        self.pipelines = BUILD_DEFAULT_PIPELINES()
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        print('=> Building pipeline dictionaries ...')
-        for pipeline in self.pipelines:
-            print('Building', pipeline.__class__.__name__, '...')
-            pipeline.build()
+from natasha import __version__
+from natasha.commands import BuildDictionariesCommand
 
 
 setup(
