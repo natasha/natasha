@@ -80,7 +80,7 @@ class PersonGrammarsTestCase(BaseTestCase):
         results = list(self.combinator.extract('Немецкий канцлер Отто фон Бисмарк'))
         grammars = (x[0] for x in results)
         values = ([y.value for y in x[1]] for x in results)
-        self.assertIn(natasha.Person.FirstnameAndLastnameWithParticle, grammars)
+        self.assertIn(natasha.Person.FirstnameAndLastnameWithNobilityParticle, grammars)
         self.assertIn(['Отто', 'фон', 'Бисмарк'], values)
 
 
