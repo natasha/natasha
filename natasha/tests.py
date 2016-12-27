@@ -306,15 +306,21 @@ class OrganisationTestCase(BaseTestCase):
         results = list(self.combinator.extract('ПАО «Газпром»'))
         grammars = (x[0] for x in results)
         values = ([y.value for y in x[1]] for x in results)
-        self.assertIn(natasha.Organisation.OfficialAbbrQuoted, grammars)
+        self.assertIn(natasha.Organisation.OfficialQuoted, grammars)
         self.assertIn(['ПАО', '«', 'Газпром', '»'], values)
 
         # TODO Wrong first matching from Geo grammar, maybe it needs separated combinator for each Test Case?
         results = list(self.combinator.extract('филиал ОАО «МРСК Юга»'))
         grammars = (x[0] for x in results)
         values = ([y.value for y in x[1]] for x in results)
-        self.assertIn(natasha.Organisation.OfficialAbbrQuoted, grammars)
+        self.assertIn(natasha.Organisation.OfficialQuoted, grammars)
         self.assertIn(['филиал', 'ОАО', '«', 'МРСК', 'Юга', '»'], values)
+
+        results = list(self.combinator.extract('АО ХК "Якутуголь"'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Organisation.OfficialQuoted, grammars)
+        self.assertIn(['АО', 'ХК', '"', 'Якутуголь', '"'], values)
 
     def test_abbr(self):
         grammar, match = next(self.combinator.extract('МВД'))
@@ -334,6 +340,13 @@ class OrganisationTestCase(BaseTestCase):
         values = ([y.value for y in x[1]] for x in results)
         self.assertIn(natasha.Organisation.SimpleLatin, grammars)
         self.assertIn(['агентство', 'Bloomberg'], values)
+
+    def test_multiword_commercial(self):
+        results = list(self.combinator.extract('производственное объединение «Алмаз-Антей»'))
+        grammars = (x[0] for x in results)
+        values = ([y.forms[0]['normal_form'] for y in x[1]] for x in results)
+        self.assertIn(natasha.Organisation.OfficialQuoted, grammars)
+        self.assertIn(['производственный_объединение', '«', 'алмаз-антей', '»'], values)
 
     def test_education(self):
         results = list(self.combinator.extract('в стенах Санкт-Петербургского государственного университета'))

@@ -13,24 +13,40 @@ from yargy.labels import (
     dictionary,
     eq,
     is_capitalized,
+    and_,
+    or_,
+    label,
+    string_required
 )
 from natasha.grammars import Person
 
 
+@label
+@string_required
+def is_abbr(case, token, value):
+    '''
+    Returns true if token contains only uppercased letters
+    '''
+    return token.value.isupper() == case
+
 
 class Organisation(Enum):
 
-    OfficialAbbrQuoted = [
+    OfficialQuoted = [
         {
             'labels': [
-                gram('Orgn/Commercial'),
+                or_((
+                    gram('Orgn/Commercial'),
+                    gram('Orgn/Abbr'),
+                )),
             ],
-            'optional': True,
         },
         {
             'labels': [
-                gram('Orgn/Abbr'),
+                is_abbr(True),
             ],
+            'optional': True,
+            'repeatable': True,
         },
         {
             'labels': [
@@ -53,7 +69,13 @@ class Organisation(Enum):
     PrefixAndNoun = [
         {
             'labels': [
-                gram('Orgn/Commercial'),
+                and_((
+                    gram('Orgn/Commercial'),
+                    or_((
+                        gram('sing'),
+                        gram('Sgtm'),
+                    ))
+                )),
             ],
         },
         {
@@ -160,7 +182,6 @@ class Organisation(Enum):
         {
             'labels': [
                 gram_not_in({
-                    'CONJ',
                     'PREP',
                 }),
                 gram_any({
@@ -178,6 +199,9 @@ class Organisation(Enum):
         },
         {
             'labels': [
+                gram_not_in({
+                    'PREP',
+                }),
                 gram_any({
                     'datv',
                     'gent',
