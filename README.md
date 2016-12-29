@@ -1,7 +1,7 @@
 # Natasha [![Build Status](https://travis-ci.org/bureaucratic-labs/natasha.svg?branch=master)](https://travis-ci.org/bureaucratic-labs/natasha) [![Documentation Status](https://readthedocs.org/projects/natasha/badge/?version=latest)](http://natasha.readthedocs.io/ru/latest/?badge=latest)
 
 
-![](http://i.imgur.com/jQtaSTV.png)
+![](http://i.imgur.com/XeXzS32.png)
 
 Наташа извлекает именованные сущности из текста на русском языке.
 
