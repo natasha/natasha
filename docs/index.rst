@@ -10,6 +10,7 @@ Welcome to Natasha's documentation!
    :maxdepth: 2
    :caption: Содержание:
 
+   grammars
    gazetteer
 
 Зачем?
