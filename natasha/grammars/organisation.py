@@ -89,27 +89,6 @@ class Organisation(Enum):
         },
     ]
 
-    # "Коммерсантъ" сообщил ...
-    NounQuoted = [
-        {
-            'labels': [
-                gram('QUOTE'),
-            ],
-        },
-        {
-            'labels': [
-                gram('NOUN'),
-                is_capitalized(True),
-            ],
-            'repeatable': True,
-        },
-        {
-            'labels': [
-                gram('QUOTE'),
-            ],
-        },
-    ]
-
     Abbr = [
         {
             'labels': [
@@ -233,4 +212,27 @@ class Organisation(Enum):
             ]
         },
         Social[-1],
+    ]
+
+class ProbabilisticOrganisation(Enum):
+
+    # "Коммерсантъ" сообщил ...
+    NounQuoted = [
+        {
+            'labels': [
+                gram('QUOTE'),
+            ],
+        },
+        {
+            'labels': [
+                gram('NOUN'),
+                is_capitalized(True),
+            ],
+            'repeatable': True,
+        },
+        {
+            'labels': [
+                gram('QUOTE'),
+            ],
+        },
     ]
