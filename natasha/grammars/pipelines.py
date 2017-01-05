@@ -165,3 +165,5 @@ class PersonPositionPipeline(CustomGrammemesPipeline):
         'представитель',
         'директор',
     }
+
+    Path = os.path.join(DICTIONARY_DIRECTORY, 'person_position.dawg')
