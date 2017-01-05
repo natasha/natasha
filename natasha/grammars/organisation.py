@@ -225,7 +225,6 @@ class ProbabilisticOrganisation(Enum):
         },
         {
             'labels': [
-                gram('NOUN'),
                 is_capitalized(True),
             ],
             'repeatable': True,

@@ -14,6 +14,7 @@ from natasha.grammars.pipelines import (
     SocialOrganisationPipeline,
     EducationalOrganisationPipeline,
     AbbreviationalOrganisationPipeline,
+    PersonPositionPipeline,
 )
 
 __version__ = '0.4.1'
@@ -33,6 +34,7 @@ DEFAULT_PIPELINES = [
     SocialOrganisationPipeline,
     EducationalOrganisationPipeline,
     AbbreviationalOrganisationPipeline,
+    PersonPositionPipeline,
 ]
 
 

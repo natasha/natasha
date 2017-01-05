@@ -6,12 +6,15 @@ from yargy.labels import (
     eq,
     gram,
     gram_not,
+    gram_not_in,
+    gram_any,
     gram_in,
     gnc_match,
     is_capitalized,
     dictionary,
     is_upper,
-    gram_any,
+    and_,
+    or_,
 )
 
 NAME_NOBILITY_PARTICLE_DICTIONARY = {
@@ -223,6 +226,52 @@ class Person(Enum):
         },
     ]
 
+    # Премьер-министр РФ Дмитрий Медведев
+    WithPosition = [
+        {
+            'labels': [
+                gram('Person/Position'),
+            ],
+        },
+        {
+            'labels': [
+                or_((
+                    and_((
+                        or_((
+                            gram_any({
+                                'ablt',
+                                'loct',
+                                'gent',
+                            }),
+                            gram('Fixd'),
+                        )),
+                        gram_not_in({
+                            'Name',
+                            'Patr',
+                            'Surn',
+                        }),
+                    )),
+                    gram({
+                        'Abbr',
+                    }),
+                )),
+            ],
+            'optional': True,
+            'repeatable': True,
+        },
+        {
+            'labels': [
+                gram_any({
+                    'Name',
+                    'Patr',
+                    'Surn',
+                }),
+                gnc_match(0, solve_disambiguation=True),
+            ],
+            'repeatable': True,
+        }
+    ]
+
 
 POSSIBLE_PART_OF_NAME_GRAMMAR = {
     'labels': [
@@ -289,3 +338,6 @@ class ProbabilisticPerson(Enum):
         },
         POSSIBLE_PART_OF_NAME_GRAMMAR,
     ]
+
+    FullWithPosition = Person.WithPosition.value[:-1] + Full
+    FisrtnameAndLastnameWithPosition = Person.WithPosition.value[:-1] + FirstnameAndLastname

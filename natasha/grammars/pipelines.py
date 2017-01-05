@@ -67,6 +67,8 @@ class SocialOrganisationPipeline(CustomGrammemesPipeline):
         'союз',
         'совет',
         'служба',
+        'театр',
+        'музей',
         'общество',
         'объединение',
         'министерство',
@@ -120,3 +122,46 @@ class AbbreviationalOrganisationPipeline(CustomGrammemesPipeline):
         'нпо',
     }
     Path = os.path.join(DICTIONARY_DIRECTORY, 'orgn_abbr.dawg')
+
+class PersonPositionPipeline(CustomGrammemesPipeline):
+
+    Grammemes = {
+        'Person/Position',
+    }
+    Dictionary = {
+        'святой',
+
+        'царь',
+        'король',
+        'царица',
+        'император',
+        'инператрица',
+        'князь',
+        'княгиня',
+        'президент',
+        'премьер-министр',
+        'министр',
+        'замминистр',
+        'замиститель_министр',
+        'глава',
+
+        'актер',
+        'актриса',
+        'артист',
+        'певец',
+        'певица',
+        'исполнитель',
+        'солист',
+        'режиссер',
+        'сценарист',
+        'писатель',
+        'музыкант',
+        'композитор',
+        'корреспондент',
+        'журналист',
+
+        'судья',
+        'юрист',
+        'представитель',
+        'директор',
+    }

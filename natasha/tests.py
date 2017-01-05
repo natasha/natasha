@@ -83,6 +83,24 @@ class PersonGrammarsTestCase(BaseTestCase):
         self.assertIn(natasha.Person.FirstnameAndLastnameWithNobilityParticle, grammars)
         self.assertIn(['Отто', 'фон', 'Бисмарк'], values)
 
+    def test_person_name_with_position(self):
+        results = list(self.combinator.extract('князь Владимир'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Person.WithPosition, grammars)
+        self.assertIn(['князь', 'Владимир'], values)
+
+        results = list(self.combinator.extract('президента РФ Владимира Путина'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Person.WithPosition, grammars)
+        self.assertIn(['президента', 'РФ', 'Владимира', 'Путина'], values)
+
+        results = list(self.combinator.extract('исполнителя главной роли сергея шувалова'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Person.WithPosition, grammars)
+        self.assertIn(['исполнителя', 'главной', 'роли', 'сергея', 'шувалова'], values)
 
 class DateTestCase(BaseTestCase):
 
