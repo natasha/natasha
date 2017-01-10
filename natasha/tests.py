@@ -10,6 +10,8 @@ import sys
 import unittest
 import natasha
 
+from yargy.normalization import get_normalized_text
+
 
 class BaseTestCase(unittest.TestCase):
 
@@ -101,6 +103,13 @@ class PersonGrammarsTestCase(BaseTestCase):
         values = ([y.value for y in x[1]] for x in results)
         self.assertIn(natasha.Person.WithPosition, grammars)
         self.assertIn(['исполнителя', 'главной', 'роли', 'сергея', 'шувалова'], values)
+
+    def test_person_name_with_position_normalization(self):
+        results = self.combinator.extract('исполнителя главной роли сергея шувалова')
+        for grammar, tokens in results:
+            if grammar == natasha.Person.WithPosition:
+                normalized = get_normalized_text(tokens)
+                self.assertEqual(normalized, 'исполнитель главной роли сергей шувалов')
 
 class DateTestCase(BaseTestCase):
 

@@ -18,6 +18,7 @@ from yargy.labels import (
     label,
     string_required
 )
+from yargy.normalization import NormalizationType
 from natasha.grammars import Person
 
 
@@ -157,11 +158,13 @@ class Organisation(Enum):
             'labels': [
                 gram('Orgn/Social'),
             ],
+            'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
                 gram_not_in({
                     'PREP',
+                    'CONJ',
                 }),
                 gram_any({
                     'datv',
@@ -175,18 +178,22 @@ class Organisation(Enum):
                 }),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Original,
         },
         {
             'labels': [
-                gram_not_in({
-                    'PREP',
-                }),
-                gram_any({
-                    'datv',
-                    'gent',
-                    'ablt',
-                    'Orgn',
-                }),
+                or_((
+                    gram_any({
+                        'datv',
+                        'gent',
+                        'ablt',
+                        'Orgn',
+                    }),
+                    gram_any({
+                        'PREP',
+                        'CONJ',
+                    }),
+                )),
                 gram_not_in({
                     'Name',
                     'Patr',
@@ -195,6 +202,7 @@ class Organisation(Enum):
             ],
             'optional': True,
             'repeatable': True,
+            'normalization': NormalizationType.Original,
         },
     ]
 
@@ -202,7 +210,16 @@ class Organisation(Enum):
         {
             'labels': [
                 gram('ADJF'),
+                is_capitalized(True),
             ],
+        },
+        {
+            'labels': [
+                gram('ADJF'),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'optional': True,
+            'repeatable': True,
         },
         {
             'labels': [

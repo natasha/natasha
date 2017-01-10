@@ -16,6 +16,8 @@ from yargy.labels import (
     and_,
     or_,
 )
+from yargy.normalization import NormalizationType
+
 
 NAME_NOBILITY_PARTICLE_DICTIONARY = {
     'да',
@@ -181,6 +183,10 @@ class Person(Enum):
         {
             'labels': [
                 gram('Surn'),
+                gram_any({
+                    'sing',
+                    'Stgm',
+                }),
                 gram_not('Abbr'),
                 is_capitalized(True),
             ],
@@ -192,6 +198,10 @@ class Person(Enum):
         {
             'labels': [
                 gram('Patr'),
+                gram_any({
+                    'sing',
+                    'Stgm',
+                }),
                 gram_not('Abbr'),
                 is_capitalized(True),
             ]
@@ -203,6 +213,10 @@ class Person(Enum):
         {
             'labels': [
                 gram('Name'),
+                gram_any({
+                    'sing',
+                    'Stgm',
+                }),
                 gram_not('Abbr'),
                 is_capitalized(True),
             ],
@@ -258,6 +272,7 @@ class Person(Enum):
             ],
             'optional': True,
             'repeatable': True,
+            'normalization': NormalizationType.Original,
         },
         {
             'labels': [
@@ -266,9 +281,11 @@ class Person(Enum):
                     'Patr',
                     'Surn',
                 }),
+                gram('sing'),
                 gnc_match(0, solve_disambiguation=True),
             ],
             'repeatable': True,
+            'normalization': NormalizationType.Inflected,
         }
     ]
 
