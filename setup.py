@@ -2,13 +2,12 @@ from setuptools import (
     setup,
     find_packages,
 )
-from natasha import __version__
 from natasha.commands import BuildDictionariesCommand
 
 
 setup(
     name='natasha',
-    version=__version__,
+    version='0.4.1',
     description='Named-entity recognition for russian language',
     url='https://github.com/bureaucratic-labs/natasha',
     author='Dmitry Veselov',
