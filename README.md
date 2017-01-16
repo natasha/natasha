@@ -64,7 +64,7 @@ for grammar, tokens in combinator.extract(text):
     print("Токены:", tokens)
 ```
 
-Иногда бывает так: некоторые словосочитания попадают под несколько грамматик, например, в предложении `иван иванович иванов меняет...` `natasha` найдет четыре результата - `Person.Full`, `Person.Firstname`, `Person.Middlename`, `Person.Lastname`.
+Иногда бывает так: некоторые словосочетания попадают под несколько грамматик, например, в предложении `иван иванович иванов меняет...` `natasha` найдет четыре результата - `Person.Full`, `Person.Firstname`, `Person.Middlename`, `Person.Lastname`.
 Если необходимо получить только один результат, можно использовать метод `resolve_matches`, который вернет правило, включившее в себя наибольшее количество слов, т.е. в данном случае - `Person.Full`:
 
 ```python
@@ -80,6 +80,28 @@ matches = combinator.extract(text)
 for grammar, tokens in combinator.resolve_matches(matches):
    print(grammar, tokens)
 
+```
+
+Также метод `resolve_matches` принимает дополнительный именной аргумент - `strict`, который определяет разрешение совпадений по классу грамматики, например:
+
+```python
+from natasha import Combinator
+from natasha.grammars import Person, Organisation
+
+
+text = 'представитель администрации президента россии федор смирнов'
+
+combinator = Combinator([
+    Person,
+    Organisation,
+])
+matches = combinator.resolve_matches(combinator.extract(text), strict=False)
+matches = ((grammar, [t.value for t in tokens]) for (grammar, tokens) in matches)
+
+assert list(matches) == [
+    (Person.WithPosition, ['представитель', 'администрации', 'президента', 'россии', 'федор', 'смирнов']),
+    (Organisation.Social, ['администрации', 'президента', 'россии']),
+]
 ```
 
 # Лицензия
