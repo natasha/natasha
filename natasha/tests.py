@@ -7,6 +7,7 @@ except NameError:
     range = range
 
 import sys
+import platform
 import unittest
 import natasha
 
@@ -188,7 +189,8 @@ class DateTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Date.DayOfWeek)
         self.assertEqual(match[0].value, 'пятницу')
 
-    @unittest.skipIf(sys.version_info.major < 3, 'python 2 and pypy creates different objects for same xrange calls')
+    @unittest.skipIf(sys.version_info.major < 3, 'python 2 creates different objects for same xrange calls')
+    @unittest.skipIf(platform.python_implementation() == 'PyPy', 'pypy & pypy3 have same semantics for range objects')
     def test_day_range(self):
         results = list(self.combinator.extract('18-19 ноября'))
         grammars = (x[0] for x in results)
@@ -196,7 +198,8 @@ class DateTestCase(BaseTestCase):
         self.assertIn(natasha.Date.DayRange, grammars)
         self.assertIn([range(18, 19), 'ноября'], values)
 
-    @unittest.skipIf(sys.version_info.major < 3, 'python 2 and pypy creates different objects for same xrange calls')
+    @unittest.skipIf(sys.version_info.major < 3, 'python 2 creates different objects for same xrange calls')
+    @unittest.skipIf(platform.python_implementation() == 'PyPy', 'pypy & pypy3 have same semantics for range objects')
     def test_year_range(self):
         results = list(self.combinator.extract('18-20 лет'))
         grammars = (x[0] for x in results)
