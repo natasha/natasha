@@ -39,6 +39,7 @@ class Person(Enum):
                 gram('Surn'),
                 gram_not('Abbr'),
             ],
+            'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
@@ -46,6 +47,7 @@ class Person(Enum):
                 gram_not('Abbr'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
@@ -53,6 +55,7 @@ class Person(Enum):
                 gram_not('Abbr'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Inflected,
         },
     ]
 
@@ -63,6 +66,7 @@ class Person(Enum):
                 gram('Name'),
                 gram_not('Abbr'),
             ],
+            'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
@@ -70,6 +74,7 @@ class Person(Enum):
                 gram_not('Abbr'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
@@ -77,6 +82,7 @@ class Person(Enum):
                 gram_not('Abbr'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Inflected,
         },
     ]
 
@@ -109,6 +115,7 @@ class Person(Enum):
                 gram('Surn'),
                 gram_not('Abbr'),
             ],
+            'normalization': NormalizationType.Inflected,
         },
     ]
 
@@ -123,12 +130,12 @@ class Person(Enum):
     ] + InitialsAndLastname[:2]
 
     # Л. Раневская
-    FistnameAsInitialsAndLastname = InitialsAndLastname[:2] + [
+    FirstnameAsInitialsAndLastname = InitialsAndLastname[:2] + [
         InitialsAndLastname[-1],
     ]
 
     # Иван Иванов
-    FisrtnameAndLastname = [
+    FirstnameAndLastname = [
         {
             'labels': [
                 gram('Name'),
@@ -141,6 +148,7 @@ class Person(Enum):
                 gram_not('Abbr'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Inflected,
         },
     ]
 
@@ -151,6 +159,7 @@ class Person(Enum):
                 gram('Surn'),
                 gram_not('Abbr'),
             ],
+            'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
@@ -158,6 +167,7 @@ class Person(Enum):
                 gram_not('Abbr'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Inflected,
         },
     ]
 
@@ -168,6 +178,7 @@ class Person(Enum):
                 gram('Name'),
                 gram_not('Abbr'),
             ],
+            'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
@@ -175,6 +186,7 @@ class Person(Enum):
                 gram_not('Abbr'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Inflected,
         },
     ]
 
@@ -190,6 +202,7 @@ class Person(Enum):
                 gram_not('Abbr'),
                 is_capitalized(True),
             ],
+            'normalization': NormalizationType.Inflected,
         },
     ]
 
@@ -204,7 +217,8 @@ class Person(Enum):
                 }),
                 gram_not('Abbr'),
                 is_capitalized(True),
-            ]
+            ],
+            'normalization': NormalizationType.Inflected,
         }
     ]
 
@@ -220,6 +234,7 @@ class Person(Enum):
                 gram_not('Abbr'),
                 is_capitalized(True),
             ],
+            'normalization': NormalizationType.Inflected,
         },
     ]
 
@@ -237,6 +252,7 @@ class Person(Enum):
                 gram_not('Abbr'),
                 gnc_match(0, solve_disambiguation=True)
             ],
+            'normalization': NormalizationType.Inflected,
         },
     ]
 
@@ -265,9 +281,8 @@ class Person(Enum):
                             'Surn',
                         }),
                     )),
-                    gram({
-                        'Abbr',
-                    }),
+                    gram('Abbr'),
+                    gram('LATN'),
                 )),
             ],
             'optional': True,
@@ -289,13 +304,56 @@ class Person(Enum):
         }
     ]
 
+    # граф де Кристо
+    PositionAndNobilitySurname = [
+        {
+            'labels': [
+                gram('Person/Position'),
+            ],
+        },
+        {
+            'labels': [
+                dictionary(NAME_NOBILITY_PARTICLE_DICTIONARY),
+            ],
+        },
+        {
+            'labels': [
+                gram('Surn'),
+                gnc_match(0, solve_disambiguation=True),
+            ]
+        }
+    ]
+
+    # Генрих Восьмой / Карл XII
+    NameWithNumericPart = [
+        {
+            'labels': [
+                gram_in({
+                    'Name',
+                    'sing',
+                }),
+                gram_not('Abbr'),
+            ],
+        },
+        {
+            'labels': [
+                or_((
+                    and_((
+                        gram_in({
+                            'ADJF',
+                            'Anum',
+                        }),
+                        gnc_match(-1, solve_disambiguation=True)
+                    )),
+                    gram('ROMN'),
+                ))
+            ]
+        }
+    ]
+
 
 POSSIBLE_PART_OF_NAME_GRAMMAR = {
     'labels': [
-        gram('NOUN'),
-        gram_any({'masc', 'femn'}),
-        gram_not('inan'),
-        gram_not('Abbr'),
         is_upper(False),
         is_capitalized(True),
     ]
@@ -306,6 +364,8 @@ POSSIBLE_PART_OF_NAME_WITH_GNC_MATCH_GRAMMAR = {
         gram('NOUN'),
         gram_any({'masc', 'femn'}),
         gram_not('Abbr'),
+        gram_not('Orgn'),
+        gram_not('Geox'),
         is_capitalized(True),
         gnc_match(-1, solve_disambiguation=True),
     ]
@@ -357,4 +417,4 @@ class ProbabilisticPerson(Enum):
     ]
 
     FullWithPosition = Person.WithPosition.value[:-1] + Full
-    FisrtnameAndLastnameWithPosition = Person.WithPosition.value[:-1] + FirstnameAndLastname
+    FirstnameAndLastnameWithPosition = Person.WithPosition.value[:-1] + FirstnameAndLastname

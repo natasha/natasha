@@ -40,7 +40,7 @@ class PersonGrammarsTestCase(BaseTestCase):
         results = list(self.combinator.extract('Анна Шерер'))
         grammars = (x[0] for x in results)
         values = ([y.value for y in x[1]] for x in results)
-        self.assertIn(natasha.Person.FisrtnameAndLastname, grammars)
+        self.assertIn(natasha.Person.FirstnameAndLastname, grammars)
         self.assertIn(['Анна', 'Шерер'], values)
 
     def test_lastname_and_firstname(self):
@@ -103,6 +103,18 @@ class PersonGrammarsTestCase(BaseTestCase):
         values = ([y.value for y in x[1]] for x in results)
         self.assertIn(natasha.Person.WithPosition, grammars)
         self.assertIn(['исполнителя', 'главной', 'роли', 'сергея', 'шувалова'], values)
+
+        results = list(self.combinator.extract('губернатор Камчатки Владимир Илюхин'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Person.WithPosition, grammars)
+        self.assertIn(['губернатор', 'Камчатки', 'Владимир', 'Илюхин'], values)
+
+        results = list(self.combinator.extract('основатель и генеральный директор хостинг-провайдера Timeweb Александр Бойков'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Person.WithPosition, grammars)
+        self.assertIn(['директор', 'хостинг-провайдера', 'Timeweb', 'Александр', 'Бойков'], values)
 
     def test_person_name_with_position_normalization(self):
         results = self.combinator.extract('исполнителя главной роли сергея шувалова')
@@ -321,6 +333,11 @@ class MoneyTestCase(BaseTestCase):
         values = ([y.value for y in x[1]] for x in results)
         self.assertIn(natasha.Money.HandwrittenNumberWithPrefix, grammars)
         self.assertIn(['два', 'миллиона', 'долларов'], values)
+        results = list(self.combinator.extract('одиннадцать миллиардов долларов'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Money.HandwrittenNumberWithPrefix, grammars)
+        self.assertIn(['одиннадцать', 'миллиардов', 'долларов'], values)
         results = list(self.combinator.extract('семьдесят пять тысяч рублей'))
         grammars = (x[0] for x in results)
         values = ([y.value for y in x[1]] for x in results)
@@ -348,6 +365,13 @@ class OrganisationTestCase(BaseTestCase):
         values = ([y.value for y in x[1]] for x in results)
         self.assertIn(natasha.Organisation.OfficialQuoted, grammars)
         self.assertIn(['АО', 'ХК', '"', 'Якутуголь', '"'], values)
+
+        # invalid quotes test case
+        results = list(self.combinator.extract('компании».\nОб этом документе слухи в американской пресс"'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertNotIn(natasha.Organisation.OfficialQuoted, grammars)
+        self.assertEqual(list(values), [])
 
     def test_abbr(self):
         grammar, match = next(self.combinator.extract('МВД'))
@@ -384,14 +408,27 @@ class OrganisationTestCase(BaseTestCase):
 
     def test_social(self):
         results = list(self.combinator.extract('в стенах общества андрологии и сексуальной медицины, возле министерства любви и цензуры РФ'))
-        grammars = (x[0] for x in results)
+        grammars = list(x[0] for x in results)
         values = ([y.value for y in x[1]] for x in results)
         self.assertIn(natasha.Organisation.Social, grammars)
+        self.assertIn(natasha.Geo.Object, grammars)
         self.assertEqual(list(values), [
             ['общества', 'андрологии', 'и', 'сексуальной', 'медицины'],
+            ['РФ'],
             ['министерства', 'любви', 'и', 'цензуры', 'РФ'],
         ])
 
+        results = list(self.combinator.extract('распоряжения правительства РФ'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Organisation.Social, grammars)
+        self.assertEqual(list(values), [['РФ'], ['правительства', 'РФ']])
+
+        results = list(self.combinator.extract('министерством экономического развития РФ'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Organisation.Social, grammars)
+        self.assertEqual(list(values), [['РФ'], ['министерством', 'экономического', 'развития', 'РФ']])
 
 class EventsTestCase(BaseTestCase):
 

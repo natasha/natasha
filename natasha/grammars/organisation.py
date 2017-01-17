@@ -12,11 +12,12 @@ from yargy.labels import (
     is_lower,
     dictionary,
     eq,
+    not_eq,
     is_capitalized,
     and_,
     or_,
     label,
-    string_required
+    string_required,
 )
 from yargy.normalization import NormalizationType
 from natasha.grammars import Person
@@ -57,6 +58,8 @@ class Organisation(Enum):
         {
             'labels': [
                 gram_not('QUOTE'),
+                gram_not_in('END-OF-LINE'),
+                not_eq('.'),
             ],
             'repeatable': True,
         },
@@ -135,6 +138,7 @@ class Organisation(Enum):
                 gram('ADJF'),
                 is_capitalized(True),
             ],
+            'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
@@ -143,10 +147,12 @@ class Organisation(Enum):
             ],
             'optional': True,
             'repeatable': True,
+            'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
                 gram('Orgn/Educational'),
+                gnc_match(0, solve_disambiguation=True),
                 gnc_match(-1, solve_disambiguation=True),
             ],
         }
@@ -167,16 +173,10 @@ class Organisation(Enum):
                     'CONJ',
                 }),
                 gram_any({
+                    'accs',
                     'datv',
                     'gent',
-                    'Orgn',
                 }),
-                gram_not_in({
-                    'Name',
-                    'Patr',
-                    'Surn',
-                }),
-                gnc_match(-1, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Original,
         },
@@ -184,20 +184,12 @@ class Organisation(Enum):
             'labels': [
                 or_((
                     gram_any({
-                        'datv',
-                        'gent',
+                        'accs',
                         'ablt',
-                        'Orgn',
-                    }),
-                    gram_any({
-                        'PREP',
-                        'CONJ',
                     }),
                 )),
                 gram_not_in({
-                    'Name',
-                    'Patr',
-                    'Surn',
+                    'PREP',
                 }),
             ],
             'optional': True,
@@ -212,6 +204,7 @@ class Organisation(Enum):
                 gram('ADJF'),
                 is_capitalized(True),
             ],
+            'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
@@ -220,11 +213,13 @@ class Organisation(Enum):
             ],
             'optional': True,
             'repeatable': True,
+            'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
                 gram('Orgn/Social'),
                 is_lower(True),
+                gnc_match(0, solve_disambiguation=True),
                 gnc_match(-1, solve_disambiguation=True),
             ]
         },

@@ -144,7 +144,6 @@ class Geo(Enum):
             'labels': [
                 is_capitalized(True),
                 gram('Geox'),
-                gram_not('Abbr'),
             ],
         },
     ]
