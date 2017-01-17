@@ -291,17 +291,28 @@ class Person(Enum):
         },
         {
             'labels': [
-                gram_any({
-                    'Name',
-                    'Patr',
-                    'Surn',
-                }),
-                gram('sing'),
+                gram('Name'),
                 gnc_match(0, solve_disambiguation=True),
             ],
-            'repeatable': True,
             'normalization': NormalizationType.Inflected,
-        }
+        },
+        {
+            'labels': [
+                gram('Patr'),
+                gnc_match(0, solve_disambiguation=True),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'optional': True,
+            'normalization': NormalizationType.Inflected,
+        },
+        {
+            'labels': [
+                gram('Surn'),
+                gnc_match(0, solve_disambiguation=True),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'normalization': NormalizationType.Inflected,
+        },
     ]
 
     # граф де Кристо
