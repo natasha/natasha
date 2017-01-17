@@ -190,6 +190,9 @@ class Organisation(Enum):
                 )),
                 gram_not_in({
                     'PREP',
+                    'Name',
+                    'Patr',
+                    'Surn',
                 }),
             ],
             'optional': True,
