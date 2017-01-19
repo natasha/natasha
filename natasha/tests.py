@@ -87,11 +87,11 @@ class PersonGrammarsTestCase(BaseTestCase):
         self.assertIn(['Отто', 'фон', 'Бисмарк'], values)
 
     def test_person_name_with_position(self):
-        results = list(self.combinator.extract('князь Владимир'))
+        results = list(self.combinator.extract('князь Иоанн Грозный'))
         grammars = (x[0] for x in results)
         values = ([y.value for y in x[1]] for x in results)
         self.assertIn(natasha.Person.WithPosition, grammars)
-        self.assertIn(['князь', 'Владимир'], values)
+        self.assertIn(['князь', 'Иоанн', 'Грозный'], values)
 
         results = list(self.combinator.extract('президента РФ Владимира Путина'))
         grammars = (x[0] for x in results)
