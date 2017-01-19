@@ -15,6 +15,8 @@ from yargy.labels import (
     is_upper,
     and_,
     or_,
+    case_match,
+    number_match,
 )
 from yargy.normalization import NormalizationType
 
@@ -314,6 +316,30 @@ class Person(Enum):
             'normalization': NormalizationType.Inflected,
         },
     ]
+
+    # Пресс-секретарь «Роснефти» Михаил Леонтьев
+    WithPositionAndQuotedOrganisationName = (
+        WithPosition[:2] + [
+            {
+                'labels': [
+                    gram('QUOTE'),
+                ],
+            },
+            {
+                'labels': [
+                    gram_not('QUOTE'),
+                    gram_not_in('END-OF-LINE'),
+                ],
+                'repeatable': True,
+                'normalization': NormalizationType.Original,
+            },
+            {
+                'labels': [
+                    gram('QUOTE'),
+                ],
+            },
+        ] + WithPosition[2:]
+    )
 
     # граф де Кристо
     PositionAndNobilitySurname = [

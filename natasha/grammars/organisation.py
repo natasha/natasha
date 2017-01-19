@@ -20,6 +20,8 @@ from yargy.labels import (
     string_required,
 )
 from yargy.normalization import NormalizationType
+
+
 from natasha.grammars import Person
 
 
