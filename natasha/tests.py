@@ -433,6 +433,12 @@ class OrganisationTestCase(BaseTestCase):
         self.assertIn(natasha.Organisation.Social, grammars)
         self.assertEqual(list(values), [['РФ'], ['министерством', 'экономического', 'развития', 'РФ']])
 
+        results = list(self.combinator.extract('руководству российского парламента'))
+        grammars = list(x[0] for x in results)
+        values = list([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Organisation.Social, grammars)
+        self.assertEqual(list(values), [['руководству', 'российского', 'парламента']])
+
 class EventsTestCase(BaseTestCase):
 
     def test_object(self):
