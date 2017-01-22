@@ -186,6 +186,7 @@ class Organisation(Enum):
             'labels': [
                 or_((
                     gram_any({
+                        'gent',
                         'accs',
                         'ablt',
                     }),

@@ -294,14 +294,16 @@ class Person(Enum):
         {
             'labels': [
                 gram('Name'),
-                gnc_match(0, solve_disambiguation=True),
+                case_match(0, solve_disambiguation=True),
+                number_match(0, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
         },
         {
             'labels': [
                 gram('Patr'),
-                gnc_match(0, solve_disambiguation=True),
+                case_match(0, solve_disambiguation=True),
+                number_match(0, solve_disambiguation=True),
                 gnc_match(-1, solve_disambiguation=True),
             ],
             'optional': True,
@@ -310,7 +312,8 @@ class Person(Enum):
         {
             'labels': [
                 gram('Surn'),
-                gnc_match(0, solve_disambiguation=True),
+                case_match(0, solve_disambiguation=True),
+                number_match(0, solve_disambiguation=True),
                 gnc_match(-1, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
