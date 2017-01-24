@@ -19,6 +19,7 @@ from yargy.labels import (
     number_match,
 )
 from yargy.normalization import NormalizationType
+from natasha.grammars.person.interpretation import PersonObject
 
 
 NAME_NOBILITY_PARTICLE_DICTIONARY = {
@@ -42,6 +43,9 @@ class Person(Enum):
                 gram_not('Abbr'),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            },
         },
         {
             'labels': [
@@ -50,6 +54,9 @@ class Person(Enum):
                 gnc_match(-1, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Firstname,
+            },
         },
         {
             'labels': [
@@ -58,6 +65,9 @@ class Person(Enum):
                 gnc_match(-1, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Middlename,
+            },
         },
     ]
 
@@ -69,6 +79,9 @@ class Person(Enum):
                 gram_not('Abbr'),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Firstname,
+            },
         },
         {
             'labels': [
@@ -77,6 +90,9 @@ class Person(Enum):
                 gnc_match(-1, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Middlename,
+            },
         },
         {
             'labels': [
@@ -85,6 +101,9 @@ class Person(Enum):
                 gnc_match(-1, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            },
         },
     ]
 
@@ -94,6 +113,10 @@ class Person(Enum):
             'labels': [
                 gram_in(['Name', 'Abbr']),
             ],
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Firstname,
+            },
+            'normalization': NormalizationType.Original,
         },
         {
             'labels': [
@@ -104,7 +127,12 @@ class Person(Enum):
         {
             'labels': [
                 gram_in(['Patr', 'Abbr']),
+                gnc_match(0, solve_disambiguation=True),
             ],
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Middlename,
+            },
+            'normalization': NormalizationType.Original,
         },
         {
             'labels': [
@@ -118,6 +146,9 @@ class Person(Enum):
                 gram_not('Abbr'),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            },
         },
     ]
 
@@ -143,6 +174,9 @@ class Person(Enum):
                 gram('Name'),
                 gram_not('Abbr'),
             ],
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Firstname,
+            },
         },
         {
             'labels': [
@@ -151,6 +185,9 @@ class Person(Enum):
                 gnc_match(-1, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            },
         },
     ]
 
@@ -162,6 +199,9 @@ class Person(Enum):
                 gram_not('Abbr'),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            },
         },
         {
             'labels': [
@@ -170,6 +210,9 @@ class Person(Enum):
                 gnc_match(-1, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Firstname,
+            },
         },
     ]
 
@@ -181,6 +224,9 @@ class Person(Enum):
                 gram_not('Abbr'),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Firstname,
+            },
         },
         {
             'labels': [
@@ -189,6 +235,9 @@ class Person(Enum):
                 gnc_match(-1, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Middlename,
+            },
         },
     ]
 
@@ -205,6 +254,9 @@ class Person(Enum):
                 is_capitalized(True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            },
         },
     ]
 
@@ -221,6 +273,9 @@ class Person(Enum):
                 is_capitalized(True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Middlename,
+            },
         }
     ]
 
@@ -237,6 +292,9 @@ class Person(Enum):
                 is_capitalized(True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Firstname,
+            },
         },
     ]
 
@@ -255,6 +313,9 @@ class Person(Enum):
                 gnc_match(0, solve_disambiguation=True)
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            },
         },
     ]
 
@@ -264,6 +325,9 @@ class Person(Enum):
             'labels': [
                 gram('Person/Position'),
             ],
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Descriptor,
+            },
         },
         {
             'labels': [
@@ -298,6 +362,9 @@ class Person(Enum):
                 number_match(0, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Firstname,
+            },
         },
         {
             'labels': [
@@ -308,6 +375,9 @@ class Person(Enum):
             ],
             'optional': True,
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Middlename,
+            },
         },
         {
             'labels': [
@@ -317,6 +387,9 @@ class Person(Enum):
                 gnc_match(-1, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            },
         },
     ]
 
@@ -360,7 +433,10 @@ class Person(Enum):
             'labels': [
                 gram('Surn'),
                 gnc_match(0, solve_disambiguation=True),
-            ]
+            ],
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            },
         }
     ]
 
@@ -374,6 +450,9 @@ class Person(Enum):
                 }),
                 gram_not('Abbr'),
             ],
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Firstname,
+            },
         },
         {
             'labels': [
