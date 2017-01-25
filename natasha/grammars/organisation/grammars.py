@@ -23,6 +23,7 @@ from yargy.normalization import NormalizationType
 
 
 from natasha.grammars import Person
+from natasha.grammars.organisation.interpretation import OrganisationObject
 
 
 @label
@@ -44,6 +45,9 @@ class Organisation(Enum):
                     gram('Orgn/Abbr'),
                 )),
             ],
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Descriptor,
+            },
         },
         {
             'labels': [
@@ -51,6 +55,9 @@ class Organisation(Enum):
             ],
             'optional': True,
             'repeatable': True,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Descriptor,
+            },
         },
         {
             'labels': [
@@ -64,6 +71,9 @@ class Organisation(Enum):
                 not_eq('.'),
             ],
             'repeatable': True,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
@@ -83,6 +93,9 @@ class Organisation(Enum):
                     ))
                 )),
             ],
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Descriptor,
+            },
         },
         {
             'labels': [
@@ -92,6 +105,9 @@ class Organisation(Enum):
                 gnc_match(-1, solve_disambiguation=True)
             ],
             'repeatable': True,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Name,
+            },
         },
     ]
 
@@ -101,7 +117,10 @@ class Organisation(Enum):
                 gram('Abbr'),
                 gram('Orgn'),
                 gram_not('Orgn/Abbr'),
-            ]
+            ],
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Name,
+            },
         },
     ]
 
@@ -121,6 +140,9 @@ class Organisation(Enum):
             'labels': [
                 gram('Orgn/Commercial'),
             ],
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Descriptor,
+            },
         },
         {
             'labels': [
@@ -130,6 +152,9 @@ class Organisation(Enum):
                 }),
             ],
             'repeatable': True,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Name,
+            },
         },
     ]
 
@@ -141,6 +166,9 @@ class Organisation(Enum):
                 is_capitalized(True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
@@ -150,6 +178,9 @@ class Organisation(Enum):
             'optional': True,
             'repeatable': True,
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
@@ -157,6 +188,9 @@ class Organisation(Enum):
                 gnc_match(0, solve_disambiguation=True),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Descriptor,
+            },
         }
     ]
 
@@ -167,6 +201,9 @@ class Organisation(Enum):
                 gram('Orgn/Social'),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Descriptor,
+            },
         },
         {
             'labels': [
@@ -181,6 +218,9 @@ class Organisation(Enum):
                 }),
             ],
             'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
@@ -201,6 +241,9 @@ class Organisation(Enum):
             'optional': True,
             'repeatable': True,
             'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Name,
+            },
         },
     ]
 
@@ -211,6 +254,9 @@ class Organisation(Enum):
                 is_capitalized(True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
@@ -220,6 +266,9 @@ class Organisation(Enum):
             'optional': True,
             'repeatable': True,
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
@@ -227,7 +276,10 @@ class Organisation(Enum):
                 is_lower(True),
                 gnc_match(0, solve_disambiguation=True),
                 gnc_match(-1, solve_disambiguation=True),
-            ]
+            ],
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Descriptor,
+            },
         },
         Social[-1],
     ]
@@ -240,16 +292,26 @@ class ProbabilisticOrganisation(Enum):
             'labels': [
                 gram('QUOTE'),
             ],
+            'skip': True,
         },
         {
             'labels': [
                 is_capitalized(True),
+                gram_any({
+                    'NOUN',
+                    'ADJF',
+                    'LATN',
+                }),
             ],
             'repeatable': True,
+            'interpretation': {
+                'attribute': OrganisationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
                 gram('QUOTE'),
             ],
+            'skip': True,
         },
     ]

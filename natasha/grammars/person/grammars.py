@@ -400,6 +400,7 @@ class Person(Enum):
                 'labels': [
                     gram('QUOTE'),
                 ],
+                'normalization': NormalizationType.Original,
             },
             {
                 'labels': [
@@ -413,6 +414,7 @@ class Person(Enum):
                 'labels': [
                     gram('QUOTE'),
                 ],
+                'normalization': NormalizationType.Original,
             },
         ] + WithPosition[2:]
     )
