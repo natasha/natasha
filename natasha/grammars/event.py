@@ -4,12 +4,18 @@ from __future__ import unicode_literals
 from enum import Enum
 from yargy.labels import (
     gram,
+    gram_any,
     gram_not,
+    gnc_match,
     dictionary,
 )
 
 EVENT_TYPE_DICTIONARY = {
     'фестиваль',
+    'форум',
+    'выставка',
+    'ярмарка',
+    'конференция',
     'шоу',
 }
 
@@ -36,6 +42,30 @@ class Event(Enum):
         {
             'labels': [
                 gram('QUOTE'),
+            ],
+        },
+    ]
+
+    # Московский международный форум
+    AdjWithDescriptor = [
+        {
+            'labels': [
+                gram('ADJF'),
+            ],
+        },
+        {
+            'labels': [
+                gram('ADJF'),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'optional': True,
+            'repeatable': True,
+        },
+        {
+            'labels': [
+                dictionary(EVENT_TYPE_DICTIONARY),
+                gnc_match(0, solve_disambiguation=True),
+                gnc_match(-1, solve_disambiguation=True),
             ],
         },
     ]

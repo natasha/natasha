@@ -184,6 +184,11 @@ class GeoTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Geo.Object)
         self.assertEqual(['Москва'], [x.value for x in match])
 
+    def test_adj_federation(self):
+        grammar, match = next(self.combinator.extract('В Донецкой народной республике'))
+        self.assertEqual(grammar, natasha.Geo.AdjFederation)
+        self.assertEqual(['Донецкой', 'народной', 'республике'], [x.value for x in match])
+
 
 class MoneyTestCase(BaseTestCase):
 
@@ -253,6 +258,7 @@ class MoneyTestCase(BaseTestCase):
         self.assertIn(natasha.Money.HandwrittenNumberWithPrefix, grammars)
         self.assertIn(['семьдесят', 'пять', 'тысяч', 'рублей'], values)
 
+
 class EventsTestCase(BaseTestCase):
 
     def test_object(self):
@@ -260,3 +266,10 @@ class EventsTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Event.Object)
         self.assertEqual(
             ['шоу', '«', 'Пятая', 'империя', '»'], [x.value for x in match])
+
+    def test_adj_with_descriptor(self):
+        grammar, match = next(
+            self.combinator.extract('в рамках ближневосточного форума прошла встреча ...'))
+        self.assertEqual(grammar, natasha.Event.AdjWithDescriptor)
+        self.assertEqual(
+            ['ближневосточного', 'форума'], [x.value for x in match])

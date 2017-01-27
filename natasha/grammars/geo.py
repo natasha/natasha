@@ -69,11 +69,13 @@ class Geo(Enum):
         },
         {
             'labels': [
+                gnc_match(-1, solve_disambiguation=True),
                 dictionary({'федеральный', }),
             ],
         },
         {
             'labels': [
+                gnc_match(-1, solve_disambiguation=True),
                 dictionary({'округ', }),
             ],
         },
@@ -135,6 +137,33 @@ class Geo(Enum):
                 gram('NOUN'),
                 gram('Geox'),
                 gnc_match(-1, solve_disambiguation=True),
+            ],
+        },
+    ]
+
+    # Донецкая народная республика / Российская Федерация
+    AdjFederation = [
+        {
+            'labels': [
+                gram('ADJF'),
+                is_capitalized(True),
+            ],
+        },
+        {
+            'labels': [
+                gram('ADJF'),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'optional': True,
+            'repeatable': True,
+        },
+        {
+            'labels': [
+                gnc_match(0, solve_disambiguation=True),
+                dictionary({
+                    'федерация',
+                    'республика',
+                }),
             ],
         },
     ]
