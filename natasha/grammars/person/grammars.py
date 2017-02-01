@@ -23,6 +23,7 @@ from natasha.grammars.person.interpretation import PersonObject
 
 
 NAME_NOBILITY_PARTICLE_DICTIONARY = {
+    'ле',
     'да',
     'де',
     'ди',
@@ -477,21 +478,12 @@ POSSIBLE_PART_OF_NAME_GRAMMAR = {
     'labels': [
         is_upper(False),
         is_capitalized(True),
+        gram_not_in({
+            'Geox',
+            'Orgn',
+        }),
     ]
 }
-
-POSSIBLE_PART_OF_NAME_WITH_GNC_MATCH_GRAMMAR = {
-    'labels': [
-        gram('NOUN'),
-        gram_any({'masc', 'femn'}),
-        gram_not('Abbr'),
-        gram_not('Orgn'),
-        gram_not('Geox'),
-        is_capitalized(True),
-        gnc_match(-1, solve_disambiguation=True),
-    ]
-}
-
 
 class ProbabilisticPerson(Enum):
 
@@ -500,15 +492,9 @@ class ProbabilisticPerson(Enum):
     Not included in natasha DEFAULT_GRAMMARS, but shows good result on factRuEval-16 testset
     '''
 
-    Full = [
-        POSSIBLE_PART_OF_NAME_GRAMMAR,
-        POSSIBLE_PART_OF_NAME_WITH_GNC_MATCH_GRAMMAR,
-        POSSIBLE_PART_OF_NAME_WITH_GNC_MATCH_GRAMMAR,
-    ]
-
     FirstnameAndLastname = [
+        Person.Firstname.value[0],
         POSSIBLE_PART_OF_NAME_GRAMMAR,
-        POSSIBLE_PART_OF_NAME_WITH_GNC_MATCH_GRAMMAR,
     ]
 
     InitialsAndLastname = Person.InitialsAndLastname.value[:4] + [
@@ -537,5 +523,4 @@ class ProbabilisticPerson(Enum):
         POSSIBLE_PART_OF_NAME_GRAMMAR,
     ]
 
-    FullWithPosition = Person.WithPosition.value[:-1] + Full
     FirstnameAndLastnameWithPosition = Person.WithPosition.value[:-1] + FirstnameAndLastname
