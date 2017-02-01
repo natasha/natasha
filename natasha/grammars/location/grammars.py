@@ -10,6 +10,7 @@ from yargy.labels import (
     gnc_match,
     eq,
 )
+from natasha.grammars.location.interpretation import LocationObject
 
 
 FEDERAL_DISTRICT_DICTIONARY = {
@@ -58,7 +59,7 @@ PARTIAL_OBJECT_PREFIX_DICTIONARY = {
     'восток',
 }
 
-class Geo(Enum):
+class Location(Enum):
 
     FederalDistrict = [
         {
@@ -66,18 +67,27 @@ class Geo(Enum):
                 gram('ADJF'),
                 dictionary(FEDERAL_DISTRICT_DICTIONARY),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
                 gnc_match(-1, solve_disambiguation=True),
                 dictionary({'федеральный', }),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Descriptor,
+            },
         },
         {
             'labels': [
                 gnc_match(-1, solve_disambiguation=True),
                 dictionary({'округ', }),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Descriptor,
+            },
         },
     ]
 
@@ -87,11 +97,17 @@ class Geo(Enum):
                 gram('ADJF'),
                 dictionary(FEDERAL_DISTRICT_DICTIONARY),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
                 eq('ФО'),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Descriptor,
+            },
         },
     ]
 
@@ -100,12 +116,18 @@ class Geo(Enum):
             'labels': [
                 gram('ADJF'),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
                 dictionary(REGION_TYPE_DICTIONARY),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Descriptor,
+            },
         },
     ]
 
@@ -115,6 +137,9 @@ class Geo(Enum):
                 gram('ADJF'),
                 dictionary(COMPLEX_OBJECT_PREFIX_DICTIONARY),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
@@ -122,6 +147,9 @@ class Geo(Enum):
                 gram('Geox'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
         },
     ]
 
@@ -131,6 +159,9 @@ class Geo(Enum):
                 gram('NOUN'),
                 dictionary(PARTIAL_OBJECT_PREFIX_DICTIONARY),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
@@ -138,6 +169,9 @@ class Geo(Enum):
                 gram('Geox'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
         },
     ]
 
@@ -148,6 +182,9 @@ class Geo(Enum):
                 gram('ADJF'),
                 is_capitalized(True),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
@@ -156,6 +193,9 @@ class Geo(Enum):
             ],
             'optional': True,
             'repeatable': True,
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
         },
         {
             'labels': [
@@ -165,6 +205,9 @@ class Geo(Enum):
                     'республика',
                 }),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Descriptor,
+            },
         },
     ]
 
@@ -174,5 +217,8 @@ class Geo(Enum):
                 is_capitalized(True),
                 gram('Geox'),
             ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
         },
     ]

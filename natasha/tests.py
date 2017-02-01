@@ -144,52 +144,6 @@ class DateTestCase(BaseTestCase):
         self.assertNotIn(natasha.Date.CurrentMonthWithOffset, grammars)
         self.assertNotIn(['прошлых', 'месяц'], values)
 
-
-class GeoTestCase(BaseTestCase):
-
-    def test_federal_district(self):
-        grammar, match = next(
-            self.combinator.extract('северо-западный федеральный округ'))
-        self.assertEqual(grammar, natasha.Geo.FederalDistrict)
-        self.assertEqual(
-            ['северо-западный', 'федеральный', 'округ'], [x.value for x in match])
-
-    def test_federal_district_abbr(self):
-        grammar, match = next(self.combinator.extract('северо-западный ФО'))
-        self.assertEqual(grammar, natasha.Geo.FederalDistrictAbbr)
-        self.assertEqual(['северо-западный', 'ФО'], [x.value for x in match])
-
-    def test_region(self):
-        grammar, match = next(
-            self.combinator.extract('северо-западная область'))
-        self.assertEqual(grammar, natasha.Geo.Region)
-        self.assertEqual(
-            ['северо-западная', 'область'], [x.value for x in match])
-        with self.assertRaises(StopIteration):
-            next(self.combinator.extract('северо-западный область'))
-
-    def test_complex_object(self):
-        grammar, match = next(self.combinator.extract('северный кипр'))
-        self.assertEqual(grammar, natasha.Geo.ComplexObject)
-        with self.assertRaises(StopIteration):
-            next(self.combinator.extract('северная кипр'))
-
-    @unittest.skip('skip for now, because need to know something about gent(2?)+loct(2?) cases concordance')
-    def test_partial_object(self):
-        grammar, match = next(self.combinator.extract('на юго-западе кипра'))
-        self.assertEqual(grammar, natasha.Geo.PartialObject)
-
-    def test_object(self):
-        grammar, match = next(self.combinator.extract('Москва́'))
-        self.assertEqual(grammar, natasha.Geo.Object)
-        self.assertEqual(['Москва'], [x.value for x in match])
-
-    def test_adj_federation(self):
-        grammar, match = next(self.combinator.extract('В Донецкой народной республике'))
-        self.assertEqual(grammar, natasha.Geo.AdjFederation)
-        self.assertEqual(['Донецкой', 'народной', 'республике'], [x.value for x in match])
-
-
 class MoneyTestCase(BaseTestCase):
 
     def test_int_object_with_prefix(self):

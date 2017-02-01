@@ -70,6 +70,7 @@ class SocialOrganisationPipeline(CustomGrammemesPipeline):
         'храм',
         'центр',
     
+        'альянс',
         'союз',
         'совет',
         'служба',

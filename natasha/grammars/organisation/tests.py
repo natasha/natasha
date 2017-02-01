@@ -85,7 +85,7 @@ class OrganisationTestCase(BaseTestCase):
         grammars = list(x[0] for x in results)
         values = ([y.value for y in x[1]] for x in results)
         self.assertIn(natasha.Organisation.Social, grammars)
-        self.assertIn(natasha.Geo.Object, grammars)
+        self.assertIn(natasha.Location.Object, grammars)
         self.assertEqual(list(values), [
             ['общества', 'андрологии', 'и', 'сексуальной', 'медицины'],
             ['РФ'],

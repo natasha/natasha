@@ -1,5 +1,5 @@
 from natasha.grammars.person import Person
-from natasha.grammars.geo import Geo
+from natasha.grammars.location import Location
 from natasha.grammars.money import Money
 from natasha.grammars.date import Date
 from natasha.grammars.brand import Brand

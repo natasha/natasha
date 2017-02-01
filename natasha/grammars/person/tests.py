@@ -65,6 +65,12 @@ class PersonGrammarsTestCase(BaseTestCase):
         self.assertIn(natasha.Person.LastnameAndInitials, grammars)
         self.assertIn(['Раневской', 'Л', '.', 'А', '.'], values)
 
+        results = list(self.combinator.extract('Миронова Т.И."'))
+        grammars = (x[0] for x in results)
+        values = ([y.value for y in x[1]] for x in results)
+        self.assertIn(natasha.Person.LastnameAndInitials, grammars)
+        self.assertIn(['Миронова', 'Т', '.', 'И', '.'], list(values))
+
     def test_gnc_matching(self):
         results = list(self.combinator.extract('есть даже марки машин'))
         self.assertEqual(results, [])
