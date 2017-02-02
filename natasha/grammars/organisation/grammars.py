@@ -45,6 +45,7 @@ class Organisation(Enum):
                     gram('Orgn/Abbr'),
                 )),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': OrganisationObject.Attributes.Descriptor,
             },
@@ -55,6 +56,7 @@ class Organisation(Enum):
             ],
             'optional': True,
             'repeatable': True,
+            'normalization': NormalizationType.Original,
             'interpretation': {
                 'attribute': OrganisationObject.Attributes.Descriptor,
             },
@@ -71,6 +73,7 @@ class Organisation(Enum):
                 not_eq('.'),
             ],
             'repeatable': True,
+            'normalization': NormalizationType.Original,
             'interpretation': {
                 'attribute': OrganisationObject.Attributes.Name,
             },
@@ -86,13 +89,17 @@ class Organisation(Enum):
         {
             'labels': [
                 and_((
-                    gram('Orgn/Commercial'),
+                    gram_any({
+                        'Orgn/Commercial',
+                        'Orgn/Social',
+                    }),
                     or_((
                         gram('sing'),
                         gram('Sgtm'),
                     ))
                 )),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': OrganisationObject.Attributes.Descriptor,
             },
@@ -105,6 +112,7 @@ class Organisation(Enum):
                 gnc_match(-1, solve_disambiguation=True)
             ],
             'repeatable': True,
+            'normalization': NormalizationType.Original,
             'interpretation': {
                 'attribute': OrganisationObject.Attributes.Name,
             },
@@ -118,6 +126,7 @@ class Organisation(Enum):
                 gram('Orgn'),
                 gram_not('Orgn/Abbr'),
             ],
+            'normalization': NormalizationType.Original,
             'interpretation': {
                 'attribute': OrganisationObject.Attributes.Name,
             },
@@ -129,6 +138,7 @@ class Organisation(Enum):
             'labels': [
                 eq('ИП'),
             ],
+            'normalization': NormalizationType.Original,
         },
         Person.Full.value[0],
         Person.Full.value[1],
@@ -140,6 +150,7 @@ class Organisation(Enum):
             'labels': [
                 gram('Orgn/Commercial'),
             ],
+            'normalization': NormalizationType.Normalized,
             'interpretation': {
                 'attribute': OrganisationObject.Attributes.Descriptor,
             },
@@ -152,6 +163,7 @@ class Organisation(Enum):
                 }),
             ],
             'repeatable': True,
+            'normalization': NormalizationType.Original,
             'interpretation': {
                 'attribute': OrganisationObject.Attributes.Name,
             },
@@ -188,6 +200,7 @@ class Organisation(Enum):
                 gnc_match(0, solve_disambiguation=True),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Normalized,
             'interpretation': {
                 'attribute': OrganisationObject.Attributes.Descriptor,
             },
@@ -273,7 +286,6 @@ class Organisation(Enum):
         {
             'labels': [
                 gram('Orgn/Social'),
-                is_lower(True),
                 gnc_match(0, solve_disambiguation=True),
                 gnc_match(-1, solve_disambiguation=True),
             ],
@@ -304,6 +316,7 @@ class ProbabilisticOrganisation(Enum):
                 }),
             ],
             'repeatable': True,
+            'normalization': NormalizationType.Original,
             'interpretation': {
                 'attribute': OrganisationObject.Attributes.Name,
             },
