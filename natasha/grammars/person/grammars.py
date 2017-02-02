@@ -523,4 +523,33 @@ class ProbabilisticPerson(Enum):
         POSSIBLE_PART_OF_NAME_GRAMMAR,
     ]
 
-    FirstnameAndLastnameWithPosition = Person.WithPosition.value[:-1] + FirstnameAndLastname
+    FirstnameAndLastnameWithPosition = Person.WithPosition.value[:-1] + [
+        FirstnameAndLastname[-1]
+    ]
+
+    Latin = [
+        {
+            'labels': [
+                gram('LATN'),
+                is_capitalized(True),
+            ],
+        },
+        {
+            'labels': [
+                gram('LATN'),
+                is_capitalized(True),
+            ],
+        },
+        {
+            'labels': [
+                gram('PUNCT'),
+                eq('.')
+            ],
+        },
+        {
+            'labels': [
+                gram('LATN'),
+                is_capitalized(True),
+            ],
+        },
+    ]
