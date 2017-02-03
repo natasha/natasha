@@ -21,6 +21,13 @@ class LocationTestCase(BaseTestCase):
         self.assertEqual(
             ['северо-западный', 'федеральный', 'округ'], [x.value for x in match])
 
+    def test_autonomous_district(self):
+        grammar, match = list(
+            self.combinator.extract('Ямало-Ненецкого автономного округа'))[0]
+        self.assertEqual(grammar, natasha.Location.AutonomousDistrict)
+        self.assertEqual(
+            ['Ямало-Ненецкого', 'автономного', 'округа'], [x.value for x in match])
+
     def test_federal_district_abbr(self):
         grammar, match = list(self.combinator.extract('северо-западный ФО'))[0]
         self.assertEqual(grammar, natasha.Location.FederalDistrictAbbr)
@@ -53,8 +60,183 @@ class LocationTestCase(BaseTestCase):
 
     def test_adj_federation(self):
         grammar, match = list(self.combinator.extract('В Донецкой народной республике'))[0]
-        self.assertEqual(grammar, natasha.Location.AdjFederation)
+        self.assertEqual(grammar, natasha.Location.AdjfFederation)
         self.assertEqual(['Донецкой', 'народной', 'республике'], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('Соединенными Штатами Америки')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Location.AdjxFederation)
+        self.assertEqual(['Соединенными', 'Штатами', 'Америки'], [x.value for x in match])
+
+class AddressTestCase(BaseTestCase):
+
+    def test_adj_full(self):
+        grammar, match = list(self.combinator.extract('на зеленой улице'))[0]
+        self.assertEqual(grammar, natasha.Address.AdjFull)
+        self.assertEqual(['зеленой', 'улице'], [x.value for x in match])
+
+        grammar, match = list(self.combinator.extract('около красной площади'))[0]
+        self.assertEqual(grammar, natasha.Address.AdjFull)
+        self.assertEqual(['красной', 'площади'], [x.value for x in match])
+
+        # TODO: this grammar fails on pypy
+        # grammar, match = list(
+        #     self.combinator.resolve_matches(
+        #         self.combinator.extract('улица Красная Набережная')
+        #     )
+        # )[0]
+        # self.assertEqual(grammar, natasha.Address.AdjFull)
+        # self.assertEqual(['Красная', 'Набережная'], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('вторая московская улица')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjFull)
+        self.assertEqual(['вторая', 'московская', 'улица'], [x.value for x in match])
+
+    def test_adj_short(self):
+        grammar, match = list(self.combinator.extract('ул. Нижняя Красносельская'))[0]
+        self.assertEqual(grammar, natasha.Address.AdjShort)
+        self.assertEqual(['ул', '.', 'Нижняя', 'Красносельская'], [x.value for x in match])
+
+    def test_adj_short_reversed(self):
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('московская ул.')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjShortReversed)
+        self.assertEqual(['московская', 'ул', '.'], [x.value for x in match])
+
+    def test_adj_noun_full(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Красной Гвардии')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjNounFull)
+        self.assertEqual(['улица', 'Красной', 'Гвардии'], [x.value for x in match])
+
+    def test_adj_noun_short(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('ул. Брянской пролетарской дивизии')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjNounShort)
+        self.assertEqual(['ул', '.', 'Брянской', 'пролетарской', 'дивизии'], [x.value for x in match])
+
+    def test_gent_full_reversed(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('проспект Юрия Гагарина')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversed)
+        self.assertEqual(['проспект', 'Юрия', 'Гагарина'], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Богомягкова')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversed)
+        self.assertEqual(['улица', 'Богомягкова'], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Федосеенко')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversed)
+        self.assertEqual(['улица', 'Федосеенко'], [x.value for x in match])
+
+    def test_gent_full_reversed_with_shortcut(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица К. Маркса')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversedWithShortcut)
+        self.assertEqual(['улица', 'К', '.', 'Маркса'], [x.value for x in match])
+
+
+    def test_gent_short_reversed(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('пр. Маршала Жукова')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentShortReversed)
+        self.assertEqual(['пр', '.', 'Маршала', 'Жукова'], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('пр-т Культуры')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentShortReversed)
+        self.assertEqual(['пр-т', 'Культуры'], [x.value for x in match])
+
+    def test_gent_short_reversed_with_shortcut(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('пр. М. Жукова')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentShortReversedWithShortcut)
+        self.assertEqual(['пр', '.', 'М', '.', 'Жукова'], [x.value for x in match])
+
+    def test_numeric_adj_full(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('2-я новорублевская улица')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjFullWithNumericPart)
+        self.assertEqual([2, '-', 'я', 'новорублевская', 'улица'], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('1-й бадаевский проезд')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjFullWithNumericPart)
+        self.assertEqual([1, '-', 'й', 'бадаевский', 'проезд'], [x.value for x in match])
+
+
+    def test_numeric_adj_full_reversed(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица 1-я промышленная')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjFullReversedWithNumericPart)
+        self.assertEqual(['улица', 1, '-', 'я', 'промышленная'], [x.value for x in match])
+
+    def test_numeric_adj_short(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('1-я промышленная ул.')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjShortWithNumericPart)
+        self.assertEqual([1, '-', 'я', 'промышленная', 'ул', '.'], [x.value for x in match])
+
+    def test_numeric_adj_short_reversed(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('ул. 1-я промышленная')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjShortReversedWithNumericPart)
+        self.assertEqual(['ул', '.', 1, '-', 'я', 'промышленная'], [x.value for x in match])
 
 class LocationInterpretationTestCase(BaseTestCase):
 

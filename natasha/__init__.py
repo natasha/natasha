@@ -3,6 +3,7 @@ from yargy import Combinator as DefaultCombinator
 from natasha.grammars import (
     Person,
     Location,
+    Address,
     Money,
     Date,
     Brand,
@@ -23,6 +24,7 @@ DEFAULT_GRAMMARS = [
     Money,
     Person,
     Location,
+    Address,
     Date,
     Brand,
     Event,

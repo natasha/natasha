@@ -5,11 +5,15 @@ from enum import Enum
 from yargy.labels import (
     gram,
     gram_not,
+    gram_not_in,
     dictionary,
     is_capitalized,
     gnc_match,
     eq,
+    gte,
+    in_,
 )
+from yargy.normalization import NormalizationType
 from natasha.grammars.location.interpretation import LocationObject
 
 
@@ -111,6 +115,54 @@ class Location(Enum):
         },
     ]
 
+    AutonomousDistrict = [
+        {
+            'labels': [
+                gram('ADJF'),
+            ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
+        },
+        {
+            'labels': [
+                gnc_match(-1, solve_disambiguation=True),
+                dictionary({'автономный', }),
+            ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Descriptor,
+            },
+        },
+        {
+            'labels': [
+                gnc_match(-1, solve_disambiguation=True),
+                dictionary({'округ', }),
+            ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Descriptor,
+            },
+        },
+    ]
+
+    AutonomousDistrictAbbr = [
+        {
+            'labels': [
+                gram('ADJF'),
+            ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
+        },
+        {
+            'labels': [
+                eq('АО'),
+            ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Descriptor,
+            },
+        },
+    ]
+
     Region = [
         {
             'labels': [
@@ -176,7 +228,7 @@ class Location(Enum):
     ]
 
     # Донецкая народная республика / Российская Федерация
-    AdjFederation = [
+    AdjfFederation = [
         {
             'labels': [
                 gram('ADJF'),
@@ -211,6 +263,50 @@ class Location(Enum):
         },
     ]
 
+    # Соединенные Штаты / Соединенные Штаты Америки
+    AdjxFederation = [
+        {
+            'labels': [
+                gram('Adjx'),
+                is_capitalized(True),
+            ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
+        },
+        {
+            'labels': [
+                gram('Adjx'),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'optional': True,
+            'repeatable': True,
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
+        },
+        {
+            'labels': [
+                gnc_match(0, solve_disambiguation=True),
+                dictionary({
+                    'штат',
+                }),
+            ],
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
+        },
+        {
+            'labels': [
+                gram('gent'),
+            ],
+            'optional': True,
+            'interpretation': {
+                'attribute': LocationObject.Attributes.Name,
+            },
+        }
+    ]
+
     Object = [
         {
             'labels': [
@@ -222,3 +318,202 @@ class Location(Enum):
             },
         },
     ]
+
+STREET_DESCRIPTOR_DICTIONARY = {
+    'улица',
+    'площадь',
+    'проспект',
+    'проезд',
+    'бульвар',
+    'набережная',
+    'шоссе',
+    'вал',
+    'аллея',
+    'переулок',
+}
+
+SHORT_STREET_DESCRIPTOR_RULE = [
+    {
+        'labels': {
+            dictionary({
+                'ул', # улица
+                'пл', # площадь,
+                'пр', # проспект / проезд?
+                'пр-том', # see kmike/github issue #88
+                'пр-кт',
+                'пер', # переулок
+                'б-литр', # бульвар,
+                'наб', # набережная
+                'ш', # шоссе
+            }),
+        },
+        'normalization': NormalizationType.Original,
+    },
+    {
+        'labels': [
+            eq('.'),
+        ],
+        'optional': True,
+        'normalization': NormalizationType.Original,
+    }
+]
+
+NUMERIC_STREET_PART_RULE = [ # 1-я, 10-й, 100500-ой и т.д.
+    {
+        'labels': [
+            gram('INT'),
+            gte(1),
+        ],
+        'normalization': NormalizationType.Original,
+    },
+    {
+        'labels': [
+            eq('-'),
+        ],
+        'normalization': NormalizationType.Original,
+    },
+    {
+        'labels': [
+            gram_not_in({
+                'PUNCT',
+                'QUOTE',
+                'LATN',
+                'NUMBER',
+                'PHONE',
+                'EMAIL',
+                'RANGE',
+                'END-OF-LINE',
+            }),
+        ],
+        'normalization': NormalizationType.Original,
+    }
+]
+
+class Address(Enum):
+
+    # Садовая улица
+    AdjFull = [
+        {
+            'labels': [
+                gram('ADJF'),
+                gram_not('Abbr'),
+            ],
+            'normalization': NormalizationType.Inflected,
+        },
+        {
+            'labels': [
+                gram('ADJF'),
+                gram_not('Abbr'),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'repeatable': True,
+            'optional': True,
+            'normalization': NormalizationType.Inflected,
+        },
+        {
+            'labels': [
+                dictionary(STREET_DESCRIPTOR_DICTIONARY),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'normalization': NormalizationType.Inflected,
+        },
+    ]
+
+    # улица Садовая
+    AdjFullReversed = [
+        {
+            'labels': [
+                dictionary(STREET_DESCRIPTOR_DICTIONARY),
+            ],
+            'normalization': NormalizationType.Inflected,
+        },
+        {
+            'labels': [
+                gram('ADJF'),
+                gram_not('Abbr'),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'repeatable': True,
+            'normalization': NormalizationType.Inflected,
+        },
+    ]
+
+    # ул. Садовая
+    AdjShort = SHORT_STREET_DESCRIPTOR_RULE + AdjFull[:2]
+
+    # Садовая ул.
+    AdjShortReversed = AdjFull[:2] + SHORT_STREET_DESCRIPTOR_RULE
+
+    # улица Красных Десантников
+    AdjNounFull = [AdjFullReversed[0]] + AdjFull[:2] + [
+        {
+            'labels': [
+                gram('gent'),
+                gram_not('Abbr'),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'normalization': NormalizationType.Inflected,
+        }
+    ]
+
+    # ул. Красных Десантников
+    AdjNounShort = AdjShort + [
+        AdjNounFull[-1]
+    ]
+
+    # улица Карла Маркса
+    GentFullReversed = [
+        AdjFullReversed[0],
+        {
+            'labels': [
+                gram('gent'),
+                gram_not('Abbr'),
+            ],
+            'normalization': NormalizationType.Original,
+        },
+        {
+            'labels': [
+                gram('gent'),
+                gram_not('Abbr'),
+                gnc_match(-1, solve_disambiguation=True)
+            ],
+            'optional': True,
+            'repeatable': True,
+            'normalization': NormalizationType.Original,
+        },
+    ]
+
+    # улица К. Маркса
+    GentFullReversedWithShortcut = [
+        GentFullReversed[0],
+        {
+            'labels': [
+                gram('Abbr'),
+            ],
+            'normalization': NormalizationType.Original,
+        },
+        {
+            'labels': [
+                eq('.'),
+            ],
+            'normalization': NormalizationType.Original,
+        },
+    ] + GentFullReversed[1:]
+
+    # пр. Маршала жукова
+    GentShortReversed = SHORT_STREET_DESCRIPTOR_RULE + GentFullReversed[1:]
+
+    # пр. К. Маркса
+    GentShortReversedWithShortcut = SHORT_STREET_DESCRIPTOR_RULE + GentFullReversedWithShortcut[1:]
+
+    # 1-я новорублевская улица
+    AdjFullWithNumericPart =  NUMERIC_STREET_PART_RULE + AdjFull
+
+    # улица 1-я новорублевская
+    AdjFullReversedWithNumericPart =  AdjFullReversed[:1] + AdjFullWithNumericPart[:-1]
+
+    # 1-я новорублевская ул.
+    AdjShortWithNumericPart = AdjFullWithNumericPart[:-1] + SHORT_STREET_DESCRIPTOR_RULE
+
+    # ул. 1-я промышленная
+    AdjShortReversedWithNumericPart = SHORT_STREET_DESCRIPTOR_RULE + AdjFullWithNumericPart[:-1]
