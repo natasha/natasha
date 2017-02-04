@@ -11,6 +11,7 @@ from yargy.labels import (
     gnc_match,
     eq,
     gte,
+    or_,
     in_,
 )
 from yargy.normalization import NormalizationType
@@ -330,22 +331,30 @@ STREET_DESCRIPTOR_DICTIONARY = {
     'вал',
     'аллея',
     'переулок',
+    'тупик',
 }
 
 SHORT_STREET_DESCRIPTOR_RULE = [
     {
         'labels': {
-            dictionary({
-                'ул', # улица
-                'пл', # площадь,
-                'пр', # проспект / проезд?
-                'пр-том', # see kmike/github issue #88
-                'пр-кт',
-                'пер', # переулок
-                'б-литр', # бульвар,
-                'наб', # набережная
-                'ш', # шоссе
-            }),
+            or_((
+                dictionary({
+                    'ул', # улица
+                    'пр', # проспект / проезд?
+                    'проспа', # проспект
+                    'пр-том', # see kmike/github issue #88
+                    'площадь', # площадь,
+                    'пр-кт', # проспект
+                    'пр-далее', # проезд
+                    'б-литр', # бульвар, #88
+                    'наб', # набережная
+                    'ш', # шоссе
+                    'тупой', # тупик, #88
+                }),
+                in_({
+                    'пер' # переулок, #88
+                }),
+            )),
         },
         'normalization': NormalizationType.Original,
     },
@@ -388,6 +397,8 @@ NUMERIC_STREET_PART_RULE = [ # 1-я, 10-й, 100500-ой и т.д.
         'normalization': NormalizationType.Original,
     }
 ]
+
+NUMERIC_STREET_PART_WITHOUT_SUFFIX_RULE = NUMERIC_STREET_PART_RULE[:1]
 
 class Address(Enum):
 
@@ -452,6 +463,7 @@ class Address(Enum):
                 gram_not('Abbr'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'repeatable': True,
             'normalization': NormalizationType.Inflected,
         }
     ]
@@ -500,20 +512,44 @@ class Address(Enum):
         },
     ] + GentFullReversed[1:]
 
+    # улица В. В. Ленина
+    GentFullReversedWithExtendedShortcut = GentFullReversedWithShortcut[:3] + GentFullReversedWithShortcut[1:3] + GentFullReversedWithShortcut[3:]
+
     # пр. Маршала жукова
     GentShortReversed = SHORT_STREET_DESCRIPTOR_RULE + GentFullReversed[1:]
 
     # пр. К. Маркса
     GentShortReversedWithShortcut = SHORT_STREET_DESCRIPTOR_RULE + GentFullReversedWithShortcut[1:]
 
+    # пл. В. В. Ленина
+    GentShortReversedWithExtendedShortcut = SHORT_STREET_DESCRIPTOR_RULE + GentFullReversedWithExtendedShortcut[1:]
+
+    # Николая Ершова улица
+    GentFull = GentFullReversed[1:] + GentFullReversed[:1]
+
+    # Обуховской Обороны пр-кт
+    GentShort = GentShortReversed[2:] + SHORT_STREET_DESCRIPTOR_RULE
+
     # 1-я новорублевская улица
-    AdjFullWithNumericPart =  NUMERIC_STREET_PART_RULE + AdjFull
+    AdjFullWithNumericPart = NUMERIC_STREET_PART_RULE + AdjFull
 
     # улица 1-я новорублевская
-    AdjFullReversedWithNumericPart =  AdjFullReversed[:1] + AdjFullWithNumericPart[:-1]
+    AdjFullReversedWithNumericPart = AdjFullReversed[:1] + AdjFullWithNumericPart[:-1]
 
     # 1-я новорублевская ул.
     AdjShortWithNumericPart = AdjFullWithNumericPart[:-1] + SHORT_STREET_DESCRIPTOR_RULE
 
     # ул. 1-я промышленная
     AdjShortReversedWithNumericPart = SHORT_STREET_DESCRIPTOR_RULE + AdjFullWithNumericPart[:-1]
+
+    # проспект 50 лет октября
+    GentFullReversedWithNumericPrefix = GentFullReversed[:1] + NUMERIC_STREET_PART_WITHOUT_SUFFIX_RULE + GentFullReversed[1:2] + GentFullReversed[1:]
+
+    # пр-т. 50 лет советской власти
+    GentShortReversedWithNumericPrefix = GentShortReversed[:2] + NUMERIC_STREET_PART_WITHOUT_SUFFIX_RULE + GentFullReversed[1:2] + GentFullReversed[1:]
+
+    # 2-ой проезд Перова Поля
+    GentNumericSplittedByFullDescriptor = NUMERIC_STREET_PART_RULE + GentFullReversed
+
+    # 7-я ул. текстильщиков
+    GentNumericSplittedByShortDescriptor = NUMERIC_STREET_PART_RULE + GentShortReversed
