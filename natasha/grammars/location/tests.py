@@ -99,6 +99,24 @@ class AddressTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Address.AdjFull)
         self.assertEqual(['вторая', 'московская', 'улица'], [x.value for x in match])
 
+    def test_adj_full_with_f_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('на зеленой улице, дом 7')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjFullWithFHn)
+        self.assertEqual(['зеленой', 'улице', ',', 'дом', 7], [x.value for x in match])
+
+    def test_adj_full_with_s_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('на зеленой улице, д. 7')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjFullWithSHn)
+        self.assertEqual(['зеленой', 'улице', ',', 'д', '.', 7], [x.value for x in match])
+
     def test_adj_short(self):
         grammar, match = list(self.combinator.extract('ул. Нижняя Красносельская'))[0]
         self.assertEqual(grammar, natasha.Address.AdjShort)
@@ -111,6 +129,24 @@ class AddressTestCase(BaseTestCase):
         )[0]
         self.assertEqual(grammar, natasha.Address.AdjShort)
         self.assertEqual(['пл', '.', 'Ленина'], [x.value for x in match])
+
+    def test_adj_short_with_f_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('ул. Нижняя Красносельская, дом 7')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjShortWithFHn)
+        self.assertEqual(['ул', '.', 'Нижняя', 'Красносельская', ',', 'дом', 7], [x.value for x in match])
+
+    def test_adj_short_with_s_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('ул. Нижняя Красносельская д 7')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjShortWithSHn)
+        self.assertEqual(['ул', '.', 'Нижняя', 'Красносельская', 'д', 7], [x.value for x in match])
 
     def test_adj_short_reversed(self):
 
@@ -130,6 +166,69 @@ class AddressTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Address.AdjShortReversed)
         self.assertEqual(['Настасьинский', 'пер', '.'], [x.value for x in match])
 
+    def test_adj_short_reversed_with_f_house_number(self):
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('московская ул. дом 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjShortReversedWithFHn)
+        self.assertEqual(['московская', 'ул', '.', 'дом', 1], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('Настасьинский пер., дом 2')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjShortReversedWithFHn)
+        self.assertEqual(['Настасьинский', 'пер', '.', ',', 'дом', 2], [x.value for x in match])
+
+    def test_adj_short_reversed_with_s_house_number(self):
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('московская ул. д 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjShortReversedWithSHn)
+        self.assertEqual(['московская', 'ул', '.', 'д', 1], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('Настасьинский пер., д. 2')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjShortReversedWithSHn)
+        self.assertEqual(['Настасьинский', 'пер', '.', ',', 'д', '.', 2], [x.value for x in match])
+
+    def test_adj_full_reversed(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Зеленая')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjFullReversed)
+        self.assertEqual(['улица', 'Зеленая'], [x.value for x in match])
+
+    def test_adj_full_reversed_with_f_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Зеленая дом 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjFullReversedWithFHn)
+        self.assertEqual(['улица', 'Зеленая', 'дом', 1], [x.value for x in match])
+
+    def test_adj_full_reversed_with_s_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Зеленая д 2')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjFullReversedWithSHn)
+        self.assertEqual(['улица', 'Зеленая', 'д', 2], [x.value for x in match])
+
     def test_adj_noun_full(self):
         grammar, match = list(
             self.combinator.resolve_matches(
@@ -138,6 +237,24 @@ class AddressTestCase(BaseTestCase):
         )[0]
         self.assertEqual(grammar, natasha.Address.AdjNounFull)
         self.assertEqual(['улица', 'Красной', 'Гвардии'], [x.value for x in match])
+
+    def test_adj_noun_full_with_f_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Красной Гвардии, дом 2')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjNounFullWithFHn)
+        self.assertEqual(['улица', 'Красной', 'Гвардии', ',', 'дом', 2], [x.value for x in match])
+
+    def test_adj_noun_full_with_s_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Красной Гвардии д1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjNounFullWithSHn)
+        self.assertEqual(['улица', 'Красной', 'Гвардии', 'д', 1], [x.value for x in match])
 
     def test_adj_noun_short(self):
         grammar, match = list(
@@ -148,6 +265,24 @@ class AddressTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Address.AdjNounShort)
         self.assertEqual(['ул', '.', 'Брянской', 'пролетарской', 'дивизии'], [x.value for x in match])
 
+    def test_adj_noun_short_with_f_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('ул. Брянской пролетарской дивизии дом 2')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjNounShortWithFHn)
+        self.assertEqual(['ул', '.', 'Брянской', 'пролетарской', 'дивизии', 'дом', 2], [x.value for x in match])
+
+    def test_adj_noun_short_with_s_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('ул. Брянской пролетарской дивизии, д. 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjNounShortWithSHn)
+        self.assertEqual(['ул', '.', 'Брянской', 'пролетарской', 'дивизии', ',', 'д', '.', 1], [x.value for x in match])
+
     def test_gent_full(self):
         grammar, match = list(
             self.combinator.resolve_matches(
@@ -157,6 +292,24 @@ class AddressTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Address.GentFull)
         self.assertEqual(['Николая', 'Ершова', 'улица'], [x.value for x in match])
 
+    def test_gent_full_with_f_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('Николая Ершова улица дом1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullWithFHn)
+        self.assertEqual(['Николая', 'Ершова', 'улица', 'дом', 1], [x.value for x in match])
+
+    def test_gent_full_with_s_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('Николая Ершова улица, д.1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullWithSHn)
+        self.assertEqual(['Николая', 'Ершова', 'улица', ',', 'д', '.', 1], [x.value for x in match])
+
     def test_gent_short(self):
         grammar, match = list(
             self.combinator.resolve_matches(
@@ -165,6 +318,24 @@ class AddressTestCase(BaseTestCase):
         )[0]
         self.assertEqual(grammar, natasha.Address.GentShort)
         self.assertEqual(['Обуховской', 'Обороны', 'пр-кт'], [x.value for x in match])
+
+    def test_gent_short_with_f_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('Обуховской Обороны пр-кт, дом 5')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentShortWithFHn)
+        self.assertEqual(['Обуховской', 'Обороны', 'пр-кт', ',','дом', 5], [x.value for x in match])
+
+    def test_gent_short_with_s_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('Обуховской Обороны пр-кт д 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentShortWithSHn)
+        self.assertEqual(['Обуховской', 'Обороны', 'пр-кт', 'д', 1], [x.value for x in match])
 
     def test_gent_full_reversed(self):
         grammar, match = list(
@@ -191,6 +362,56 @@ class AddressTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Address.GentFullReversed)
         self.assertEqual(['улица', 'Федосеенко'], [x.value for x in match])
 
+    def test_gent_full_reversed_with_f_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('проспект Юрия Гагарина, дом 10')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversedWithFHn)
+        self.assertEqual(['проспект', 'Юрия', 'Гагарина', ',', 'дом', 10], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Богомягкова дом 10')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversedWithFHn)
+        self.assertEqual(['улица', 'Богомягкова', 'дом', 10], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Федосеенко дом5')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversedWithFHn)
+        self.assertEqual(['улица', 'Федосеенко', 'дом', 5], [x.value for x in match])
+
+    def test_gent_full_reversed_s_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('проспект Юрия Гагарина д1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversedWithSHn)
+        self.assertEqual(['проспект', 'Юрия', 'Гагарина', 'д', 1], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Богомягкова, д. 10')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversedWithSHn)
+        self.assertEqual(['улица', 'Богомягкова', ',', 'д', '.', 10], [x.value for x in match])
+
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица Федосеенко д 10')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversedWithSHn)
+        self.assertEqual(['улица', 'Федосеенко', 'д', 10], [x.value for x in match])
+
     def test_gent_full_reversed_with_shortcut(self):
         grammar, match = list(
             self.combinator.resolve_matches(
@@ -208,6 +429,42 @@ class AddressTestCase(BaseTestCase):
         )[0]
         self.assertEqual(grammar, natasha.Address.GentFullReversedWithExtendedShortcut)
         self.assertEqual(['улица', 'В', '.', 'В', '.', 'Ленина'], [x.value for x in match])
+
+    def test_gent_full_reversed_with_shortcut_and_f_h_n(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица К. Маркса дом 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversedWithShortcutAndFHn)
+        self.assertEqual(['улица', 'К', '.', 'Маркса', 'дом',  1], [x.value for x in match])
+
+    def test_gent_full_reversed_with_shortcut_and_s_h_n(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица К. Маркса, д. 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversedWithShortcutAndSHn)
+        self.assertEqual(['улица', 'К', '.', 'Маркса', ',', 'д', '.', 1], [x.value for x in match])
+
+    def test_gent_full_reversed_with_extended_shortcut_and_f_h_n(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица В. В. Ленина дом 2')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversedWithExtendedShortcutAndFHn)
+        self.assertEqual(['улица', 'В', '.', 'В', '.', 'Ленина', 'дом', 2], [x.value for x in match])
+
+    def test_gent_full_reversed_with_extended_shortcut_and_s_h_n(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('улица В. В. Ленина д 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentFullReversedWithExtendedShortcutAndSHn)
+        self.assertEqual(['улица', 'В', '.', 'В', '.', 'Ленина', 'д', 1], [x.value for x in match])
 
     def test_gent_short_reversed(self):
         grammar, match = list(
@@ -243,6 +500,24 @@ class AddressTestCase(BaseTestCase):
         # self.assertEqual(grammar, natasha.Address.GentShortReversed)
         # self.assertEqual(['ул', '.', 'Розы', 'Люксембург'], [x.value for x in match])
 
+    def test_gent_short_reversed_with_f_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('пр. Маршала Жукова дом 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentShortReversedWithFHn)
+        self.assertEqual(['пр', '.', 'Маршала', 'Жукова', 'дом', 1], [x.value for x in match])
+
+    def test_gent_short_reversed_with_s_house_number(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('пр. Маршала Жукова д. 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentShortReversedWithSHn)
+        self.assertEqual(['пр', '.', 'Маршала', 'Жукова', 'д', '.', 1], [x.value for x in match])
+
     def test_gent_short_reversed_with_shortcut(self):
         grammar, match = list(
             self.combinator.resolve_matches(
@@ -260,6 +535,42 @@ class AddressTestCase(BaseTestCase):
         )[0]
         self.assertEqual(grammar, natasha.Address.GentShortReversedWithExtendedShortcut)
         self.assertEqual(['пр', '.', 'В', '.', 'В', '.', 'Ленина'], [x.value for x in match])
+
+    def test_gent_short_reversed_with_shortcut_and_f_h_n(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('ул. К. Маркса дом 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentShortReversedWithShortcutAndFHn)
+        self.assertEqual(['ул', '.', 'К', '.', 'Маркса', 'дом',  1], [x.value for x in match])
+
+    def test_gent_short_reversed_with_shortcut_and_s_h_n(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('ул. К. Маркса, д. 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentShortReversedWithShortcutAndSHn)
+        self.assertEqual(['ул', '.', 'К', '.', 'Маркса', ',', 'д', '.', 1], [x.value for x in match])
+
+    def test_gent_short_reversed_with_extended_shortcut_and_f_h_n(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('ул. В. В. Ленина дом 2')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentShortReversedWithExtendedShortcutAndFHn)
+        self.assertEqual(['ул', '.', 'В', '.', 'В', '.', 'Ленина', 'дом', 2], [x.value for x in match])
+
+    def test_gent_short_reversed_with_extended_shortcut_and_s_h_n(self):
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract('ул. В. В. Ленина д 1')
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.GentShortReversedWithExtendedShortcutAndSHn)
+        self.assertEqual(['ул', '.', 'В', '.', 'В', '.', 'Ленина', 'д', 1], [x.value for x in match])
 
     def test_numeric_adj_full(self):
         grammar, match = list(

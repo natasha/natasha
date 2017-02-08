@@ -332,6 +332,8 @@ STREET_DESCRIPTOR_DICTIONARY = {
     'аллея',
     'переулок',
     'тупик',
+    'тракт',
+    'дорога',
 }
 
 SHORT_STREET_DESCRIPTOR_RULE = [
@@ -347,12 +349,16 @@ SHORT_STREET_DESCRIPTOR_RULE = [
                     'пр-кт', # проспект
                     'пр-далее', # проезд
                     'б-литр', # бульвар, #88
+                    'б-р', # бульвар
+                    'бул', # бульвар
                     'наб', # набережная
                     'ш', # шоссе
                     'тупой', # тупик, #88
+                    'дора', # дорога, #88
                 }),
                 in_({
-                    'пер' # переулок, #88
+                    'пер', # переулок, #88,
+                    'н', # набережная
                 }),
             )),
         },
@@ -399,6 +405,52 @@ NUMERIC_STREET_PART_RULE = [ # 1-я, 10-й, 100500-ой и т.д.
 ]
 
 NUMERIC_STREET_PART_WITHOUT_SUFFIX_RULE = NUMERIC_STREET_PART_RULE[:1]
+
+HOUSE_NUMBER_FULL_GRAMMAR = [ # дом 1, дом 2 и т.д.
+    {
+        'labels': [
+            dictionary({
+                'дом',
+            }),
+        ],
+        'normalization': NormalizationType.Inflected,
+    },
+    {
+        'labels': [
+            gram('INT'),
+            gte(1),
+        ],
+    }
+]
+
+HOUSE_NUMBER_SHORT_GRAMMAR = [
+    {
+        'labels': [
+            dictionary({
+                'далее', # д. #88
+            })
+        ],
+        'normalization': NormalizationType.Original,
+    },
+    {
+        'labels': [
+            eq('.'),
+        ],
+        'optional': True,
+        'normalization': NormalizationType.Original,
+    },
+    HOUSE_NUMBER_FULL_GRAMMAR[-1],
+]
+
+OPTIONAL_COMMA_GRAMMAR = [
+    {
+        'labels': [
+            eq(','),
+        ],
+        'optional': True,
+        'normalization': NormalizationType.Original,
+    }
+]
 
 class Address(Enum):
 
@@ -553,3 +605,166 @@ class Address(Enum):
 
     # 7-я ул. текстильщиков
     GentNumericSplittedByShortDescriptor = NUMERIC_STREET_PART_RULE + GentShortReversed
+
+    '''
+    Street names with prefixed house numbers
+    '''
+
+    # Зеленая улица, дом 7
+    AdjFullWithFHn = AdjFull + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    AdjFullWithSHn = AdjFull + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # улица Зеленая, дом 7
+    AdjFullReversedWithFHn = AdjFullReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    AdjFullReversedWithSHn = AdjFullReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # ул. Нижняя Красносельская дом 7
+    AdjShortWithFHn = AdjShort + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    AdjShortWithSHn = AdjShort + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # Настасьинский пер., дом 2
+    AdjShortReversedWithFHn = AdjShortReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    AdjShortReversedWithSHn = AdjShortReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # улица Красной Гвардии, дом 2
+    AdjNounFullWithFHn = AdjNounFull + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    AdjNounFullWithSHn = AdjNounFull + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # ул. Брянской пролетарской дивизии дом 2
+    AdjNounShortWithFHn = AdjNounShort + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    AdjNounShortWithSHn = AdjNounShort + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # Николая Ершова улица дом 1
+    GentFullWithFHn = GentFull + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentFullWithSHn = GentFull + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # улица Карла Маркса дом 1
+    GentFullReversedWithFHn = GentFullReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentFullReversedWithSHn = GentFullReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # улица К. Маркса, дом 1
+    GentFullReversedWithShortcutAndFHn = GentFullReversedWithShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentFullReversedWithShortcutAndSHn = GentFullReversedWithShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # улица В. И. Ленина, дом 1
+    GentFullReversedWithExtendedShortcutAndFHn = GentFullReversedWithExtendedShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentFullReversedWithExtendedShortcutAndSHn = GentFullReversedWithExtendedShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # Обуховской Обороны пр-кт дом 1
+    GentShortWithFHn = GentShort + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentShortWithSHn = GentShort + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # пр-кт Обуховской Обороны дом 1
+    GentShortReversedWithFHn = GentShortReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentShortReversedWithSHn = GentShortReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # ул. К. Маркса, дом 1
+    GentShortReversedWithShortcutAndFHn = GentShortReversedWithShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentShortReversedWithShortcutAndSHn = GentShortReversedWithShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # ул. В. И. Ленина, дом 1
+    GentShortReversedWithExtendedShortcutAndFHn = GentShortReversedWithExtendedShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentShortReversedWithExtendedShortcutAndSHn = GentShortReversedWithExtendedShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # 1-я новорублевская улица дом 1
+    AdjFullWithNumericPartWithFHn = AdjFullWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    AdjFullWithNumericPartWithSHn = AdjFullWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # улица 1-я новорублевская, дом 1
+    AdjFullReversedWithNumericPartWithFHn = AdjFullReversedWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    AdjFullReversedWithNumericPartWithSHn = AdjFullReversedWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # 1-я новорублевская ул. дом 1
+    AdjShortWithNumericPartWithFHn = AdjShortWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    AdjShortWithNumericPartWithSHn = AdjShortWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # ул. 1-я промышленная, дом 1
+    AdjShortReversedWithNumericPartWithFHn = AdjShortReversedWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    AdjShortReversedWithNumericPartWithSHn = AdjShortReversedWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # проспект 50 лет октября, дом 1
+    GentFullReversedWithNumericPrefixWithFHn = GentFullReversedWithNumericPrefix + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentFullReversedWithNumericPrefixWithSHn = GentFullReversedWithNumericPrefix + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # пр-т. 50 лет советской власти, дом 1
+    GentShortReversedWithNumericPrefixWithFHn = GentShortReversedWithNumericPrefix + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentShortReversedWithNumericPrefixWithSHn = GentShortReversedWithNumericPrefix + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # 2-ой проезд Перова Поля, дом 1
+    GentNumericSplittedByFullDescriptorWithFHn = GentNumericSplittedByFullDescriptor + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentNumericSplittedByFullDescriptorWithSHn = GentNumericSplittedByFullDescriptor + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+    # 7-я ул. текстильщиков, дом 1
+    GentNumericSplittedByShortDescriptorWithFHn = GentNumericSplittedByShortDescriptor + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR
+    GentNumericSplittedByShortDescriptorWithSHn = GentNumericSplittedByShortDescriptor + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_SHORT_GRAMMAR
+
+
+    '''
+    Street names with not prefixed house numbers
+    '''
+
+    # Зеленая улица, 7
+    AdjFullWithRHn = AdjFull + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # улица Зеленая, 7
+    AdjFullReversedWithRHn = AdjFullReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # ул. Нижняя Красносельская, 7
+    AdjShortWithRHn = AdjShort + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # Настасьинский пер., 2
+    AdjShortReversedWithRHn = AdjShortReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # улица Красной Гвардии, 2
+    AdjNounFullWithRHn = AdjNounFull + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # ул. Брянской пролетарской дивизии, 2
+    AdjNounShortWithRHn = AdjNounShort + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # Николая Ершова улица, 1
+    GentFullWithRHn = GentFull + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # улица Карла Маркса, 1
+    GentFullReversedWithRHn = GentFullReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # улица К. Маркса, 1
+    GentFullReversedWithShortcutAndRHn = GentFullReversedWithShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # улица В. И. Ленина, 1
+    GentFullReversedWithExtendedShortcutAndRHn = GentFullReversedWithExtendedShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # Обуховской Обороны пр-кт, 1
+    GentShortWithRHn = GentShort + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # пр-кт Обуховской Обороны, 1
+    GentShortReversedWithRHn = GentShortReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # ул. К. Маркса, 1
+    GentShortReversedWithShortcutAndRHn = GentShortReversedWithShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+ 
+    # ул. В. И. Ленина, 1
+    GentShortReversedWithExtendedShortcutAndRHn = GentShortReversedWithExtendedShortcut + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # 1-я новорублевская улица, 1
+    AdjFullWithNumericPartWithRHn = AdjFullWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # улица 1-я новорублевская, 1
+    AdjFullReversedWithNumericPartWithRHn = AdjFullReversedWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # 1-я новорублевская ул., 1
+    AdjShortWithNumericPartWithRHn = AdjShortWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # ул. 1-я промышленная, 1
+    AdjShortReversedWithNumericPartWithRHn = AdjShortReversedWithNumericPart + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # проспект 50 лет октября, 1
+    GentFullReversedWithNumericPrefixWithRHn = GentFullReversedWithNumericPrefix + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # пр-т. 50 лет советской власти, 1
+    GentShortReversedWithNumericPrefixWithRHn = GentShortReversedWithNumericPrefix + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # 2-ой проезд Перова Поля, 1
+    GentNumericSplittedByFullDescriptorWithRHn = GentNumericSplittedByFullDescriptor + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
+
+    # 7-я ул. текстильщиков, 1
+    GentNumericSplittedByShortDescriptorWithRHn = GentNumericSplittedByShortDescriptor + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_FULL_GRAMMAR[1:]
