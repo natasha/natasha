@@ -3,8 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Natasha's documentation!
+Добро пожаловать!
 ===================================
+
+.. image:: http://i.imgur.com/XeXzS32.png
+
+Вы попали на главную страницу документации Natasha - инструмента для извлечения и интерпретации именованных сущностей
+
+Наша цель - сделать простой и удобный инструмент, не уступающий аналогичным коммерческим решениям
 
 .. toctree::
    :maxdepth: 2
@@ -12,14 +18,3 @@ Welcome to Natasha's documentation!
 
    grammars
    gazetteer
-
-Зачем?
---------
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
