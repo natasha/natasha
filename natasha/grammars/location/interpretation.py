@@ -11,3 +11,13 @@ class LocationObject(InterpretationObject):
 
         Name = 0 # российская
         Descriptor = 1 # федерация
+
+class AddressObject(InterpretationObject):
+
+    class Attributes(Enum):
+
+        StreetDescriptor = 0
+        StreetName = 1
+
+        HouseNumberDescriptor = 2
+        HouseNumber = 3

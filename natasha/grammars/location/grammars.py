@@ -15,7 +15,7 @@ from yargy.labels import (
     in_,
 )
 from yargy.normalization import NormalizationType
-from natasha.grammars.location.interpretation import LocationObject
+from natasha.grammars.location.interpretation import LocationObject, AddressObject
 
 
 FEDERAL_DISTRICT_DICTIONARY = {
@@ -363,6 +363,9 @@ SHORT_STREET_DESCRIPTOR_RULE = [
             )),
         },
         'normalization': NormalizationType.Original,
+        'interpretation': {
+            'attribute': AddressObject.Attributes.StreetDescriptor,
+        },
     },
     {
         'labels': [
@@ -380,12 +383,18 @@ NUMERIC_STREET_PART_RULE = [ # 1-я, 10-й, 100500-ой и т.д.
             gte(1),
         ],
         'normalization': NormalizationType.Original,
+        'interpretation': {
+            'attribute': AddressObject.Attributes.StreetName,
+        },
     },
     {
         'labels': [
             eq('-'),
         ],
         'normalization': NormalizationType.Original,
+        'interpretation': {
+            'attribute': AddressObject.Attributes.StreetName,
+        },
     },
     {
         'labels': [
@@ -401,6 +410,9 @@ NUMERIC_STREET_PART_RULE = [ # 1-я, 10-й, 100500-ой и т.д.
             }),
         ],
         'normalization': NormalizationType.Original,
+        'interpretation': {
+            'attribute': AddressObject.Attributes.StreetName,
+        },
     }
 ]
 
@@ -414,12 +426,18 @@ HOUSE_NUMBER_FULL_GRAMMAR = [ # дом 1, дом 2 и т.д.
             }),
         ],
         'normalization': NormalizationType.Inflected,
+        'interpretation': {
+            'attribute': AddressObject.Attributes.HouseNumberDescriptor,
+        },
     },
     {
         'labels': [
             gram('INT'),
             gte(1),
         ],
+        'interpretation': {
+            'attribute': AddressObject.Attributes.HouseNumber,
+        },
     }
 ]
 
@@ -431,6 +449,9 @@ HOUSE_NUMBER_SHORT_GRAMMAR = [
             })
         ],
         'normalization': NormalizationType.Original,
+        'interpretation': {
+            'attribute': AddressObject.Attributes.HouseNumberDescriptor,
+        },
     },
     {
         'labels': [
@@ -462,6 +483,9 @@ class Address(Enum):
                 gram_not('Abbr'),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': AddressObject.Attributes.StreetName,
+            },
         },
         {
             'labels': [
@@ -472,6 +496,9 @@ class Address(Enum):
             'repeatable': True,
             'optional': True,
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': AddressObject.Attributes.StreetName,
+            },
         },
         {
             'labels': [
@@ -479,6 +506,9 @@ class Address(Enum):
                 gnc_match(-1, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': AddressObject.Attributes.StreetDescriptor,
+            },
         },
     ]
 
@@ -489,6 +519,9 @@ class Address(Enum):
                 dictionary(STREET_DESCRIPTOR_DICTIONARY),
             ],
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': AddressObject.Attributes.StreetDescriptor,
+            },
         },
         {
             'labels': [
@@ -498,6 +531,9 @@ class Address(Enum):
             ],
             'repeatable': True,
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': AddressObject.Attributes.StreetName,
+            },
         },
     ]
 
@@ -517,6 +553,9 @@ class Address(Enum):
             ],
             'repeatable': True,
             'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': AddressObject.Attributes.StreetName,
+            },
         }
     ]
 
@@ -534,6 +573,9 @@ class Address(Enum):
                 gram_not('Abbr'),
             ],
             'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': AddressObject.Attributes.StreetName,
+            },
         },
         {
             'labels': [
@@ -544,6 +586,9 @@ class Address(Enum):
             'optional': True,
             'repeatable': True,
             'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': AddressObject.Attributes.StreetName,
+            },
         },
     ]
 
@@ -555,6 +600,9 @@ class Address(Enum):
                 gram('Abbr'),
             ],
             'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': AddressObject.Attributes.StreetName,
+            },
         },
         {
             'labels': [
