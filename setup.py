@@ -7,7 +7,7 @@ from natasha.commands import BuildDictionariesCommand
 
 setup(
     name='natasha',
-    version='0.4.1',
+    version='0.5.0',
     description='Named-entity recognition for russian language',
     url='https://github.com/bureaucratic-labs/natasha',
     author='Dmitry Veselov',
@@ -42,6 +42,6 @@ setup(
     keywords='natural language processing, russian morphology, named entity recognition, tomita',
     packages=find_packages(),
     install_requires=[
-        'yargy==0.5.3'
+        'yargy==0.6.0'
     ],
 )
