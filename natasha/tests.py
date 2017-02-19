@@ -16,11 +16,8 @@ from yargy.normalization import get_normalized_text
 
 class BaseTestCase(unittest.TestCase):
 
-    def setUp(self):
-        self.combinator = natasha.Combinator(
-            natasha.DEFAULT_GRAMMARS,
-        )
-
+    def setUp(self, grammars=natasha.DEFAULT_GRAMMARS):
+        self.combinator = natasha.Combinator(grammars)
 
 class DateTestCase(BaseTestCase):
 
