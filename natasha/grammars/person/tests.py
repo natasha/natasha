@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import natasha
 
 from natasha.tests import BaseTestCase
-from natasha.grammars.person import PersonObject
+from natasha.grammars.person import Person, ProbabilisticPerson, PersonObject
 
 from yargy.normalization import get_normalized_text
 from yargy.interpretation import InterpretationEngine
@@ -129,6 +129,52 @@ class PersonGrammarsTestCase(BaseTestCase):
                 normalized = get_normalized_text(tokens)
                 self.assertEqual(
                     normalized, 'исполнитель главной роли сергей шувалов')
+
+class ProbabilisticPersonGrammarsTestCase(BaseTestCase):
+
+    def setUp(self):
+        super(ProbabilisticPersonGrammarsTestCase, self).setUp([
+            Person,
+            ProbabilisticPerson,
+        ])
+
+    def test_firstname_and_lastname(self):
+        text = 'Дональд Трамп'
+        grammar, tokens = list(self.combinator.resolve_matches(
+            self.combinator.extract(text)
+        ))[0]
+        self.assertEqual(grammar, ProbabilisticPerson.FirstnameAndLastname)
+        self.assertEqual([t.value for t in tokens], ['Дональд', 'Трамп'])
+
+    def test_firstname_and_lastname_with_position(self):
+        text = 'сообщалось, что директор Федерального бюро расследований США Джеймс Коми провел закрытое совещание'
+        grammar, tokens = list(self.combinator.resolve_matches(
+            self.combinator.extract(text)
+        ))[0]
+        self.assertEqual(grammar, ProbabilisticPerson.FirstnameAndLastnameWithPosition)
+        self.assertEqual([t.value for t in tokens], ['директор', 'Федерального', 'бюро', 'расследований', 'США', 'Джеймс', 'Коми'])
+
+        text = 'Американский сенатор Крис Мерфи'
+        grammar, tokens = list(self.combinator.resolve_matches(
+            self.combinator.extract(text)
+        ))[0]
+        self.assertEqual(grammar, ProbabilisticPerson.FirstnameAndLastnameWithPosition)
+        self.assertEqual([t.value for t in tokens], ['сенатор', 'Крис', 'Мерфи'])
+
+        text = 'президент США Дональд Трамп'
+        grammar, tokens = list(self.combinator.resolve_matches(
+            self.combinator.extract(text)
+        ))[0]
+        self.assertEqual(grammar, ProbabilisticPerson.FirstnameAndLastnameWithPosition)
+        self.assertEqual([t.value for t in tokens], ['президент', 'США', 'Дональд', 'Трамп'])
+
+    def test_firstname_as_initials_and_lastname(self):
+        text = 'Д. Трамп'
+        grammar, tokens = list(self.combinator.resolve_matches(
+            self.combinator.extract(text)
+        ))[0]
+        self.assertEqual(grammar, ProbabilisticPerson.FirstnameAsInitialsAndLastname)
+        self.assertEqual([t.value for t in tokens], ['Д', '.', 'Трамп'])
 
 class PersonInterpretationTestCase(BaseTestCase):
 

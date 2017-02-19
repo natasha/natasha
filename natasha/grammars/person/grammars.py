@@ -36,7 +36,7 @@ NAME_NOBILITY_PARTICLE_DICTIONARY = {
 
 class Person(Enum):
 
-    # Иван Иванович Иванов
+    # Иванов Иван Иванович
     Full = [
         {
             'labels': [
@@ -72,7 +72,7 @@ class Person(Enum):
         },
     ]
 
-    # Иванов Иван Иванович
+    # Иван Иванович Иванов
     FullReversed = [
         {
             'labels': [
@@ -152,6 +152,9 @@ class Person(Enum):
             },
         },
     ]
+
+    # Александр Ф. Скляр
+    FullReversedWithMiddlenameAsInitials = FullReversed[:1] + InitialsAndLastname[3:]
 
     # Раневская Л. А.
     LastnameAndInitials = [
@@ -478,10 +481,6 @@ POSSIBLE_PART_OF_NAME_GRAMMAR = {
     'labels': [
         is_upper(False),
         is_capitalized(True),
-        gram_not_in({
-            'Geox',
-            'Orgn',
-        }),
     ]
 }
 
@@ -514,7 +513,7 @@ class ProbabilisticPerson(Enum):
     ] + Person.InitialsAndLastname.value[:2]
 
     FirstnameAndLastnameWithNobilityParticle = [
-        POSSIBLE_PART_OF_NAME_GRAMMAR,
+        Person.Firstname.value[0],
         {
             'labels': [
                 dictionary(NAME_NOBILITY_PARTICLE_DICTIONARY),
