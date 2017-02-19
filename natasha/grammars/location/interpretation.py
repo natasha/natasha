@@ -16,8 +16,9 @@ class AddressObject(InterpretationObject):
 
     class Attributes(Enum):
 
-        StreetDescriptor = 0
-        StreetName = 1
+        Street_Descriptor = 0
+        Street_Name = 1
 
-        HouseNumberDescriptor = 2
-        HouseNumber = 3
+        House_Number_Descriptor = 2
+        House_Number_Letter = 3
+        House_Number = 4
