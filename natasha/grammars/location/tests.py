@@ -58,6 +58,15 @@ class LocationTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Location.Object)
         self.assertEqual(['Москва'], [x.value for x in match])
 
+    def test_object_with_descriptor(self):
+        grammar, match = list(self.combinator.extract('город Москва'))[1]
+        self.assertEqual(grammar, natasha.Location.ObjectWithDescriptor)
+        self.assertEqual(['город', 'Москва'], [x.value for x in match])
+
+        grammar, match = list(self.combinator.extract('г. Санкт-Петербург'))[1]
+        self.assertEqual(grammar, natasha.Location.ObjectWithDescriptor)
+        self.assertEqual(['г', '.', 'Санкт-Петербург'], [x.value for x in match])
+
     def test_adj_federation(self):
         grammar, match = list(self.combinator.extract('В Донецкой народной республике'))[0]
         self.assertEqual(grammar, natasha.Location.AdjfFederation)
@@ -741,6 +750,16 @@ class AddressTestCase(BaseTestCase):
         )[0]
         self.assertEqual(grammar, natasha.Address.GentNumericSplittedByShortDescriptorWithHn)
         self.assertEqual([7, '-', 'я', 'ул', '.', 'текстильщиков', 'дом', 1], [x.value for x in match])
+
+    def test_street_name_with_house_letter(self):
+        text = 'Литовский бульвар 9/7).15 этаж блочного дома.В'
+        grammar, match = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract(text)
+            )
+        )[0]
+        self.assertEqual(grammar, natasha.Address.AdjFullWithHn)
+        self.assertEqual(['Литовский', 'бульвар', 9], [x.value for x in match])
 
 class LocationInterpretationTestCase(BaseTestCase):
 

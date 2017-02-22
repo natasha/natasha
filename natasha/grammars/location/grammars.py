@@ -66,6 +66,47 @@ PARTIAL_OBJECT_PREFIX_DICTIONARY = {
     'восток',
 }
 
+OBJECT_DESCRIPTOR_RULE = [
+    OR(
+        [
+            {
+                'labels': [
+                    dictionary({
+                        'город',
+                        'город-герой',
+                        'поселок',
+                        'деревня',
+                        'село',
+                    }),
+                ],
+                'interpretation': {
+                    'attribute': LocationObject.Attributes.Descriptor,
+                },
+            },
+        ],
+        [
+            {
+                'labels': [
+                    in_({
+                        'г',
+                        'п',
+                        'с',
+                        'д',
+                    }),
+                ],
+                'interpretation': {
+                    'attribute': LocationObject.Attributes.Descriptor,
+                },
+            }, {
+                'labels': [
+                    eq('.'),
+                ],
+                'optional': True,
+            }
+        ]
+    )
+]
+
 class Location(Enum):
 
     FederalDistrict = [
@@ -321,6 +362,8 @@ class Location(Enum):
             },
         },
     ]
+
+    ObjectWithDescriptor = OBJECT_DESCRIPTOR_RULE + Object
 
 STREET_DESCRIPTOR_DICTIONARY = {
     'улица',
