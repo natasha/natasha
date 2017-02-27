@@ -477,11 +477,15 @@ class Person(Enum):
     ]
 
 
-POSSIBLE_PART_OF_NAME_GRAMMAR = {
+POSSIBLE_LASTNAME_GRAMMAR = {
     'labels': [
         is_upper(False),
         is_capitalized(True),
-    ]
+    ],
+    'normalization': NormalizationType.Inflected,
+    'interpretation': {
+        'attribute': PersonObject.Attributes.Lastname,
+    }
 }
 
 class ProbabilisticPerson(Enum):
@@ -493,23 +497,23 @@ class ProbabilisticPerson(Enum):
 
     FirstnameAndLastname = [
         Person.Firstname.value[0],
-        POSSIBLE_PART_OF_NAME_GRAMMAR,
+        POSSIBLE_LASTNAME_GRAMMAR,
     ]
 
     InitialsAndLastname = Person.InitialsAndLastname.value[:4] + [
-        POSSIBLE_PART_OF_NAME_GRAMMAR,
+        POSSIBLE_LASTNAME_GRAMMAR,
     ]
 
     LastnameAndInitials = [
-        POSSIBLE_PART_OF_NAME_GRAMMAR
+        POSSIBLE_LASTNAME_GRAMMAR
     ] + Person.InitialsAndLastname.value[:4]
 
     FirstnameAsInitialsAndLastname = Person.InitialsAndLastname.value[:2] + [
-        POSSIBLE_PART_OF_NAME_GRAMMAR,
+        POSSIBLE_LASTNAME_GRAMMAR,
     ]
 
     LastnameAndfirstnameAsInitials = [
-        POSSIBLE_PART_OF_NAME_GRAMMAR,
+        POSSIBLE_LASTNAME_GRAMMAR,
     ] + Person.InitialsAndLastname.value[:2]
 
     FirstnameAndLastnameWithNobilityParticle = [
@@ -519,25 +523,34 @@ class ProbabilisticPerson(Enum):
                 dictionary(NAME_NOBILITY_PARTICLE_DICTIONARY),
             ],
         },
-        POSSIBLE_PART_OF_NAME_GRAMMAR,
+        POSSIBLE_LASTNAME_GRAMMAR,
     ]
 
     FirstnameAndLastnameWithPosition = Person.WithPosition.value[:-1] + [
         FirstnameAndLastname[-1]
     ]
 
+    # John S. Doe
     Latin = [
         {
             'labels': [
                 gram('LATN'),
                 is_capitalized(True),
             ],
+            'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Firstname,
+            }
         },
         {
             'labels': [
                 gram('LATN'),
                 is_capitalized(True),
             ],
+            'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Middlename,
+            }
         },
         {
             'labels': [
@@ -550,5 +563,9 @@ class ProbabilisticPerson(Enum):
                 gram('LATN'),
                 is_capitalized(True),
             ],
+            'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            }
         },
     ]
