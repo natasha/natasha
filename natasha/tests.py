@@ -213,10 +213,10 @@ class MoneyTestCase(BaseTestCase):
 class EventsTestCase(BaseTestCase):
 
     def test_object(self):
-        grammar, match = next(self.combinator.extract('шоу «Пятая империя»'))
+        grammar, match = next(self.combinator.extract('шоу «Вернувшиеся»'))
         self.assertEqual(grammar, natasha.Event.Object)
         self.assertEqual(
-            ['шоу', '«', 'Пятая', 'империя', '»'], [x.value for x in match])
+            ['шоу', '«', 'Вернувшиеся', '»'], [x.value for x in match])
 
     def test_adj_with_descriptor(self):
         grammar, match = next(
