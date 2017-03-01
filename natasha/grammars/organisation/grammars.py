@@ -85,40 +85,6 @@ class Organisation(Enum):
         },
     ]
 
-    PrefixAndNoun = [
-        {
-            'labels': [
-                and_((
-                    gram_any({
-                        'Orgn/Commercial',
-                        'Orgn/Social',
-                    }),
-                    or_((
-                        gram('sing'),
-                        gram('Sgtm'),
-                    ))
-                )),
-            ],
-            'normalization': NormalizationType.Inflected,
-            'interpretation': {
-                'attribute': OrganisationObject.Attributes.Descriptor,
-            },
-        },
-        {
-            'labels': [
-                gram('NOUN'),
-                gram_not('Orgn/Abbr'),
-                is_capitalized(True),
-                gnc_match(-1, solve_disambiguation=True)
-            ],
-            'repeatable': True,
-            'normalization': NormalizationType.Original,
-            'interpretation': {
-                'attribute': OrganisationObject.Attributes.Name,
-            },
-        },
-    ]
-
     Abbr = [
         {
             'labels': [
@@ -212,6 +178,7 @@ class Organisation(Enum):
         {
             'labels': [
                 gram('Orgn/Social'),
+                gram('sing'),
             ],
             'normalization': NormalizationType.Inflected,
             'interpretation': {
@@ -237,13 +204,11 @@ class Organisation(Enum):
         },
         {
             'labels': [
-                or_((
-                    gram_any({
-                        'gent',
-                        'accs',
-                        'ablt',
-                    }),
-                )),
+                gram_any({
+                    'gent',
+                    'accs',
+                    'ablt',
+                }),
                 gram_not_in({
                     'PREP',
                     'Name',

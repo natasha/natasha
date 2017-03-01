@@ -58,23 +58,6 @@ class LocationTestCase(BaseTestCase):
         self.assertEqual(grammar, natasha.Location.Object)
         self.assertEqual(['Москва'], [x.value for x in match])
 
-    def test_object_with_descriptor(self):
-        grammar, match = list(
-            self.combinator.resolve_matches(
-                self.combinator.extract('город Москва')
-            )
-        )[0]
-        self.assertEqual(grammar, natasha.Location.ObjectWithDescriptor)
-        self.assertEqual(['город', 'Москва'], [x.value for x in match])
-
-        grammar, match = list(
-            self.combinator.resolve_matches(
-                self.combinator.extract('г. Санкт-Петербург')
-            )
-        )[0]
-        self.assertEqual(grammar, natasha.Location.ObjectWithDescriptor)
-        self.assertEqual(['г', '.', 'Санкт-Петербург'], [x.value for x in match])
-
     def test_adj_federation(self):
         grammar, match = list(self.combinator.extract('В Донецкой народной республике'))[0]
         self.assertEqual(grammar, natasha.Location.AdjfFederation)

@@ -7,6 +7,9 @@ from yargy.labels import (
     in_,
     is_capitalized,
 )
+from yargy.normalization import NormalizationType
+
+from natasha.grammars.organisation import OrganisationObject
 
 
 class Brand(Enum):
@@ -18,12 +21,24 @@ class Brand(Enum):
                 is_capitalized(True),
             ],
             'repeatable': True,
+            'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': [
+                    OrganisationObject.Attributes.Name,
+                ]
+            },
         },
         {
             'labels': [
                 gram('INT'),
             ],
             'optional': True,
+            'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': [
+                    OrganisationObject.Attributes.Name,
+                ]
+            },
         }
     ]
 
@@ -36,6 +51,12 @@ class Brand(Enum):
                     '/',
                 }),
             ],
+            'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': [
+                    OrganisationObject.Attributes.Name,
+                ]
+            },
         },
         Latin[0],
     ]
@@ -45,5 +66,11 @@ class Brand(Enum):
             'labels': [
                 gram('Trad'),
             ],
+            'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': [
+                    OrganisationObject.Attributes.Name,
+                ]
+            },
         }
     ]

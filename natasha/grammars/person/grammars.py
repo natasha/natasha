@@ -479,10 +479,10 @@ class Person(Enum):
 
 POSSIBLE_LASTNAME_GRAMMAR = {
     'labels': [
-        is_upper(False),
         is_capitalized(True),
+        is_upper(False),
     ],
-    'normalization': NormalizationType.Inflected,
+    'normalization': NormalizationType.Original,
     'interpretation': {
         'attribute': PersonObject.Attributes.Lastname,
     }
@@ -515,6 +515,9 @@ class ProbabilisticPerson(Enum):
     LastnameAndfirstnameAsInitials = [
         POSSIBLE_LASTNAME_GRAMMAR,
     ] + Person.InitialsAndLastname.value[:2]
+
+    # Джон Х. Доу
+    FirstnameAndMiddlenameAsInitialsWithLastname = FirstnameAndLastname[:1] + FirstnameAsInitialsAndLastname
 
     FirstnameAndLastnameWithNobilityParticle = [
         Person.Firstname.value[0],

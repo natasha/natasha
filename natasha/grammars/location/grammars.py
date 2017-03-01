@@ -66,46 +66,6 @@ PARTIAL_OBJECT_PREFIX_DICTIONARY = {
     'восток',
 }
 
-OBJECT_DESCRIPTOR_RULE = [
-    OR(
-        [
-            {
-                'labels': [
-                    dictionary({
-                        'город',
-                        'город-герой',
-                        'поселок',
-                        'деревня',
-                        'село',
-                    }),
-                ],
-                'interpretation': {
-                    'attribute': LocationObject.Attributes.Descriptor,
-                },
-            },
-        ],
-        [
-            {
-                'labels': [
-                    in_({
-                        'г',
-                        'п',
-                        'с',
-                        'д',
-                    }),
-                ],
-                'interpretation': {
-                    'attribute': LocationObject.Attributes.Descriptor,
-                },
-            }, {
-                'labels': [
-                    eq('.'),
-                ],
-                'optional': True,
-            }
-        ]
-    )
-]
 
 class Location(Enum):
 
@@ -115,6 +75,7 @@ class Location(Enum):
                 gram('ADJF'),
                 dictionary(FEDERAL_DISTRICT_DICTIONARY),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -124,6 +85,7 @@ class Location(Enum):
                 gnc_match(-1, solve_disambiguation=True),
                 dictionary({'федеральный', }),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Descriptor,
             },
@@ -133,6 +95,7 @@ class Location(Enum):
                 gnc_match(-1, solve_disambiguation=True),
                 dictionary({'округ', }),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Descriptor,
             },
@@ -145,6 +108,7 @@ class Location(Enum):
                 gram('ADJF'),
                 dictionary(FEDERAL_DISTRICT_DICTIONARY),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -164,6 +128,7 @@ class Location(Enum):
             'labels': [
                 gram('ADJF'),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -173,6 +138,7 @@ class Location(Enum):
                 gnc_match(-1, solve_disambiguation=True),
                 dictionary({'автономный', }),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Descriptor,
             },
@@ -182,6 +148,7 @@ class Location(Enum):
                 gnc_match(-1, solve_disambiguation=True),
                 dictionary({'округ', }),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Descriptor,
             },
@@ -193,6 +160,7 @@ class Location(Enum):
             'labels': [
                 gram('ADJF'),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -212,6 +180,7 @@ class Location(Enum):
             'labels': [
                 gram('ADJF'),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -221,6 +190,7 @@ class Location(Enum):
                 dictionary(REGION_TYPE_DICTIONARY),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Descriptor,
             },
@@ -233,6 +203,7 @@ class Location(Enum):
                 gram('ADJF'),
                 dictionary(COMPLEX_OBJECT_PREFIX_DICTIONARY),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -243,6 +214,7 @@ class Location(Enum):
                 gram('Geox'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -255,6 +227,7 @@ class Location(Enum):
                 gram('NOUN'),
                 dictionary(PARTIAL_OBJECT_PREFIX_DICTIONARY),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -265,6 +238,7 @@ class Location(Enum):
                 gram('Geox'),
                 gnc_match(-1, solve_disambiguation=True),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -278,6 +252,7 @@ class Location(Enum):
                 gram('ADJF'),
                 is_capitalized(True),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -289,6 +264,7 @@ class Location(Enum):
             ],
             'optional': True,
             'repeatable': True,
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -301,6 +277,7 @@ class Location(Enum):
                     'республика',
                 }),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Descriptor,
             },
@@ -314,6 +291,7 @@ class Location(Enum):
                 gram('Adjx'),
                 is_capitalized(True),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -325,6 +303,7 @@ class Location(Enum):
             ],
             'optional': True,
             'repeatable': True,
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -336,6 +315,7 @@ class Location(Enum):
                     'штат',
                 }),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -345,6 +325,7 @@ class Location(Enum):
                 gram('gent'),
             ],
             'optional': True,
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
@@ -357,13 +338,12 @@ class Location(Enum):
                 is_capitalized(True),
                 gram('Geox'),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': LocationObject.Attributes.Name,
             },
         },
     ]
-
-    ObjectWithDescriptor = OBJECT_DESCRIPTOR_RULE + Object
 
 STREET_DESCRIPTOR_DICTIONARY = {
     'улица',
