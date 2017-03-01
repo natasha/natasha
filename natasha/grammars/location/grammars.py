@@ -275,6 +275,7 @@ class Location(Enum):
                 dictionary({
                     'федерация',
                     'республика',
+                    'империя',
                 }),
             ],
             'normalization': NormalizationType.Inflected,
@@ -313,6 +314,7 @@ class Location(Enum):
                 gnc_match(0, solve_disambiguation=True),
                 dictionary({
                     'штат',
+                    'эмират',
                 }),
             ],
             'normalization': NormalizationType.Inflected,

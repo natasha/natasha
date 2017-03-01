@@ -108,6 +108,9 @@ class Person(Enum):
         },
     ]
 
+    # Фелипе Родригес Фернандес
+    FullReversedHispanic = FullReversed[:1] + FullReversed[-1:] + FullReversed[-1:]
+
     # Л. А. Раневская
     InitialsAndLastname = [
         {
@@ -145,30 +148,13 @@ class Person(Enum):
             'labels': [
                 gram('Surn'),
                 gram_not('Abbr'),
+                gnc_match(0, solve_disambiguation=True),
             ],
             'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': PersonObject.Attributes.Lastname,
             },
         },
-    ]
-
-    # Александр Ф. Скляр
-    FullReversedWithMiddlenameAsInitials = FullReversed[:1] + InitialsAndLastname[3:]
-
-    # Раневская Л. А.
-    LastnameAndInitials = [
-        InitialsAndLastname[-1],
-    ] + InitialsAndLastname[:4]
-
-    # Раневская Л.
-    LastnameAndFirstnameAsInitials = [
-        InitialsAndLastname[-1],
-    ] + InitialsAndLastname[:2]
-
-    # Л. Раневская
-    FirstnameAsInitialsAndLastname = InitialsAndLastname[:2] + [
-        InitialsAndLastname[-1],
     ]
 
     # Иван Иванов
@@ -218,6 +204,24 @@ class Person(Enum):
                 'attribute': PersonObject.Attributes.Firstname,
             },
         },
+    ]
+
+    # Александр Ф. Скляр
+    FullReversedWithMiddlenameAsInitials = FullReversed[:1] + InitialsAndLastname[3:]
+
+    # Раневская Л. А.
+    LastnameAndInitials = [
+        LastnameAndFirstname[0],
+    ] + InitialsAndLastname[:4]
+
+    # Раневская Л.
+    LastnameAndFirstnameAsInitials = [
+        LastnameAndFirstname[0],
+    ] + InitialsAndLastname[:2]
+
+    # Л. Раневская
+    FirstnameAsInitialsAndLastname = InitialsAndLastname[:2] + [
+        InitialsAndLastname[-1],
     ]
 
     # Иван Иванович
