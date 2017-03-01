@@ -2,10 +2,12 @@
 from __future__ import unicode_literals
 
 from enum import Enum
-from jellyfish import damerau_levenshtein_distance
 
 from yargy.normalization import get_normalized_text
-from yargy.interpretation import InterpretationObject
+from yargy.interpretation import (
+    InterpretationObject,
+    damerau_levenshtein_distance,
+)
 
 
 class OrganisationObject(InterpretationObject):
