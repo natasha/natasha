@@ -118,6 +118,7 @@ class SocialOrganisationPipeline(CustomGrammemesPipeline):
         'сенат',
         'палата',
         'госдума',
+        'департамент',
         'госдепартамент',
         'конгресс',
         'партия',
