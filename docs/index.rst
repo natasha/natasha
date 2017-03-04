@@ -16,5 +16,6 @@
    :maxdepth: 2
    :caption: Содержание:
 
+   quickstart
    grammars
    gazetteer
