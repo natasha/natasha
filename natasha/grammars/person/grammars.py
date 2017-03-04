@@ -521,7 +521,9 @@ class ProbabilisticPerson(Enum):
     ] + Person.InitialsAndLastname.value[:2]
 
     # Джон Х. Доу
-    FirstnameAndMiddlenameAsInitialsWithLastname = FirstnameAndLastname[:1] + FirstnameAsInitialsAndLastname
+    FirstnameAndMiddlenameAsInitialsWithLastname = FirstnameAndLastname[:1] + Person.InitialsAndLastname.value[2:4] + [
+        POSSIBLE_LASTNAME_GRAMMAR,
+    ] 
 
     FirstnameAndLastnameWithNobilityParticle = [
         Person.Firstname.value[0],
