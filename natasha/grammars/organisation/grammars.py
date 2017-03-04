@@ -349,7 +349,8 @@ class Organisation(Enum):
             'interpretation': {
                 'attribute': OrganisationObject.Attributes.Descriptor,
             },
-        }
+        },
+        Educational[-1],
     ]
 
     AdjCommercialWithInitials = AdjCommercial + NAMED_ORG_INITIALS_PREFIX_RULE + NAMED_ORG_INITIALS_RULE

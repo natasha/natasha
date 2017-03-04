@@ -43,6 +43,11 @@ class OrganisationObject(InterpretationObject):
 
     def __eq__(self, another):
         if self.normalized_name and another.normalized_name:
+            a, b = self.normalized_name, another.normalized_name
+            if b > a:
+                a, b = b, a
+            if b in a:
+                return True
             if self.normalized_name_difference(another) <= self.SIMILARITY_THRESHOLD:
                 return True
         return False
