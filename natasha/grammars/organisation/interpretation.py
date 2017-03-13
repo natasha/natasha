@@ -48,6 +48,8 @@ class OrganisationObject(InterpretationObject):
                 a, b = b, a
             if b in a:
                 return True
+            if self.abbr & another.abbr:
+                return True
             if self.normalized_name_difference(another) <= self.SIMILARITY_THRESHOLD:
                 return True
         return False

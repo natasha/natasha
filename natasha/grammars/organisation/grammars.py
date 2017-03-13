@@ -48,9 +48,6 @@ NAMED_ORG_INITIALS_PREFIX_RULE = [
                     eq('.'),
                 ],
                 'normalization': NormalizationType.Original,
-                'interpretation': {
-                    'attribute': OrganisationObject.Attributes.Name,
-                },
             }
         ],
         [
@@ -83,9 +80,6 @@ NAMED_ORG_INITIALS_AND_LASTNAME = [
             eq('.'),
         ],
         'normalization': NormalizationType.Original,
-        'interpretation': {
-            'attribute': OrganisationObject.Attributes.Name,
-        },
     },
     {
         'labels': [
@@ -101,10 +95,6 @@ NAMED_ORG_INITIALS_AND_LASTNAME = [
             gram('PUNCT'),
             eq('.'),
         ],
-        'normalization': NormalizationType.Original,
-        'interpretation': {
-            'attribute': OrganisationObject.Attributes.Name,
-        },
     },
     {
         'labels': [
@@ -181,6 +171,7 @@ class Organisation(Enum):
             'labels': [
                 or_((
                     gram('Orgn/Commercial'),
+                    gram('Orgn/Social'),
                     gram('Orgn/Abbr'),
                 )),
             ],
@@ -415,7 +406,6 @@ class Organisation(Enum):
         {
             'labels': [
                 gram('ADJF'),
-                is_capitalized(True),
             ],
             'normalization': NormalizationType.Inflected,
             'interpretation': {

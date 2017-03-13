@@ -42,6 +42,15 @@ class OrganisationTestCase(BaseTestCase):
         self.assertNotIn(natasha.Organisation.OfficialQuoted, grammars)
         self.assertEqual(list(values), [])
 
+        # TODO: match quotes
+        # results = list(self.combinator.extract(
+        #     'ПАО «НК «Роснефть»'
+        # )) 
+        # grammars = (x[0] for x in results)
+        # values = ([y.value for y in x[1]] for x in results)
+        # self.assertIn(natasha.Organisation.OfficialQuoted, grammars)
+        # self.assertEqual(list(values), [])
+
     def test_abbr(self):
         grammar, match = next(self.combinator.extract('МВД'))
         self.assertEqual(grammar, natasha.Organisation.Abbr)
@@ -113,7 +122,7 @@ class OrganisationTestCase(BaseTestCase):
         values = list([y.value for y in x[1]] for x in results)
         self.assertIn(natasha.Organisation.Social, grammars)
         self.assertEqual(
-            list(values), [['руководству', 'российского', 'парламента']])
+            list(values), [['руководству', 'российского', 'парламента'], ['российского', 'парламента']])
 
 class OrganisationInterpretationTestCase(BaseTestCase):
 
@@ -151,3 +160,31 @@ class OrganisationInterpretationTestCase(BaseTestCase):
         self.assertEqual(len(objects), 1)
         self.assertEqual([x.value for x in objects[0].descriptor], ['филиал', 'ООО'])
         self.assertEqual([x.value for x in objects[0].name], ['Рога', 'и', 'копыта'])
+
+    def test_coreference_solving(self):
+        text = 'ооо "Рога и КаПыта" или общество "рога и копыто"'
+        matches = self.combinator.resolve_matches(
+            self.combinator.extract(text)
+        )
+        objects = list(
+            self.engine.extract(matches)
+        )
+        self.assertEqual(len(objects), 2)
+
+        self.assertEqual(objects[0], objects[1])
+
+        text = 'федеральная служба безопасности (сокращенно, ФСБ)'
+        matches = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract(text)
+            )
+        )
+
+        objects = list(
+            self.engine.extract(matches)
+        )
+        self.assertEqual(len(objects), 2)
+        self.assertEqual(objects[0].abbr, {'фсб'})
+        self.assertEqual(objects[1].abbr, {'фсб'})
+
+        self.assertEqual(objects[0], objects[1])

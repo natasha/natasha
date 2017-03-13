@@ -241,3 +241,36 @@ class PersonInterpretationTestCase(BaseTestCase):
         self.assertEqual(genders, [
             ('masc', 1),
         ])
+
+    def test_coreference_solving(self):
+        text = 'Н. Н. Вертинская - Надежда Николаевна'
+        spans = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract(text)
+            )
+        )
+        objects = list(
+            self.engine.extract(spans)
+        )
+
+        self.assertEqual(len(objects), 2)
+        self.assertEqual(objects[0], objects[1])
+
+        merged = objects[0].merge(objects[1])
+
+        self.assertEqual(merged.firstname.value, 'Надежда')
+        self.assertEqual(merged.middlename.value, 'Николаевна')
+        self.assertEqual(merged.lastname.value, 'Вертинская')
+
+        text = 'Иван Иванович, а не Надежда Николаевна'
+        spans = list(
+            self.combinator.resolve_matches(
+                self.combinator.extract(text)
+            )
+        )
+        objects = list(
+            self.engine.extract(spans)
+        )
+
+        self.assertEqual(len(objects), 2)
+        self.assertNotEqual(objects[0], objects[1])

@@ -2,12 +2,14 @@
 from __future__ import unicode_literals
 
 from enum import Enum
+from functools import partial
 from collections import Counter
 
 from yargy.tokenizer import Token
 from yargy.normalization import get_normalized_text
 from yargy.interpretation import (
     InterpretationObject,
+    choice_best_span,
     damerau_levenshtein_distance,
 )
 
@@ -101,47 +103,43 @@ class PersonObject(InterpretationObject):
         )
         return round(sum(coefficients), 2)
 
-    def similarity_firstname_coef(self, another):
-        if not self.normalized_firstname or not another.normalized_firstname:
-            return self.NEUTRAL_COEF[0]
+    def similarity_check(self, a, b, index):
 
-        similarity = damerau_levenshtein_distance(
+        if not a or not b:
+            return self.NEUTRAL_COEF[index]
+
+        if b > a:
+            a, b = b, a
+        if a.startswith(b):
+            return self.POSITIVE_COEF[index]
+
+        similarity = damerau_levenshtein_distance(a, b)
+
+        if similarity <= self.SIMILARITY_THRESHOLD:
+            return self.POSITIVE_COEF[index]
+        else:
+            return self.NEGATIVE_COEF[index]
+
+    def similarity_firstname_coef(self, another):
+        return self.similarity_check(
             self.normalized_firstname,
             another.normalized_firstname,
+            0,
         )
-
-        if similarity <= self.SIMILARITY_THRESHOLD:
-            return self.POSITIVE_COEF[0]
-        else:
-            return self.NEGATIVE_COEF[0]
 
     def similarity_middlename_coef(self, another):
-        if not self.normalized_middlename or not another.normalized_middlename:
-            return self.NEUTRAL_COEF[1]
-
-        similarity = damerau_levenshtein_distance(
-            self.normalized_middlename,
-            another.normalized_middlename,
+        return self.similarity_check(
+            self.normalized_firstname,
+            another.normalized_firstname,
+            1,
         )
-
-        if similarity <= self.SIMILARITY_THRESHOLD:
-            return self.POSITIVE_COEF[1]
-        else:
-            return self.NEGATIVE_COEF[1]
 
     def similarity_lastname_coef(self, another):
-        if not self.normalized_lastname or not another.normalized_lastname:
-            return self.NEUTRAL_COEF[2]
-
-        similarity = damerau_levenshtein_distance(
-            self.normalized_lastname,
-            another.normalized_lastname,
+        return self.similarity_check(
+            self.normalized_firstname,
+            another.normalized_firstname,
+            2,
         )
-
-        if similarity <= self.SIMILARITY_THRESHOLD:
-            return self.POSITIVE_COEF[2]
-        else:
-            return self.NEGATIVE_COEF[2]
 
     def similarity_gender_coef(self, another):
         if not self.gender.most_common(1) or not another.gender.most_common(1):
@@ -162,11 +160,26 @@ class PersonObject(InterpretationObject):
 
     def merge(self, another):
         return PersonObject(**{
-            'firstname': self.firstname or another.firstname,
-            'middlename': self.middlename or another.middlename,
-            'lastname': self.lastname or another.lastname,
-            'descriptor': self.descriptor or another.descriptor,
-            'descriptor_destination': self.descriptor_destination or another.descriptor_destination,
+            'firstname': choice_best_span(
+                self.firstname,
+                another.firstname,
+            ),
+            'middlename': choice_best_span(
+                self.middlename,
+                another.middlename,
+            ),
+            'lastname': choice_best_span(
+                self.lastname,
+                another.lastname,
+            ),
+            'descriptor': choice_best_span(
+                self.descriptor,
+                another.descriptor,
+            ),
+            'descriptor_destination': choice_best_span(
+                self.descriptor_destination,
+                another.descriptor_destination,
+            ),
             'spans': self.spans + another.spans,
         })
 
