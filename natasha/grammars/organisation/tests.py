@@ -121,8 +121,8 @@ class OrganisationTestCase(BaseTestCase):
         grammars = list(x[0] for x in results)
         values = list([y.value for y in x[1]] for x in results)
         self.assertIn(natasha.Organisation.Social, grammars)
-        self.assertEqual(
-            list(values), [['руководству', 'российского', 'парламента'], ['российского', 'парламента']])
+        self.assertIn(['руководству', 'российского', 'парламента'], values)
+        self.assertIn(['российского', 'парламента'], values)
 
 class OrganisationInterpretationTestCase(BaseTestCase):
 
