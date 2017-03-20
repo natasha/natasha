@@ -164,6 +164,7 @@ class Person(Enum):
                 gram('Name'),
                 gram_not('Abbr'),
             ],
+            'normalization': NormalizationType.Inflected,
             'interpretation': {
                 'attribute': PersonObject.Attributes.Firstname,
             },
@@ -179,6 +180,35 @@ class Person(Enum):
                 'attribute': PersonObject.Attributes.Lastname,
             },
         },
+    ]
+
+    FirstnameAndLastnameWithQuotedNickname = [
+        FirstnameAndLastname[0],
+        {
+            'labels': {
+                gram('QUOTE'),
+            },
+            'normalization': NormalizationType.Original,
+        },
+        {
+            'labels': {
+                gram_not_in({
+                    'QUOTE',
+                    'PUNCT',
+                }),
+            },
+            'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Nickname,
+            },
+        },
+        {
+            'labels': {
+                gram('QUOTE'),
+            },
+            'normalization': NormalizationType.Original,
+        },
+        InitialsAndLastname[-1]
     ]
 
     # Иванов Иван

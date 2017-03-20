@@ -130,6 +130,14 @@ class PersonGrammarsTestCase(BaseTestCase):
                 self.assertEqual(
                     normalized, 'исполнитель главной роли сергей шувалов')
 
+    def test_firstname_and_lastname_with_quoted_nickname(self):
+        text = 'Владимир «Ленин» Ульянов'
+        grammar, tokens = list(self.combinator.resolve_matches(
+            self.combinator.extract(text)
+        ))[0]
+        self.assertEqual(grammar, Person.FirstnameAndLastnameWithQuotedNickname)
+        self.assertEqual([t.value for t in tokens], ['Владимир', '«', 'Ленин', '»', 'Ульянов'])
+
 class ProbabilisticPersonGrammarsTestCase(BaseTestCase):
 
     def setUp(self):
@@ -193,6 +201,19 @@ class PersonInterpretationTestCase(BaseTestCase):
         self.assertEqual(objects[0].firstname.value, 'иван')
         self.assertEqual(objects[0].middlename.value, 'иванович')
         self.assertEqual(objects[0].lastname.value, 'иванов')
+        self.assertEqual(objects[0].descriptor, None)
+
+        matches = self.combinator.resolve_matches(
+            self.combinator.extract('Владимир «Ленин» Ульянов')
+        )
+        objects = list(
+            self.engine.extract(matches)
+        )
+        self.assertEqual(len(objects), 1)
+        self.assertEqual(objects[0].firstname.value, 'Владимир')
+        self.assertEqual(objects[0].middlename, None)
+        self.assertEqual(objects[0].lastname.value, 'Ульянов')
+        self.assertEqual(objects[0].nickname.value, 'Ленин')
         self.assertEqual(objects[0].descriptor, None)
 
     def test_get_person_gender(self):

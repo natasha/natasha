@@ -819,13 +819,13 @@ class Address(Enum):
     Street names with house numbers and letters
     '''
 
-    # Зеленая улица, дом 7
+    # Зеленая улица, дом 7, лит А
     AdjFullWithHnAndLetter = AdjFull + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_GRAMMAR + HOUSE_LETTER_GRAMMAR
 
-    # улица Зеленая, дом 7
+    # улица Зеленая, дом 7, лит А
     AdjFullReversedWithHnAndLetter = AdjFullReversed + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_GRAMMAR + HOUSE_LETTER_GRAMMAR
 
-    # ул. Нижняя Красносельская дом 7
+    # ул. Нижняя Красносельская дом 7, лит А
     AdjShortWithHnAndLetter = AdjShort + OPTIONAL_COMMA_GRAMMAR + HOUSE_NUMBER_GRAMMAR + HOUSE_LETTER_GRAMMAR
 
     # Настасьинский пер., дом 2

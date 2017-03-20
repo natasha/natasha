@@ -34,8 +34,9 @@ class PersonObject(InterpretationObject):
         Firstname = 0  # владимир
         Middlename = 1  # владимирович
         Lastname = 2  # путин
-        Descriptor = 3  # президент
-        Descriptor_Destination = 4  # российской федерации
+        Nickname = 3 # "володя"
+        Descriptor = 4  # президент
+        Descriptor_Destination = 5  # российской федерации
 
     @property
     def gender(self):
@@ -171,6 +172,10 @@ class PersonObject(InterpretationObject):
             'lastname': choice_best_span(
                 self.lastname,
                 another.lastname,
+            ),
+            'nickname': choice_best_span(
+                self.nickname,
+                another.nickname,
             ),
             'descriptor': choice_best_span(
                 self.descriptor,
