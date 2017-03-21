@@ -2,7 +2,6 @@ from setuptools import (
     setup,
     find_packages,
 )
-from natasha.commands import BuildDictionariesCommand
 
 
 setup(
@@ -31,9 +30,6 @@ setup(
         'Topic :: Scientific/Engineering :: Information Analysis',
         'Topic :: Text Processing :: Linguistic',
     ],
-    cmdclass={
-        'build_dicts': BuildDictionariesCommand,
-    },
     package_data = {
         'natasha.grammars': [
             'dictionaries/*.dawg',
