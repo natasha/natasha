@@ -3,62 +3,29 @@
 
 ![](http://i.imgur.com/nGwT8IG.png)
 
-Наташа извлекает именованные сущности (имена людей, адреса, топонимы и т.д.) из текста на русском языке.
+Natasha - библиотека для поиска и извлечения именованных сущностей ([Named-entity recognition](https://en.wikipedia.org/wiki/Named-entity_recognition)) в тексте на естественном языке.
 
-Алгоритм работы похож на [Томита-парсер от Яндекса](https://tech.yandex.ru/tomita/).
+На данный момент мы умеем разбирать:
 
-# Установка
+- Упоминания персон
+- Названия организаций
+- Топонимы и почтовые адреса
+- Названия праздников, конференций и т.д.
 
-*Важно:* `natasha` поддерживает версии Python 2.7+ и 3.3+, включая интерпретаторы PyPy и PyPy3.
+Из возможностей парсера стоит отметить:
 
-```bash
-$ pip install natasha==0.5.0
-```
+- Снятие морфологической неоднозначности
+- Приведение сущностей к нормальной форме и их склонение
+- Извлечение аттрибутов сущностей: для упоминаний персон это имя, фамилия и т.д.
+- Разрешение кореференции для упоминаний персон, организаций и топонимов
 
-# Использование
+# Дополнительная информация
 
-Для первого знакомства можно использовать [онлайн версию](https://bureaucratic-labs.github.io/natasha/).
-
-```python
-from natasha import (
-    Combinator,
-    DEFAULT_GRAMMARS,
-)
-from natasha.grammars import Location, Date
-
-# DEFAULT_GRAMMARS содержит стандартный набор правил:
-# [
-#    <enum 'Brand'>,
-#    <enum 'Date'>,
-#    <enum 'Event'>
-#    <enum 'Location'>,
-#    <enum 'Money'>,
-#    <enum 'Organisation'>,
-#    <enum 'Person'>,
-# ]
-
-# Можно использовать их частично или использовать свои правила
-MY_GRAMMARS_LIST = [
-    Location,
-    Date,
-]
-
-text = "23 августа в Нижнем Новгороде пройдет очередной день"
-
-combinator = Combinator(
-    MY_GRAMMARS_LIST
-
-)
-
-for grammar, tokens in combinator.extract(text):
-    print("Правило:", grammar)
-    print("Токены:", tokens)
-```
+- [Демо поиска упоминаний](https://b-labs.pro/natasha/)
+- [Пошаговое руководство](http://natasha.readthedocs.io/ru/latest/quickstart/) и [документация](http://natasha.readthedocs.io/ru/latest/)
+- [Telegram-конференция](https://telegram.me/natural_language_processing), где можно найти ответы на все вопросы (на самом деле нет)
+- [Результаты FactRuEval-2016](https://github.com/bureaucratic-labs/natasha-factRuEval-2016)
 
 # Лицензия
 
 Исходный код распространяется под лицензией MIT.
-
-# У меня остались вопросы
-[Telegram-конференция](https://telegram.me/natural_language_processing), где можно найти ответы на все вопросы (на самом деле нет)
-
