@@ -1,7 +1,6 @@
 # Natasha [![Build Status](https://travis-ci.org/bureaucratic-labs/natasha.svg?branch=master)](https://travis-ci.org/bureaucratic-labs/natasha) [![Documentation Status](https://readthedocs.org/projects/natasha/badge/?version=latest)](http://natasha.readthedocs.io/ru/latest/?badge=latest) [![PyPI](https://img.shields.io/pypi/v/natasha.svg)](https://pypi.python.org/pypi/natasha)
 
-
-![](http://i.imgur.com/nGwT8IG.png)
+<img align="right" src="http://i.imgur.com/DD2KYS9.png">
 
 Natasha - библиотека для поиска и извлечения именованных сущностей ([Named-entity recognition](https://en.wikipedia.org/wiki/Named-entity_recognition)) в тексте на естественном языке.
 
