@@ -187,6 +187,10 @@ class Person(Enum):
         {
             'labels': {
                 gram('QUOTE'),
+                gram_any({
+                    'G-QUOTE',
+                    'L-QUOTE',
+                }),
             },
             'normalization': NormalizationType.Original,
         },
@@ -561,12 +565,27 @@ class ProbabilisticPerson(Enum):
             'labels': [
                 dictionary(NAME_NOBILITY_PARTICLE_DICTIONARY),
             ],
+            'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            }
         },
         POSSIBLE_LASTNAME_GRAMMAR,
     ]
 
     FirstnameAndLastnameWithPosition = Person.WithPosition.value[:-1] + [
         FirstnameAndLastname[-1]
+    ]
+
+    # Эрнесто «Че» Гевара
+    FirstnameAndLastnameWithQuotedNickname = Person.Firstname.value[:1] + Person.FirstnameAndLastnameWithQuotedNickname.value[1:-1] + [
+        POSSIBLE_LASTNAME_GRAMMAR,
+    ]
+
+    # С.П. фон Дервиз
+    InitialsAndLastnameWithNobilityParticle = InitialsAndLastname[:4] + [
+        FirstnameAndLastnameWithNobilityParticle[1],
+        POSSIBLE_LASTNAME_GRAMMAR,
     ]
 
     # John S. Doe

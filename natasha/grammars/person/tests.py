@@ -184,6 +184,14 @@ class ProbabilisticPersonGrammarsTestCase(BaseTestCase):
         self.assertEqual(grammar, ProbabilisticPerson.FirstnameAsInitialsAndLastname)
         self.assertEqual([t.value for t in tokens], ['Д', '.', 'Трамп'])
 
+    def test_initials_and_lastname_with_nobility_particle(self):
+        text = 'Особняк С.П. фон Дервиза'
+        grammar, tokens = list(self.combinator.resolve_matches(
+            self.combinator.extract(text)
+        ))[0]
+        self.assertEqual(grammar, ProbabilisticPerson.InitialsAndLastnameWithNobilityParticle)
+        self.assertEqual([t.value for t in tokens], ['С', '.', 'П', '.', 'фон', 'Дервиза'])
+
 class PersonInterpretationTestCase(BaseTestCase):
 
     def setUp(self):
