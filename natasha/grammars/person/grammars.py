@@ -23,6 +23,8 @@ from natasha.grammars.person.interpretation import PersonObject
 
 
 NAME_NOBILITY_PARTICLE_DICTIONARY = {
+    'бе',
+    'ла',
     'ле',
     'да',
     'де',
@@ -32,6 +34,7 @@ NAME_NOBILITY_PARTICLE_DICTIONARY = {
     'дель',
     'бен',
     'дю',
+    'мак',
 }
 
 class Person(Enum):
@@ -109,7 +112,41 @@ class Person(Enum):
     ]
 
     # Фелипе Родригес Фернандес
-    FullReversedHispanic = FullReversed[:1] + FullReversed[-1:] + FullReversed[-1:]
+    # https://www.englishelp.ru/business-english/other/284-patronymic-vs-middle-name.html
+
+    FullReversedWithLatinMiddlename = [
+        {
+            'labels': [
+                gram('Name'),
+            ],
+            'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Firstname,
+            },
+        },
+        {
+            'labels': [
+                gram('Name'),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'repeatable': True,
+            'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Middlename,
+            },
+        },
+        {
+            'labels': [
+                gram('Surn'),
+                gnc_match(0, solve_disambiguation=True),
+                gnc_match(-1, solve_disambiguation=True),
+            ],
+            'normalization': NormalizationType.Inflected,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            },
+        },
+    ]
 
     # Л. А. Раневская
     InitialsAndLastname = [
@@ -347,6 +384,10 @@ class Person(Enum):
             'labels': [
                 dictionary(NAME_NOBILITY_PARTICLE_DICTIONARY),
             ],
+            'normalization': NormalizationType.Original,
+            'interpretation': {
+                'attribute': PersonObject.Attributes.Lastname,
+            }
         },
         {
             'labels': [

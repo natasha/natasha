@@ -138,6 +138,14 @@ class PersonGrammarsTestCase(BaseTestCase):
         self.assertEqual(grammar, Person.FirstnameAndLastnameWithQuotedNickname)
         self.assertEqual([t.value for t in tokens], ['Владимир', '«', 'Ленин', '»', 'Ульянов'])
 
+    def test_full_reversed_with_latin_middlename(self):
+        text = 'Иоганн Вольфганг Гете'
+        grammar, tokens = list(self.combinator.resolve_matches(
+            self.combinator.extract(text)
+        ))[0]
+        self.assertEqual(grammar, Person.FullReversedWithLatinMiddlename)
+        self.assertEqual([t.value for t in tokens], ['Иоганн', 'Вольфганг', 'Гете'])
+
 class ProbabilisticPersonGrammarsTestCase(BaseTestCase):
 
     def setUp(self):
