@@ -558,6 +558,7 @@ class Person(Enum):
 
 POSSIBLE_LASTNAME_GRAMMAR = {
     'labels': [
+        gram_not('LATN'),
         is_capitalized(True),
         is_upper(False),
     ],
