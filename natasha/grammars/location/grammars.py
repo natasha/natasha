@@ -492,10 +492,8 @@ HOUSE_NUMBER_SHORT_GRAMMAR = [
 
 HOUSE_NUMBER_GRAMMAR = [
     OR(
-        OR(
-            HOUSE_NUMBER_SHORT_GRAMMAR,
-            HOUSE_NUMBER_FULL_GRAMMAR,
-        ),
+        HOUSE_NUMBER_SHORT_GRAMMAR,
+        HOUSE_NUMBER_FULL_GRAMMAR,
         HOUSE_NUMBER_FULL_GRAMMAR[-1:]
     )
 ]
@@ -544,13 +542,28 @@ HOUSE_LETTER_ONLY_LETTER_GRAMMAR = [
     HOUSE_LETTER_FULL_GRAMMAR[-1],
 ]
 
+HOUSE_LETTER_QUOTED_GRAMMAR = [
+    {
+        'labels': [
+            gram('QUOTE'),
+        ],
+        'normalization': NormalizationType.Original,
+    },
+    HOUSE_LETTER_FULL_GRAMMAR[-1],
+    {
+        'labels': [
+            gram('QUOTE'),
+        ],
+        'normalization': NormalizationType.Original,
+    },
+]
+
 HOUSE_LETTER_GRAMMAR = [
     OR(
-        OR(
-            HOUSE_LETTER_FULL_GRAMMAR,
-            HOUSE_LETTER_SHORT_GRAMMAR,
-        ),
+        HOUSE_LETTER_FULL_GRAMMAR,
+        HOUSE_LETTER_SHORT_GRAMMAR,
         HOUSE_LETTER_ONLY_LETTER_GRAMMAR,
+        HOUSE_LETTER_QUOTED_GRAMMAR,
     )
 ]
 
