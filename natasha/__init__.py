@@ -18,7 +18,7 @@ from natasha.grammars.pipelines import (
     PersonPositionPipeline,
 )
 
-__version__ = '0.5.0'
+__version__ = '0.6.0'
 
 DEFAULT_GRAMMARS = [
     Money,
