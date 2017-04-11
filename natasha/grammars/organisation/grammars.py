@@ -21,8 +21,9 @@ from yargy.labels import (
     or_,
     label,
     is_upper,
-    string_required,
+    type_required,
 )
+from yargy.compat import string_type
 from yargy.parser import OR
 from yargy.normalization import NormalizationType
 
@@ -156,7 +157,7 @@ PROBABILISTIC_NAMED_ORG_INITIALS_RULE = [
 ]
 
 @label
-@string_required
+@type_required(string_type)
 def is_abbr(case, token, value):
     '''
     Returns true if token contains only uppercased letters
