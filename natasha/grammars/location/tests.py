@@ -8,6 +8,7 @@ import unittest
 from natasha.tests import BaseTestCase
 from natasha.grammars.location import LocationObject, AddressObject
 
+from yargy.compat import RUNNING_ON_PYTHON_2_VERSION
 from yargy.normalization import get_normalized_text
 from yargy.interpretation import InterpretationEngine
 
@@ -1261,7 +1262,7 @@ def generate(test):
 
 for index, test in enumerate(parse(ADDRESS_TESTS)):
     function = generate(test)
-    function.__name__ = u'test_address_%d' % index
+    function.__name__ = str('test_address_%d' % index) if RUNNING_ON_PYTHON_2_VERSION else 'test_address_%d' % index
 
     if test.skip:
         function = unittest.skip('just skip')(function)
