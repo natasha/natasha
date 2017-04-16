@@ -24,6 +24,26 @@ class AddressObject(InterpretationObject):
         Street_Descriptor = 0
         Street_Name = 1
 
-        House_Number_Descriptor = 2
-        House_Number_Letter = 3
-        House_Number = 4
+        House_Number = 3
+        House_Letter = 4
+        House_Corpus = 5
+        House_Building = 6
+
+    @property
+    def normalized_street(self):
+        return get_normalized_text(self.street_name)
+
+    @property
+    def normalized_house(self):
+        house = get_normalized_text(self.house_number, delimiter='')
+        if self.house_letter:
+            letter = get_normalized_text(self.house_letter).upper()
+            house += letter
+        if self.house_corpus:
+            corpus = 'к' + get_normalized_text(self.house_corpus)
+            house += corpus
+        if self.house_building:
+            build = 'с' + get_normalized_text(self.house_building)
+            house += build
+        return house
+        
