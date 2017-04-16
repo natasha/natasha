@@ -22,8 +22,9 @@ from yargy.labels import (
     label,
     is_upper,
     type_required,
-    string_type
+    string_type,
 )
+from yargy.compat import string_type
 from yargy.parser import OR
 from yargy.normalization import NormalizationType
 
