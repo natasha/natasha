@@ -1261,7 +1261,7 @@ def generate(test):
 
 for index, test in enumerate(parse(ADDRESS_TESTS)):
     function = generate(test)
-    function.__name__ = 'test_address_%d' % index
+    function.__name__ = u'test_address_%d' % index
 
     if test.skip:
         function = unittest.skip('just skip')(function)
