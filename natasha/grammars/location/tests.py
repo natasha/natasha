@@ -1260,13 +1260,13 @@ def generate(test):
 
 
 for index, test in enumerate(parse(ADDRESS_TESTS)):
-    name = 'test_address_%d' % index
     function = generate(test)
+    function.__name__ = 'test_address_%d' % index
 
     if test.skip:
         function = unittest.skip('just skip')(function)
 
-    function.__name__ = name
-    setattr(AddressTestCase, name, function)
+    
+    setattr(AddressTestCase, function.__name__, function)
 
 del function
