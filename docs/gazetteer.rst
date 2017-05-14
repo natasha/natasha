@@ -14,7 +14,7 @@
   from yargy.pipeline import CustomGrammemesPipeline
 
   # CustomGrammemesPipeline - базовый класс с реализованными методами для поиска
-  # подходящих статей и замены граммем в найденных словосочитаниях
+  # подходящих статей и замены граммем в найденных словосочетаниях
 
   class CitiesPipeline(CustomGrammemesPipeline):
 
