@@ -7,6 +7,7 @@ from yargy.normalization import get_normalized_text
 from yargy.interpretation import (
     InterpretationObject,
     damerau_levenshtein_distance,
+    choice_best_span,
 )
 
 
@@ -14,8 +15,16 @@ class LocationObject(InterpretationObject):
 
     class Attributes(Enum):
 
-        Name = 0 # российская
-        Descriptor = 1 # федерация
+        Name = 0  # российская
+        Descriptor = 1  # федерация
+
+    def merge(self, another):
+        return LocationObject(**{
+            'name': choice_best_span(self.name, another.name),
+            'descriptor': choice_best_span(self.descriptor, another.descriptor),
+            'spans': self.spans + another.spans,
+        })
+
 
 class AddressObject(InterpretationObject):
 
@@ -46,4 +55,3 @@ class AddressObject(InterpretationObject):
             build = 'с' + get_normalized_text(self.house_building)
             house += build
         return house
-        

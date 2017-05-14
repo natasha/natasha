@@ -7,6 +7,7 @@ from yargy.normalization import get_normalized_text
 from yargy.interpretation import (
     InterpretationObject,
     damerau_levenshtein_distance,
+    choice_best_span,
 )
 
 
@@ -40,6 +41,13 @@ class OrganisationObject(InterpretationObject):
             self.normalized_name,
             another.normalized_name,
         )
+
+    def merge(self, another):
+        return OrganisationObject(**{
+            'name': choice_best_span(self.name, another.name),
+            'descriptor': choice_best_span(self.descriptor, another.descriptor),
+            'spans': self.spans + another.spans,
+        })
 
     def __eq__(self, another):
         if self.normalized_name and another.normalized_name:
