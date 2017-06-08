@@ -1,83 +1,74 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
-from enum import Enum
-from yargy.labels import (
-    gram,
-    dictionary,
+from yargy import (
+    rule,
+    and_, or_,
+    fact
+)
+from yargy.predicates import (
+    eq, in_,
+    gram, normalized, caseless
 )
 
 
-PREFIX_DICTIONARY = {
-    'тысяча',
-    'миллион',
-    'миллиард',
-    'триллион',
-}
+Money = fact(
+    'Money',
+    ['amount', 'currency']
+)
 
-CURRENCY_DICTIONARY = {
-    'рубль',
-    'доллар',
-    'евро',
-}
 
-PREFIX_GRAMMAR = {'labels': [
-        dictionary(PREFIX_DICTIONARY),
-    ]
-}
+EURO = normalized('евро')
 
-CURRENCY_GRAMMAR = {'labels': [
-        dictionary(CURRENCY_DICTIONARY),
-    ]
-}
+DOLLARS = or_(
+    normalized('доллар'),
+    eq('$')
+)
 
-OPTIONAL_PUNCT_GRAMMAR = {
-    'labels': [
-        gram('PUNCT'),
-    ],
-    'optional': True,
-}
+RUBLES = or_(
+    rule(normalized('рубль')),
+    rule(
+        or_(
+            caseless('руб'),
+            caseless('р')
+        ),
+        eq('.').optional()
+    )
+)
 
-NUMBER_GRAMMAR = {
-    'labels': [
-        gram('NUMBER'),
-    ],
-}
+CURRENCY = or_(
+    rule(EURO),
+    rule(DOLLARS),
+    RUBLES
+).interpretation(
+    Money.currency
+)
 
-HAND_WRITTEN_NUMBER_GRAMMAR = {
-    'labels': [
-        gram('NUMR')
-    ],
-    'repeatable': True,
-}
+INT = gram('INT')
 
-class Money(Enum):
+AMOUNT_ = or_(
+    rule(INT),
+    rule(INT, INT),
+    rule(INT, INT, INT),
+    rule(INT, '.', INT),
+    rule(INT, '.', INT, '.', INT),
+)
 
-    HandwrittenNumberWithPrefix = [
-        HAND_WRITTEN_NUMBER_GRAMMAR,
-        PREFIX_GRAMMAR,
-        OPTIONAL_PUNCT_GRAMMAR,
-        CURRENCY_GRAMMAR,
-    ]
+FRACTION_AMOUN = rule(
+    AMOUNT_,
+    in_({',', '.'}),
+    INT
+)
 
-    HandwrittenNumber = [
-        HAND_WRITTEN_NUMBER_GRAMMAR,
-        CURRENCY_GRAMMAR,
-    ]
+AMOUNT = or_(
+    AMOUNT_,
+    FRACTION_AMOUN
+).interpretation(
+    Money.amount
+)
 
-    ObjectWithPrefix = [
-        NUMBER_GRAMMAR,
-        PREFIX_GRAMMAR,
-        OPTIONAL_PUNCT_GRAMMAR,
-        CURRENCY_GRAMMAR,
-    ]
-
-    Object = [
-        NUMBER_GRAMMAR,
-        CURRENCY_GRAMMAR,
-    ]
-
-    ObjectWithoutActualNumber = [
-        PREFIX_GRAMMAR,
-        CURRENCY_GRAMMAR,
-    ]
+MONEY = rule(
+    AMOUNT, CURRENCY
+).interpretation(
+    Money
+)

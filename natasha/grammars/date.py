@@ -1,219 +1,107 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
-from enum import Enum
-from yargy.labels import (
-    gram,
-    dictionary,
-    gte,
-    lte,
-    gnc_match,
+from yargy import (
+    rule,
+    and_, or_,
+    fact
+)
+from yargy.predicates import (
+    eq, gte, lte,
+    dictionary, normalized,
 )
 
 
-MONTH_DICTIONARY = {
-    'январь',
-    'февраль',
-    'март',
-    'апрель',
-    'май',
-    'июнь',
-    'июль',
-    'август',
-    'сентябрь',
-    'октябрь',
-    'ноябрь',
-    'декабрь',
+Date = fact(
+    'Date',
+    ['year', 'month', 'day']
+)
+
+
+MONTHS = {
+    'январь': 1,
+    'февраль': 2,
+    'март': 3,
+    'апрель': 4,
+    'май': 5,
+    'июнь': 6,
+    'июль': 7,
+    'август': 8,
+    'сентябрь': 9,
+    'октябрь': 10,
+    'ноябрь': 11,
+    'декабрь': 12,
 }
 
-DAY_OF_WEEK_DICTIONARY = {
-    'понедельник',
-    'вторник',
-    'среда',
-    'четверг',
-    'пятница',
-    'суббота',
-    'воскресенье',
-}
 
-PARTIAL_DATE_DICTIONARY = {
-    'начало',
-    'середина',
-    'конец',
-}
+MONTH_NAME = dictionary(MONTHS).interpretation(
+    Date.month.normalized()
+)
 
-TIME_WORD_DICTIONARY = {
-    'утро',
-    'полдень',
-    'вечер',
-    'ночь',
-}
+MONTH = and_(
+    gte(1),
+    lte(12)
+).interpretation(
+    Date.month
+)
 
-DATE_OFFSET_PREFIX_DICTIONARY = {
-    'следующий',
-    'прошлый',
-}
+DAY = and_(
+    gte(1),
+    lte(31)
+).interpretation(
+    Date.day
+)
 
-DATE_OFFSET_PREFIX_GRAMMAR = {
-    'labels': [
-        dictionary(DATE_OFFSET_PREFIX_DICTIONARY),
-    ],
-}
+YEAR_WORD = or_(
+    rule('г', eq('.').optional()),
+    rule(normalized('год'))
+)
 
-DAY_GRAMMAR = {
-    'labels': [
-        gram('INT'),
-        gte(1),
-        lte(31),
-    ],
-}
+YEAR = and_(
+    gte(1900),
+    lte(2100)
+).interpretation(
+    Date.year
+)
 
-MONTH_GRAMMAR = {
-    'labels': [
-        dictionary(MONTH_DICTIONARY),
-    ],
-}
+YEAR_SHORT = and_(
+    gte(0),
+    lte(99)
+).interpretation(
+    Date.year
+)
 
-MONTH_WITH_GNC_MATCHING_GRAMMAR = {
-    'labels': [
-        dictionary(MONTH_DICTIONARY),
-        gnc_match(-1, solve_disambiguation=True),
-    ]
-}
-
-DAY_OF_WEEK_GRAMMAR = {
-    'labels': [
-        dictionary(DAY_OF_WEEK_DICTIONARY),
-    ],
-}
-
-DAY_OF_WEEK_WITH_GNC_MATCHING_GRAMMAR = {
-    'labels': [
-        dictionary(DAY_OF_WEEK_DICTIONARY),
-        gnc_match(-1, solve_disambiguation=True),
-    ]
-}
-
-YEAR_GRAMMAR = {
-    'labels': [
-        gram('NUMBER'),
-        gte(1),
-    ],
-}
-
-YEAR_SUFFIX_GRAMMAR = {
-    'labels': [
-        dictionary({'год', })
-    ],
-}
-
-PARTIAL_DATE_GRAMMAR = {
-    'labels': [
-        dictionary(PARTIAL_DATE_DICTIONARY),
-    ],
-}
-
-class Date(Enum):
-
-    Full = [
-        DAY_GRAMMAR,
-        MONTH_GRAMMAR,
-        YEAR_GRAMMAR,
-    ]
-
-    FullWithDigits = [
-        DAY_GRAMMAR,
-        {
-            'labels': [
-                gram('PUNCT'),
-            ],
-            'optional': True
-        },
-        {
-            'labels': [
-                gram('INT'),
-                gte(1),
-                lte(12),
-            ],
-        },
-        {
-            'labels': [
-                gram('PUNCT'),
-            ],
-            'optional': True
-        },
-        YEAR_GRAMMAR,
-    ]
-
-    DayAndMonth = [
-        DAY_GRAMMAR,
-        MONTH_GRAMMAR,
-    ]
-
-    Year = [
-        YEAR_GRAMMAR,
-        YEAR_SUFFIX_GRAMMAR,
-    ]
-
-    PartialYearObject = [
-        PARTIAL_DATE_GRAMMAR,
-        YEAR_GRAMMAR,
-        YEAR_SUFFIX_GRAMMAR,
-    ]
-
-    PartialMonthObject = [
-        PARTIAL_DATE_GRAMMAR,
-        MONTH_GRAMMAR,
-    ]
-
-    DayRange = [
-        {
-            'labels': [
-                gram('INT-RANGE')
-            ]
-        },
-        MONTH_GRAMMAR,
-    ]
-
-    YearRange = [
-        {
-            'labels': [
-                gram('INT-RANGE')
-            ]
-        },
-        {
-            'labels': [
-                dictionary({'год', }),
-            ],
-        },
-    ]
-
-    Month = [
-        MONTH_GRAMMAR,
-    ]
-
-    DayOfWeek = [
-        DAY_OF_WEEK_GRAMMAR,
-    ]
-
-    MonthWithOffset = [
-        DATE_OFFSET_PREFIX_GRAMMAR,
-        MONTH_WITH_GNC_MATCHING_GRAMMAR,
-    ]
-
-    DayOfWeekWithOffset = [
-        DATE_OFFSET_PREFIX_GRAMMAR,
-        DAY_OF_WEEK_WITH_GNC_MATCHING_GRAMMAR,
-    ]
-
-    CurrentMonthWithOffset = [
-        DATE_OFFSET_PREFIX_GRAMMAR,
-        {
-            'labels': [
-                dictionary({
-                    'месяц',
-                }),
-                gnc_match(-1, solve_disambiguation=True),
-            ],
-        }
-    ]
+DATE = or_(
+    rule(
+        DAY,
+        '.',
+        MONTH,
+        '.',
+        or_(
+            YEAR,
+            YEAR_SHORT
+        ),
+        YEAR_WORD.optional()
+    ),
+    rule(
+        YEAR,
+        YEAR_WORD
+    ),
+    rule(
+        DAY,
+        MONTH_NAME
+    ),
+    rule(
+        MONTH_NAME,
+        YEAR,
+        YEAR_WORD.optional()
+    ),
+    rule(
+        DAY,
+        MONTH_NAME,
+        YEAR,
+        YEAR_WORD.optional()
+    ),
+).interpretation(
+    Date
+)
