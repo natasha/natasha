@@ -6,7 +6,5 @@ python:
   - "3.5"
   - "pypy"
   - "pypy3"
-before_script:
-  - pip install git+https://github.com/bureaucratic-labs/yargy.git
 script:
-  - nosetests
+  - pytest -vv --pep8 natasha
