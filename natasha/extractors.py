@@ -27,14 +27,14 @@ def serialize(match):
 
 class Matches(Record):
     __attributes__ = ['text', 'matches']
-    
+
     def __init__(self, text, matches):
         self.text = text
         self.matches = sorted(matches, key=lambda _: _.span)
-        
+
     def __iter__(self):
         return iter(self.matches)
-    
+
     def __getitem__(self, index):
         return self.matches[index]
 
@@ -48,7 +48,7 @@ class Matches(Record):
 
 
 class Extractor(Record):
-    __attributes__ = ['parser']    
+    __attributes__ = ['parser']
 
     def __init__(self, rule, pipelines=()):
         self.parser = Parser(rule, pipelines=pipelines)

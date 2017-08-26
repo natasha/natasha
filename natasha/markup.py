@@ -6,7 +6,7 @@ TABLE = [
     ('<', '&lt;'),
     ('>', '&gt;'),
 ]
-    
+
 
 def escape(text):
     for char, code in TABLE:

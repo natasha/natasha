@@ -24,16 +24,16 @@ class Span(Record):
         self.start = start
         self.stop = stop
 
-        
+
 class Entity(Record):
     __attributes__ = ['id', 'type', 'spans']
-    
+
     def __init__(self, id, type, spans):
         self.id = id
         self.type = type
         self.spans = spans
 
-        
+
 class Coref(Record):
     __attributes__ = ['id', 'entities', 'normalized']
 
@@ -41,11 +41,11 @@ class Coref(Record):
         self.id = id
         self.entities = entities
         self.normalized = normalized
-    
-    
+
+
 class Token(Record):
     __attributes__ = ['value', 'start', 'stop']
-    
+
     def __init__(self, value, start, stop):
         self.value = value
         self.start = start
@@ -69,7 +69,7 @@ class Token(Record):
 
 class Name(Record):
     __attributes__ = ['first', 'middle', 'last', 'nick']
-    
+
     def __init__(self, first, middle, last, nick):
         self.first = first
         self.middle = middle
@@ -102,25 +102,25 @@ class Name(Record):
         ]
         return Name(*tokens)
 
-        
+
 class NamePart(Record):
     __attributes__ = ['type', 'token']
-    
+
     def __init__(self, type, token):
         self.type = type
         self.token = token
 
-        
+
 class ComplexName(Record):
     __attributes__ = ['parts']
-    
+
     def __init__(self, parts):
         self.parts = parts
 
-        
+
 class CoreferenceGroup(Record):
     __attributes__ = ['normalized', 'items']
-    
+
     def __init__(self, normalized, items):
         self.normalized = normalized
         self.items = items
@@ -128,7 +128,7 @@ class CoreferenceGroup(Record):
 
 class Test(Record):
     __attributes__ = ['text', 'names']
-    
+
     def __init__(self, text, names):
         self.text = text
         self.names = names
@@ -148,7 +148,7 @@ def load_factru_doc(id, extension):
         path = os.path.join(dir, filename)
         if os.path.exists(path):
             return load_text(path)
-        
+
 
 def load_factru_text(id):
     return load_factru_doc(id, 'txt')
@@ -190,8 +190,8 @@ def parse_factru_spans(text):
         start = int(start)
         size = int(size)
         yield Span(id, type, start, start + size)
-        
-        
+
+
 def load_factru_spans(id):
     text = load_factru_doc(id, 'spans')
     return parse_factru_spans(text)
@@ -212,8 +212,8 @@ def parse_factru_entities(text):
         id = int(id)
         spans = [int(_) for _ in spans.split()]
         yield Entity(id, type, spans)
-        
-        
+
+
 def load_factru_entities(id):
     text = load_factru_doc(id, 'objects')
     return parse_factru_entities(text)
@@ -276,7 +276,7 @@ def prepare_name(text, spans):
         parts = [prepare_name_part(text, _) for _ in spans]
         return ComplexName(parts)
 
-        
+
 def prepare_entity(id, text, id_entities, id_spans):
     entity = id_entities[id]
     spans = [id_spans[_] for _ in entity.spans]
@@ -327,7 +327,7 @@ def get_line_tokens(text):
         stop = match.end()
         yield Token(value, start, stop)
 
-        
+
 def is_inside(a, b):
     a_start, a_stop = a
     b_start, b_stop = b
