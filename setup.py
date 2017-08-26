@@ -1,3 +1,6 @@
+# coding: utf-8
+from __future__ import unicode_literals
+
 from setuptools import (
     setup,
     find_packages,
@@ -30,14 +33,9 @@ setup(
         'Topic :: Scientific/Engineering :: Information Analysis',
         'Topic :: Text Processing :: Linguistic',
     ],
-    package_data = {
-        'natasha.grammars': [
-            'dictionaries/*.dawg',
-        ],
-    },
     keywords='natural language processing, russian morphology, named entity recognition, tomita',
     packages=find_packages(),
     install_requires=[
-        'yargy==0.8.0'
+        'yargy'
     ],
 )
