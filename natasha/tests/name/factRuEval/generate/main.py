@@ -285,7 +285,13 @@ def prepare_entity(id, text, id_entities, id_spans):
 
 
 def prepare_normalized_name(data):
-    if set(data) <= {'firstname', 'lastname', 'wikidata', 'patronymic', 'nickname'}:
+    if set(data) <= {
+        'firstname',
+        'lastname',
+        'wikidata',
+        'patronymic',
+        'nickname'
+    }:
         return Name(
             data.get('firstname'),
             data.get('patronymic'),
@@ -309,7 +315,10 @@ def load_factru(id):
     id_entities = {_.id: _ for _ in entities}
     for coref in corefs:
         normalized = prepare_normalized_name(coref.normalized)
-        items = [prepare_entity(_, text, id_entities, id_spans) for _ in coref.entities]
+        items = [
+            prepare_entity(_, text, id_entities, id_spans)
+            for _ in coref.entities
+        ]
         if all(items):
             yield CoreferenceGroup(normalized, items)
 
