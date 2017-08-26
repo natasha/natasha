@@ -2,4 +2,5 @@
 git+https://github.com/bureaucratic-labs/yargy.git#egg=yargy
 
 # dev
-pytest
+pytest==3.2.1
+pytest-pep8==1.0.6
