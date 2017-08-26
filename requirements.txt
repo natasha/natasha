@@ -1,1 +1,5 @@
+# common
 git+https://github.com/bureaucratic-labs/yargy.git#egg=yargy
+
+# dev
+pytest
