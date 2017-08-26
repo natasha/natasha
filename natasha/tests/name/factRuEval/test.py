@@ -1,4 +1,5 @@
 
+import os
 import json
 
 import pytest
@@ -22,7 +23,9 @@ def load_json(path):
 
 
 def load_tests():
-    data = load_json('tests.json')
+    dir = os.path.dirname(__file__)
+    path = os.path.join(dir, 'tests.json')
+    data = load_json(path)
     for line, items in data:
         tokens = [
             Token(value, start, stop)
