@@ -32,6 +32,7 @@ text = '''
 представителей бестиария японской мифологии, тем самым совершил
 преступление, предусмотренное статьей 148 УК РФ
 '''
+extractor = NamesExtractor()
 matches = extractor(text)
 for match in matches:
     print(match.span, match.fact)
