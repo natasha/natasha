@@ -2,7 +2,8 @@
 from .extractors import (
     NamesExtractor,
     DatesExtractor,
-    MoneyExtractor
+    MoneyExtractor,
+    LocationExtractor,
 )
 
 

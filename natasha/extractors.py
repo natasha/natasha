@@ -12,6 +12,7 @@ from .markup import format_markup
 from .grammars.name import NAME
 from .grammars.date import DATE
 from .grammars.money import MONEY
+from .grammars.location import LOCATION
 
 
 def serialize(match):
@@ -72,3 +73,8 @@ class DatesExtractor(Extractor):
 class MoneyExtractor(Extractor):
     def __init__(self):
         super(MoneyExtractor, self).__init__(MONEY)
+
+
+class LocationExtractor(Extractor):
+    def __init__(self):
+        super(LocationExtractor, self).__init__(LOCATION)
