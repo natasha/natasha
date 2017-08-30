@@ -87,7 +87,7 @@ TITLE_LAST = and_(
 
 #########
 #
-#  COMBINATIONS
+#  FI IF
 #
 #########
 
@@ -136,6 +136,14 @@ TITLE_LAST_FIRST = rule(
     )
 )
 
+
+###########
+#
+#  ABBR
+#
+###########
+
+
 ABBR_FIRST_LAST = rule(
     TITLE_FIRST_ABBR.interpretation(
         Name.first
@@ -144,6 +152,16 @@ ABBR_FIRST_LAST = rule(
     TITLE_LAST.interpretation(
         Name.last.inflected()
     )
+)
+
+LAST_ABBR_FIRST = rule(
+    TITLE_LAST.interpretation(
+        Name.last.inflected()
+    ),
+    TITLE_FIRST_ABBR.interpretation(
+        Name.first
+    ),
+    '.',
 )
 
 ABBR_FIRST_MIDDLE_LAST = rule(
@@ -174,6 +192,14 @@ LAST_ABBR_FIRST_MIDDLE = rule(
     '.'
 )
 
+
+##############
+#
+#  MIDDLE
+#
+#############
+
+
 gnc = gnc_relation()
 
 TITLE_FIRST_MIDDLE = rule(
@@ -200,6 +226,29 @@ TITLE_FIRST_MIDDLE_LAST = rule(
     )
 )
 
+gnc1 = gnc_relation()
+gnc2 = gnc_relation()
+
+TITLE_LAST_FIRST_MIDDLE = rule(
+    TITLE_LAST.match(gnc1, gnc2).interpretation(
+        Name.last.inflected()
+    ),
+    TITLE_FIRST.match(gnc1).interpretation(
+        Name.first.inflected()
+    ),
+    TITLE_MIDDLE.match(gnc2).interpretation(
+        Name.middle.inflected()
+    )
+)
+
+
+##############
+#
+#  SINGLE
+#
+#############
+
+
 JUST_FIRST = rule(
     and_(
         IS_FIRST,
@@ -223,11 +272,16 @@ NAME = or_(
     LAST_FIRST,
     TITLE_FIRST_LAST,
     TITLE_LAST_FIRST,
+
     ABBR_FIRST_LAST,
+    LAST_ABBR_FIRST,
     ABBR_FIRST_MIDDLE_LAST,
     LAST_ABBR_FIRST_MIDDLE,
+
     TITLE_FIRST_MIDDLE,
     TITLE_FIRST_MIDDLE_LAST,
+    TITLE_LAST_FIRST_MIDDLE,
+
     JUST_FIRST,
     JUST_LAST
 ).interpretation(
