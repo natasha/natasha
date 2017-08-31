@@ -1,5 +1,3 @@
-# coding: utf-8
-from __future__ import unicode_literals
 
 from setuptools import (
     setup,
@@ -35,6 +33,9 @@ setup(
     ],
     keywords='natural language processing, russian morphology, named entity recognition, tomita',
     packages=find_packages(),
+    package_data={
+        'data': ['*.txt']
+    },
     install_requires=[
         'yargy'
     ],
