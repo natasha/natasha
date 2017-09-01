@@ -8,6 +8,7 @@ from yargy import (
 )
 
 from yargy.predicates import (
+    caseless,
     eq, length_eq,
     gram, dictionary,
     is_single, is_title
@@ -80,9 +81,71 @@ FEDERATION = rule(
     }).match(gnc)
 ).interpretation(Location.name.inflected())
 
+gnc1 = gnc_relation()
+gnc2 = gnc_relation()
+
+ADJX_FEDERATION = rule(
+    or_(
+        gram('Adjx'),
+        gram('ADJF'),
+    ).match(gnc1).repeatable(),
+    dictionary({
+        'штат',
+        'эмират',
+    }).match(gnc1),
+    (
+        gram('gent')
+        .match(gnc2)
+        .optional()
+        .repeatable()
+    ),
+).interpretation(Location.name.inflected())
+
+gnc = gnc_relation()
+
+STATE = rule(
+    dictionary({
+        'графство',
+        'штат',
+    }),
+    gram('ADJF').match(gnc).optional(),
+    gram('NOUN').match(gnc),
+).interpretation(Location.name.inflected())
+
+gnc = gnc_relation()
+
+LOCALITY = rule(
+    or_(
+        rule(
+            dictionary({
+                'город',
+                'город-герой',
+                'деревня',
+                'село',
+            }),
+        ),
+        rule(
+            or_(
+                caseless('г'),
+                caseless('д'),
+                caseless('с'),
+            ),
+            eq('.').optional(),
+        ),
+    ),
+    gram('ADJF').match(gnc).optional(),
+    or_(
+        gram('NOUN'),
+        gram('Geox'),
+    ).match(gnc),
+).interpretation(Location.name.inflected())
+
 LOCATION = or_(
     REGION,
     FEDERAL_DISTRICT,
     AUTONOMOUS_DISTRICT,
     FEDERATION,
+    ADJX_FEDERATION,
+    STATE,
+    LOCALITY,
 ).interpretation(Location)
