@@ -56,7 +56,33 @@ FEDERAL_DISTRICT = rule(
     ),
 ).interpretation(Location.name.inflected())
 
+gnc1 = gnc_relation()
+gnc2 = gnc_relation()
+
+AUTONOMOUS_DISTRICT = rule(
+    gram('ADJF').match(gnc).repeatable(),
+    or_(
+        rule(
+            dictionary({'автономный'}).match(gnc1, gnc2),
+            dictionary({'округ'}).match(gnc2),
+        ),
+        rule('АО'),
+    ),
+).interpretation(Location.name.inflected())
+
+gnc = gnc_relation()
+
+FEDERATION = rule(
+    gram('ADJF').match(gnc).repeatable(),
+    dictionary({
+        'республика',
+        'федерация',
+    }).match(gnc)
+).interpretation(Location.name.inflected())
+
 LOCATION = or_(
     REGION,
     FEDERAL_DISTRICT,
+    AUTONOMOUS_DISTRICT,
+    FEDERATION,
 ).interpretation(Location)
