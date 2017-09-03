@@ -8,7 +8,7 @@ from yargy import (
 )
 
 from yargy.predicates import (
-    caseless,
+    caseless, normalized,
     eq, length_eq,
     gram, dictionary,
     is_single, is_title
@@ -38,11 +38,12 @@ gnc1 = gnc_relation()
 gnc2 = gnc_relation()
 
 FEDERAL_DISTRICT = rule(
+    rule(caseless('северо'), '-').optional(),
     dictionary({
         'центральный',
-        'северо-западный',
+        'западный',
         'южный',
-        'северо-кавказский',
+        'кавказский',
         'приволжский',
         'уральский',
         'сибирский',
@@ -119,11 +120,11 @@ LOCALITY = rule(
         rule(
             dictionary({
                 'город',
-                'город-герой',
                 'деревня',
                 'село',
             }),
         ),
+        rule(normalized('город'), '-', normalized('герой')),
         rule(
             or_(
                 caseless('г'),
