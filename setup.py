@@ -7,7 +7,7 @@ from setuptools import (
 
 setup(
     name='natasha',
-    version='0.7.0',
+    version='0.8.0',
     description='Named-entity recognition for russian language',
     url='https://github.com/bureaucratic-labs/natasha',
     author='Dmitry Veselov',
