@@ -1,4 +1,4 @@
-# Natasha [![Build Status](https://travis-ci.org/bureaucratic-labs/natasha.svg?branch=master)](https://travis-ci.org/bureaucratic-labs/natasha) [![Documentation Status](https://readthedocs.org/projects/natasha/badge/?version=0.7.0)](http://natasha.readthedocs.io/ru/0.7.0/?badge=0.7.0) [![PyPI](https://img.shields.io/pypi/v/natasha.svg)](https://pypi.python.org/pypi/natasha)
+# Natasha [![Build Status](https://travis-ci.org/natasha/natasha.svg?branch=master)](https://travis-ci.org/bureaucratic-labs/natasha) [![Documentation Status](https://readthedocs.org/projects/natasha/badge/?version=0.7.0)](http://natasha.readthedocs.io/ru/0.7.0/?badge=0.7.0) [![PyPI](https://img.shields.io/pypi/v/natasha.svg)](https://pypi.python.org/pypi/natasha)
 
 <img align="right" src="http://i.imgur.com/DD2KYS9.png">
 
