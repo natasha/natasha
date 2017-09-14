@@ -13,6 +13,7 @@ from .grammars.name import NAME
 from .grammars.date import DATE
 from .grammars.money import MONEY
 from .grammars.location import LOCATION
+from .grammars.address import ADDRESS, ComplexGorodPipeline
 
 
 def serialize(match):
@@ -78,3 +79,11 @@ class MoneyExtractor(Extractor):
 class LocationExtractor(Extractor):
     def __init__(self):
         super(LocationExtractor, self).__init__(LOCATION)
+
+
+class AddressExtractor(Extractor):
+    def __init__(self):
+        super(AddressExtractor, self).__init__(
+            ADDRESS,
+            [ComplexGorodPipeline()]
+        )
