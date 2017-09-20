@@ -1,6 +1,6 @@
 # coding: utf-8
 from __future__ import unicode_literals
-from yargy.compat import RUNNING_ON_PYTHON_2_VERSION
+from io import open
 
 import os
 
@@ -18,10 +18,8 @@ def maybe_strip_comment(line):
 
 def load_lines(filename):
     path = get_path(filename)
-    with open(path) as file:
+    with open(path, encoding='utf-8') as file:
         for line in file:
-            if RUNNING_ON_PYTHON_2_VERSION:
-                line = line.decode('utf-8')
             line = line.rstrip('\n')
             line = maybe_strip_comment(line)
             yield line
