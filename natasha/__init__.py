@@ -5,6 +5,7 @@ from .extractors import (
     MoneyExtractor,
     LocationExtractor,
     AddressExtractor,
+    OrganisationExtractor,
 )
 
 
