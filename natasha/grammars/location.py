@@ -136,7 +136,6 @@ LOCALITY = rule(
     ),
     gram('ADJF').match(gnc).optional(),
     or_(
-        gram('NOUN'),
         gram('Geox'),
     ).match(gnc),
 ).interpretation(Location.name.inflected())
