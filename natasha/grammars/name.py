@@ -9,7 +9,7 @@ from yargy import (
 from yargy.predicates import (
     eq, length_eq,
     gram, dictionary,
-    is_single, is_title
+    is_single, is_capitalized
 )
 from yargy.relations import gnc_relation
 
@@ -50,23 +50,23 @@ TITLE_FIRST = and_(
         IS_FIRST,
         MAYBE_FIRST
     ),
-    is_title()
+    is_capitalized()
 )
 
 TITLE_FIRST_ABBR = and_(
     length_eq(1),
-    is_title()
+    is_capitalized()
 )
 
 TITLE_MIDDLE = and_(
     gram('Patr'),
     not_(gram('Abbr')),  # Фил О’Рейли -> "О" is Patr
-    is_title()
+    is_capitalized()
 )
 
 TITLE_MIDDLE_ABBR = and_(
     length_eq(1),
-    is_title()
+    is_capitalized()
 )
 
 IS_LAST = dictionary(LAST_DICT)
@@ -81,7 +81,7 @@ TITLE_LAST = and_(
         IS_LAST,
         MAYBE_LAST
     ),
-    is_title()
+    is_capitalized()
 )
 
 
