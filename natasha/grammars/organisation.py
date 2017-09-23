@@ -5,16 +5,19 @@ from yargy import (
     rule,
     fact,
     not_,
+    and_,
     or_,
     attribute,
 )
 
 from yargy.predicates import (
     eq,
+    in_,
     true,
     gram,
     caseless,
     normalized,
+    is_capitalized,
 )
 
 from yargy.relations import gnc_relation
@@ -92,6 +95,11 @@ ADJF_PREFIX = rule(
     or_(caseless('и'), eq(',')).optional(),
 ).repeatable()
 
+gnc = gnc_relation()
+GENT_GROUP = rule(
+    gram('gent').match(gnc).repeatable()
+).optional()
+
 QUOTED = rule(
     gram('OrganisationType'),
     gram('QUOTE'),
@@ -116,6 +124,7 @@ NAMED = rule(
         QUOTED_WITH_ADJF_PREFIX,
         BASIC,
     ),
+    GENT_GROUP,
     or_(
         rule(normalized('имя')),
         rule(caseless('им'), eq('.').optional()),
@@ -123,9 +132,27 @@ NAMED = rule(
     NAME_,
 )
 
+LATIN = rule(
+    gram('OrganisationType'),
+    or_(
+        rule(
+            and_(
+                gram('LATN'),
+                is_capitalized(),
+            )
+        ),
+        rule(
+            gram('LATN'),
+            in_({'&', '/', '.'}),
+            gram('LATN'),
+        )
+    ).repeatable()
+)
+
 ORGANISATION = or_(
     QUOTED.interpretation(Organisation.name),
     QUOTED_WITH_ADJF_PREFIX.interpretation(Organisation.name),
     BASIC.interpretation(Organisation.name),
     NAMED.interpretation(Organisation.name),
+    LATIN.interpretation(Organisation.name),
 ).interpretation(Organisation)
