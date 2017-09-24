@@ -14,6 +14,7 @@ from .grammars.date import DATE
 from .grammars.money import MONEY
 from .grammars.location import LOCATION
 from .grammars.address import ADDRESS, ComplexGorodPipeline
+from .grammars.person import PERSON, PositionsPipeline
 
 
 def serialize(match):
@@ -86,4 +87,12 @@ class AddressExtractor(Extractor):
         super(AddressExtractor, self).__init__(
             ADDRESS,
             [ComplexGorodPipeline()]
+        )
+
+
+class PersonExtractor(Extractor):
+    def __init__(self):
+        super(PersonExtractor, self).__init__(
+            PERSON,
+            [PositionsPipeline()]
         )
