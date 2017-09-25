@@ -82,3 +82,11 @@ def test_extractor(extractor, test):
     etalon = test[1:]
     guess = [_.fact for _ in extractor(text)]
     assert guess == etalon
+
+
+# TODO from pzz
+# ул. Народного Ополчения д. 9к.3
+# В п. 14
+# Садовническая наб, вл.77стр1
+# ул. Б. Пироговская, д.37/430 корп В
+# ул.Б. Серпуховская ,вл.46, к.9
