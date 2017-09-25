@@ -1,0 +1,21 @@
+encoding "utf8";
+
+import "base.proto";
+import "articles_base.proto";
+
+import "facttypes.proto";
+
+TAuxDicArticle "имя"
+{
+    key = { "alg:fio" type=CUSTOM }
+}
+
+TAuxDicArticle "имя_без_фамилии"
+{
+    key = { "alg:fio_without_surname" type=CUSTOM }
+}
+
+TAuxDicArticle "People"
+{
+    key = { "tomita:people.cxx" type=CUSTOM }
+}

@@ -1,0 +1,7 @@
+import "base.proto";
+import "facttypes_base.proto";
+
+message Person: NFactType.TFact
+{
+    required NFactType.TFio Name = 1;
+}
