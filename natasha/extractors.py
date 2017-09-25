@@ -41,6 +41,12 @@ class Matches(Record):
     def __getitem__(self, index):
         return self.matches[index]
 
+    def __len__(self):
+        return len(self.matches)
+
+    def __bool__(self):
+        return bool(self.matches)
+
     @property
     def as_json(self):
         return [serialize(_) for _ in self.matches]
