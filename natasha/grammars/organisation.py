@@ -20,7 +20,10 @@ from yargy.predicates import (
     is_capitalized,
 )
 
-from yargy.relations import gnc_relation
+from yargy.relations import (
+    gnc_relation,
+    case_relation,
+)
 from yargy.pipelines import MorphPipeline
 
 
@@ -95,9 +98,9 @@ ADJF_PREFIX = rule(
     or_(caseless('и'), eq(',')).optional(),
 ).repeatable()
 
-gnc = gnc_relation()
+case = case_relation()
 GENT_GROUP = rule(
-    gram('gent').match(gnc).repeatable()
+    gram('gent').match(case).repeatable()
 ).optional()
 
 QUOTED = rule(
