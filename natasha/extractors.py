@@ -102,6 +102,7 @@ class OrganisationExtractor(Extractor):
         super(OrganisationExtractor, self).__init__(
             ORGANISATION,
             [OrganisationTypePipeline()]
+        )
 
 
 class PersonExtractor(Extractor):
