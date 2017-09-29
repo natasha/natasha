@@ -267,7 +267,7 @@ JUST_LAST = rule(
     )
 )
 
-NAME = or_(
+NAME_ = or_(
     FIRST_LAST,
     LAST_FIRST,
     TITLE_FIRST_LAST,
@@ -283,7 +283,9 @@ NAME = or_(
     TITLE_LAST_FIRST_MIDDLE,
 
     JUST_FIRST,
-    JUST_LAST
-).interpretation(
+    JUST_LAST,
+)
+
+NAME = NAME_.interpretation(
     Name
 )

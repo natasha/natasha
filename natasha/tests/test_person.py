@@ -35,7 +35,18 @@ tests = [
                 nick=None
             )
         )
-    ]
+    ],
+    [
+        'академик Н.Н. Петров',
+        Person(
+            position='академик',
+            name=Name(
+                first='Н',
+                middle='Н',
+                last='петров',
+            )
+        ),
+    ],
 ]
 
 

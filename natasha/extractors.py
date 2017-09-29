@@ -14,6 +14,7 @@ from .grammars.date import DATE
 from .grammars.money import MONEY
 from .grammars.location import LOCATION
 from .grammars.address import ADDRESS, ComplexGorodPipeline
+from .grammars.organisation import ORGANISATION, OrganisationTypePipeline
 from .grammars.person import PERSON, PositionsPipeline
 
 
@@ -93,6 +94,14 @@ class AddressExtractor(Extractor):
         super(AddressExtractor, self).__init__(
             ADDRESS,
             [ComplexGorodPipeline()]
+        )
+
+
+class OrganisationExtractor(Extractor):
+    def __init__(self):
+        super(OrganisationExtractor, self).__init__(
+            ORGANISATION,
+            [OrganisationTypePipeline()]
         )
 
 
