@@ -372,12 +372,14 @@ SIMPLE = or_(
     Person.name
 )
 
-PERSON = or_(
+PERSON_ = or_(
     rule(
         POSITION.optional(),
         COMPLEX
     ),
     SIMPLE
-).interpretation(
+)
+
+PERSON = PERSON_.interpretation(
     Person
 )

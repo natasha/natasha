@@ -28,6 +28,7 @@ from yargy.pipelines import MorphPipeline
 
 
 from natasha.grammars.name import NAME_
+from natasha.grammars.person import PERSON_
 
 
 Organisation = fact('Organisation', ['name'])
@@ -100,26 +101,30 @@ ADJF_PREFIX = rule(
 
 case = case_relation()
 GENT_GROUP = rule(
-    gram('gent').match(case).repeatable()
-).optional()
+    gram('gent').match(case)
+).repeatable().optional()
 
 QUOTED = rule(
     gram('OrganisationType'),
     gram('QUOTE'),
-    not_(gram('QUOTE')).repeatable(),
+    not_(
+        or_(
+            gram('QUOTE'),
+            gram('END-OF-LINE'),
+        )).repeatable(),
     gram('QUOTE'),
-)
+).interpretation(Organisation.name)
 
 QUOTED_WITH_ADJF_PREFIX = rule(
     ADJF_PREFIX,
     QUOTED,
-)
+).interpretation(Organisation.name)
 
 
 BASIC = rule(
     ADJF_PREFIX,
     gram('OrganisationType'),
-)
+).interpretation(Organisation.name)
 
 NAMED = rule(
     or_(
@@ -132,8 +137,11 @@ NAMED = rule(
         rule(normalized('имя')),
         rule(caseless('им'), eq('.').optional()),
     ),
-    NAME_,
-)
+    or_(
+        NAME_,
+        PERSON_,
+    ),
+).interpretation(Organisation.name)
 
 LATIN = rule(
     gram('OrganisationType'),
@@ -150,12 +158,20 @@ LATIN = rule(
             gram('LATN'),
         )
     ).repeatable()
+).interpretation(Organisation.name)
+
+KNOWN = rule(
+    gram('Orgn'),
+    GENT_GROUP,
+).interpretation(Organisation.name)
+
+ORGANISATION_ = or_(
+    QUOTED,
+    QUOTED_WITH_ADJF_PREFIX,
+    BASIC,
+    NAMED,
+    LATIN,
+    KNOWN,
 )
 
-ORGANISATION = or_(
-    QUOTED.interpretation(Organisation.name),
-    QUOTED_WITH_ADJF_PREFIX.interpretation(Organisation.name),
-    BASIC.interpretation(Organisation.name),
-    NAMED.interpretation(Organisation.name),
-    LATIN.interpretation(Organisation.name),
-).interpretation(Organisation)
+ORGANISATION = ORGANISATION_.interpretation(Organisation)
