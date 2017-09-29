@@ -15,6 +15,7 @@ from .grammars.money import MONEY
 from .grammars.location import LOCATION
 from .grammars.address import ADDRESS, ComplexGorodPipeline
 from .grammars.organisation import ORGANISATION, OrganisationTypePipeline
+from .grammars.person import PERSON, PositionsPipeline
 
 
 def serialize(match):
@@ -40,6 +41,12 @@ class Matches(Record):
 
     def __getitem__(self, index):
         return self.matches[index]
+
+    def __len__(self):
+        return len(self.matches)
+
+    def __bool__(self):
+        return bool(self.matches)
 
     @property
     def as_json(self):
@@ -95,4 +102,11 @@ class OrganisationExtractor(Extractor):
         super(OrganisationExtractor, self).__init__(
             ORGANISATION,
             [OrganisationTypePipeline()]
+
+
+class PersonExtractor(Extractor):
+    def __init__(self):
+        super(PersonExtractor, self).__init__(
+            PERSON,
+            [PositionsPipeline()]
         )

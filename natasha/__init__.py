@@ -6,6 +6,7 @@ from .extractors import (
     LocationExtractor,
     AddressExtractor,
     OrganisationExtractor,
+    PersonExtractor
 )
 
 
