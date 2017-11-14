@@ -133,7 +133,7 @@ FED_OKRUG_WORDS = or_(
     ),
     rule(caseless('фо'))
 ).interpretation(
-    Region.type.normalized('федеральный округ')
+    Region.type.const('федеральный округ')
 )
 
 FED_OKRUG = rule(
@@ -155,7 +155,7 @@ RESPUBLIKA_WORDS = or_(
     rule(caseless('респ'), DOT.optional()),
     rule(normalized('республика'))
 ).interpretation(
-    Region.type.normalized('республика')
+    Region.type.const('республика')
 )
 
 RESPUBLIKA_ADJF = or_(
@@ -235,7 +235,7 @@ RESPUBLIKA = or_(
 
 
 KRAI_WORDS = normalized('край').interpretation(
-    Region.type.normalized('край')
+    Region.type.const('край')
 )
 
 KRAI_NAME = dictionary({
@@ -273,7 +273,7 @@ OBLAST_WORDS = or_(
         DOT.optional()
     )
 ).interpretation(
-    Region.type.normalized('область')
+    Region.type.const('область')
 )
 
 OBLAST_NAME = dictionary({
@@ -373,7 +373,7 @@ AUTO_OKRUG_WORDS = or_(
     ),
     rule(caseless('ао'))
 ).interpretation(
-    Region.type.normalized('автономный округ')
+    Region.type.const('автономный округ')
 )
 
 HANTI = rule(
@@ -416,7 +416,7 @@ RAION_WORDS = or_(
     rule(caseless('р'), '-', in_caseless({'он', 'н'})),
     rule(normalized('район'))
 ).interpretation(
-    Region.type.normalized('район')
+    Region.type.const('район')
 )
 
 RAION_SIMPLE_NAME = and_(
@@ -739,7 +739,7 @@ GOROD_WORDS = or_(
         DOT.optional()
     )
 ).interpretation(
-    Settlement.type.normalized('город')
+    Settlement.type.const('город')
 )
 
 GOROD = or_(
@@ -802,7 +802,7 @@ SELO_WORDS = or_(
     ),
     rule(normalized('село'))
 ).interpretation(
-    Settlement.type.normalized('село')
+    Settlement.type.const('село')
 )
 
 SELO_NAME = SETTLEMENT_NAME.interpretation(
@@ -831,7 +831,7 @@ DEREVNYA_WORDS = or_(
     ),
     rule(normalized('деревня'))
 ).interpretation(
-    Settlement.type.normalized('деревня')
+    Settlement.type.const('деревня')
 )
 
 DEREVNYA_NAME = SETTLEMENT_NAME.interpretation(
@@ -870,7 +870,7 @@ POSELOK_WORDS = or_(
         normalized('посёлок')
     )
 ).interpretation(
-    Settlement.type.normalized('посёлок')
+    Settlement.type.const('посёлок')
 )
 
 POSELOK_NAME = SETTLEMENT_NAME.interpretation(
@@ -1286,7 +1286,7 @@ STREET_WORDS = or_(
         DOT.optional()
     )
 ).interpretation(
-    Street.type.normalized('улица')
+    Street.type.const('улица')
 )
 
 STREET_NAME = ADDRESS_NAME.interpretation(
@@ -1321,7 +1321,7 @@ PROSPEKT_WORDS = or_(
     ),
     rule(normalized('проспект'))
 ).interpretation(
-    Street.type.normalized('проспект')
+    Street.type.const('проспект')
 )
 
 PROSPEKT_NAME = ADDRESS_NAME.interpretation(
@@ -1353,7 +1353,7 @@ PROEZD_WORDS = or_(
     ),
     rule(normalized('проезд'))
 ).interpretation(
-    Street.type.normalized('проезд')
+    Street.type.const('проезд')
 )
 
 PROEZD_NAME = ADDRESS_NAME.interpretation(
@@ -1382,7 +1382,7 @@ PEREULOK_WORDS = or_(
     ),
     rule(normalized('переулок'))
 ).interpretation(
-    Street.type.normalized('переулок')
+    Street.type.const('переулок')
 )
 
 PEREULOK_NAME = ADDRESS_NAME.interpretation(
@@ -1411,7 +1411,7 @@ PLOSHAD_WORDS = or_(
     ),
     rule(normalized('площадь'))
 ).interpretation(
-    Street.type.normalized('площадь')
+    Street.type.const('площадь')
 )
 
 PLOSHAD_NAME = ADDRESS_NAME.interpretation(
@@ -1446,7 +1446,7 @@ SHOSSE_WORDS = or_(
     ),
     rule(normalized('шоссе'))
 ).interpretation(
-    Street.type.normalized('шоссе')
+    Street.type.const('шоссе')
 )
 
 SHOSSE_NAME = ADDRESS_NAME.interpretation(
@@ -1510,7 +1510,7 @@ DOM_WORDS = or_(
         DOT.optional()
     )
 ).interpretation(
-    Building.type.normalized('дом')
+    Building.type.const('дом')
 )
 
 DOM_VALUE = ADDRESS_VALUE.interpretation(
@@ -1539,7 +1539,7 @@ KORPUS_WORDS = or_(
     ),
     rule(normalized('корпус'))
 ).interpretation(
-    Building.type.normalized('корпус')
+    Building.type.const('корпус')
 )
 
 KORPUS_VALUE = ADDRESS_VALUE.interpretation(
@@ -1574,7 +1574,7 @@ STROENIE_WORDS = or_(
     ),
     rule(normalized('строение'))
 ).interpretation(
-    Building.type.normalized('строение')
+    Building.type.const('строение')
 )
 
 STROENIE_VALUE = ADDRESS_VALUE.interpretation(
@@ -1603,7 +1603,7 @@ OFIS_WORDS = or_(
     ),
     rule(normalized('офис'))
 ).interpretation(
-    Room.type.normalized('офис')
+    Room.type.const('офис')
 )
 
 OFIS_VALUE = ADDRESS_VALUE.interpretation(
@@ -1632,7 +1632,7 @@ KVARTIRA_WORDS = or_(
     ),
     rule(normalized('квартира'))
 ).interpretation(
-    Room.type.normalized('квартира')
+    Room.type.const('квартира')
 )
 
 KVARTIRA_VALUE = ADDRESS_VALUE.interpretation(
