@@ -31,7 +31,7 @@ REGION = rule(
         'область',
         'губерния',
         'уезд',
-    }),
+    }).match(gnc),
 ).interpretation(Location.name.inflected())
 
 gnc1 = gnc_relation()
@@ -62,7 +62,7 @@ gnc1 = gnc_relation()
 gnc2 = gnc_relation()
 
 AUTONOMOUS_DISTRICT = rule(
-    gram('ADJF').match(gnc).repeatable(),
+    gram('ADJF').match(gnc1).repeatable(),
     or_(
         rule(
             dictionary({'автономный'}).match(gnc1, gnc2),
@@ -116,29 +116,35 @@ STATE = rule(
 gnc = gnc_relation()
 
 LOCALITY = rule(
-    or_(
-        rule(
-            dictionary({
-                'город',
-                'деревня',
-                'село',
-            }),
-        ),
-        rule(normalized('город'), '-', normalized('герой')),
-        rule(
+    and_(
+        dictionary({
+            'город',
+            'деревня',
+            'село',
+        }),
+        not_(
             or_(
-                caseless('г'),
-                caseless('д'),
-                caseless('с'),
+                gram('Abbr'),
+                gram('PREP'),
+                gram('CONJ'),
+                gram('PRCL'),
             ),
-            eq('.'),
         ),
-    ),
-    gram('ADJF').match(gnc).optional(),
-    or_(
-        gram('NOUN'),
+    ).optional(),
+    and_(
+        gram('ADJF'),
+    ).match(gnc).optional(),
+    and_(
         gram('Geox'),
-    ).match(gnc),
+        not_(
+            or_(
+                gram('Abbr'),
+                gram('PREP'),
+                gram('CONJ'),
+                gram('PRCL'),
+            ),
+        ),
+    ).match(gnc)
 ).interpretation(Location.name.inflected())
 
 LOCATION = or_(
