@@ -29,12 +29,12 @@ tests = [
     [
         '692909, РФ, Приморский край, г. Находка, ул. Добролюбова, 18',
         Address(parts=[
-            Index(value=692909),
+            Index(value='692909'),
             Country(name='РФ'),
             Region(name='Приморский', type='край'),
             Settlement(name='Находка', type='город'),
             Street(name='Добролюбова', type='улица'),
-            Building(number=18, type=None)
+            Building(number='18', type=None)
         ])
     ],
     [
@@ -42,25 +42,24 @@ tests = [
         Address(parts=[
             Settlement(name='Федоровка', type='деревня'),
             Street(name='Дружбы', type='улица'),
-            Building(number=13, type=None)
+            Building(number='13', type=None)
         ])
     ],
     [
         'Россия, 129110, г.Москва, Олимпийский проспект, 22',
         Address(parts=[
-            Index(value=129110),
+            Index(value='129110'),
             Settlement(name='Москва', type='город'),
             Street(name='Олимпийский', type='проспект'),
-            Building(number=22, type=None)
+            Building(number='22', type=None)
         ])
     ],
     [
-        '197342 г. Санкт-Петербург, Красногвардейский пер., д. 15',
+        'г. Санкт-Петербург, Красногвардейский пер., д. 15',
         Address(parts=[
-            Index(value=197342),
             Settlement(name='Санкт-Петербург', type='город'),
             Street(name='Красногвардейский', type='переулок'),
-            Building(number=15, type='дом')
+            Building(number='15', type='дом')
         ])
     ],
     [
@@ -70,7 +69,7 @@ tests = [
             Settlement(name='Петрозаводск', type='город'),
             Street(name='Маршала Мерецкова', type='улица'),
             Building(number='8 Б', type='дом'),
-            Room(number=4, type='офис')
+            Room(number='4', type='офис')
         ])
     ]
 ]

@@ -3,9 +3,9 @@ from __future__ import unicode_literals
 
 from yargy import (
     rule,
-    and_, or_,
-    fact
+    and_, or_
 )
+from yargy.interpretation import fact
 from yargy.predicates import (
     eq, gte, lte,
     dictionary, normalized,

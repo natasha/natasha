@@ -3,23 +3,23 @@ from __future__ import unicode_literals
 
 from yargy import (
     rule,
-    and_, or_, not_,
-    fact
+    and_, or_, not_
 )
-
+from yargy.interpretation import fact
 from yargy.predicates import (
     caseless, normalized,
     eq, length_eq,
     gram, dictionary,
     is_single, is_title
 )
-
 from yargy.relations import gnc_relation
+
 
 Location = fact(
     'Location',
     ['name'],
 )
+
 
 gnc = gnc_relation()
 
@@ -34,8 +34,7 @@ REGION = rule(
     }).match(gnc),
 ).interpretation(Location.name.inflected())
 
-gnc1 = gnc_relation()
-gnc2 = gnc_relation()
+gnc = gnc_relation()
 
 FEDERAL_DISTRICT = rule(
     rule(caseless('северо'), '-').optional(),
@@ -48,25 +47,24 @@ FEDERAL_DISTRICT = rule(
         'уральский',
         'сибирский',
         'дальневосточный',
-    }).match(gnc1),
+    }).match(gnc),
     or_(
         rule(
-            dictionary({'федеральный'}).match(gnc1, gnc2),
-            dictionary({'округ'}).match(gnc2),
+            dictionary({'федеральный'}).match(gnc),
+            dictionary({'округ'}).match(gnc),
         ),
         rule('ФО'),
     ),
 ).interpretation(Location.name.inflected())
 
-gnc1 = gnc_relation()
-gnc2 = gnc_relation()
+gnc = gnc_relation()
 
 AUTONOMOUS_DISTRICT = rule(
-    gram('ADJF').match(gnc1).repeatable(),
+    gram('ADJF').match(gnc).repeatable(),
     or_(
         rule(
-            dictionary({'автономный'}).match(gnc1, gnc2),
-            dictionary({'округ'}).match(gnc2),
+            dictionary({'автономный'}).match(gnc),
+            dictionary({'округ'}).match(gnc),
         ),
         rule('АО'),
     ),
@@ -82,24 +80,18 @@ FEDERATION = rule(
     }).match(gnc)
 ).interpretation(Location.name.inflected())
 
-gnc1 = gnc_relation()
-gnc2 = gnc_relation()
+gnc = gnc_relation()
 
 ADJX_FEDERATION = rule(
     or_(
         gram('Adjx'),
         gram('ADJF'),
-    ).match(gnc1).repeatable(),
+    ).match(gnc).repeatable(),
     dictionary({
         'штат',
         'эмират',
-    }).match(gnc1),
-    (
-        gram('gent')
-        .match(gnc2)
-        .optional()
-        .repeatable()
-    ),
+    }).match(gnc),
+    gram('gent').optional().repeatable()
 ).interpretation(Location.name.inflected())
 
 gnc = gnc_relation()

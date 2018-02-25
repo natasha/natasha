@@ -1,5 +1,5 @@
 # coding: utf-8
-from __future__ import unicode_literals
+from __future__ import unicode_literals, print_function
 
 
 TABLE = [
@@ -14,25 +14,20 @@ def escape(text):
     return text
 
 
-def format_markup_(text, spans, show_index):
-    # TODO Check and do something with intersecting
+def format_markup_html(text, spans):
     spans = sorted(spans)
     previous = 0
-    for index, span in enumerate(spans):
+    for span in spans:
         start, stop = span
         yield escape(text[previous:start])
         yield '<mark>'
         yield escape(text[start:stop])
-        if show_index:
-            yield '<span class="index">'
-            yield str(index)
-            yield '</span>'
         yield '</mark>'
         previous = stop
     yield escape(text[previous:])
 
 
-def format_markup(text, spans, index=False):
+def format_markup_css(text, spans):
     yield '<style>'
     yield """
 
@@ -47,21 +42,42 @@ def format_markup(text, spans, index=False):
     border: 1px solid #fdf07c;
     background: #ffffc2;
 }
-
-.markup > mark > .index {
-    font-size: 0.7em;
-    vertical-align: top;
-    margin-left: 0.1em;
-}
     """
     yield '</style>'
     yield '<div class="markup tex2jax_ignore">'
-    yield ''.join(format_markup_(text, spans, index))
+    yield ''.join(format_markup_html(text, spans))
     yield '</div>'
 
 
-def show_markup(text, spans, index=False):
+def show_markup_notebook(text, spans):
     from IPython.display import HTML, display
 
-    html = ''.join(format_markup(text, spans, index=index))
+    html = ''.join(format_markup_css(text, spans))
     display(HTML(html))
+
+
+def format_markup(text, spans):
+    spans = sorted(spans)
+    previous = 0
+    for span in spans:
+        start, stop = span
+        yield text[previous:start]
+        yield '[['
+        yield text[start:stop]
+        yield ']]'
+        previous = stop
+    yield text[previous:]
+
+
+def show_markup(text, spans):
+    print(''.join(format_markup(text, spans)))
+
+
+def format_json(data):
+    import json
+
+    return json.dumps(data, indent=2, ensure_ascii=False)
+
+
+def show_json(data):
+    print(format_json(data))
