@@ -2,19 +2,19 @@
 from __future__ import unicode_literals
 
 from yargy import (
-    rule, fact, attribute,
+    rule,
     or_, and_
 )
+from yargy.interpretation import fact, attribute
 from yargy.predicates import (
-    eq, lte, gte, gram,
+    eq, lte, gte, gram, type,
     length_eq,
     in_, in_caseless, dictionary,
     normalized, caseless,
     is_title
 )
-from yargy.pipelines import (
-    MorphPipeline
-)
+from yargy.pipelines import morph_pipeline
+from yargy.tokenizer import QUOTES
 
 
 Address = fact(
@@ -56,7 +56,7 @@ DOT = eq('.')
 
 ADJF = gram('ADJF')
 NOUN = gram('NOUN')
-INT = gram('INT')
+INT = type('INT')
 TITLE = is_title()
 
 ANUM = rule(
@@ -464,35 +464,31 @@ RAION = rule(
 
 # Top 200 Russia cities, cover 75% of population
 
-
-class ComplexGorodPipeline(MorphPipeline):
-    grammemes = {'ComplexGorod'}
-    keys = [
-        'санкт - петербург',
-        'нижний новгород',
-        'н . новгород',
-        'ростов - на - дону',
-        'набережные челны',
-        'улан - удэ',
-        'нижний тагил',
-        'комсомольск - на - амуре',
-        'йошкар - ола',
-        'старый оскол',
-        'великий новгород',
-        'южно - сахалинск',
-        'петропавловск - камчатский',
-        'каменск - уральский',
-        'орехово - зуево',
-        'сергиев посад',
-        'новый уренга',
-        'ленинск - кузнецкий',
-        'великие лук',
-        'каменск - шахтинский',
-        'усть - илимск',
-        'усолье - сибирский',
-        'кирово - чепецк',
-    ]
-
+COMPLEX = morph_pipeline([
+    'санкт-петербург',
+    'нижний новгород',
+    'н.новгород',
+    'ростов-на-дону',
+    'набережные челны',
+    'улан-удэ',
+    'нижний тагил',
+    'комсомольск-на-амуре',
+    'йошкар-ола',
+    'старый оскол',
+    'великий новгород',
+    'южно-сахалинск',
+    'петропавловск-камчатский',
+    'каменск-уральский',
+    'орехово-зуево',
+    'сергиев посад',
+    'новый уренга',
+    'ленинск-кузнецкий',
+    'великие лук',
+    'каменск-шахтинский',
+    'усть-илимск',
+    'усолье-сибирский',
+    'кирово-чепецк',
+])
 
 SIMPLE = dictionary({
     'москва',
@@ -682,17 +678,15 @@ SIMPLE = dictionary({
     'клин'
 })
 
-COMPLEX = gram('ComplexGorod')
-
 GOROD_ABBR = in_caseless({
     'спб',
     'мск'
 })
 
 GOROD_NAME = or_(
-    SIMPLE,
+    rule(SIMPLE),
     COMPLEX,
-    GOROD_ABBR
+    rule(GOROD_ABBR)
 ).interpretation(
     Settlement.name
 )
@@ -1470,7 +1464,7 @@ SHOSSE = or_(
 
 LETTER = in_caseless(set('абвгдежзиклмнопрстуфхшщэюя'))
 
-QUOTE = gram('QUOTE')
+QUOTE = in_(QUOTES)
 
 LETTER = or_(
     rule(LETTER),

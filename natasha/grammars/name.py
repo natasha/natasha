@@ -4,13 +4,14 @@ from __future__ import unicode_literals
 from yargy import (
     rule,
     and_, or_, not_,
-    fact
 )
+from yargy.interpretation import fact
 from yargy.predicates import (
     eq, length_eq,
-    gram, dictionary,
+    gram,
     is_single, is_capitalized
 )
+from yargy.predicates.bank import DictionaryPredicate as dictionary
 from yargy.relations import gnc_relation
 
 from natasha.data import load_lines
@@ -95,45 +96,45 @@ TITLE_LAST = and_(
 gnc = gnc_relation()
 
 FIRST_LAST = rule(
-    IS_FIRST.match(gnc).interpretation(
+    IS_FIRST.interpretation(
         Name.first.inflected()
-    ),
-    IS_LAST.match(gnc).interpretation(
+    ).match(gnc),
+    IS_LAST.interpretation(
         Name.last.inflected()
-    )
+    ).match(gnc)
 )
 
 gnc = gnc_relation()
 
 LAST_FIRST = rule(
-    IS_LAST.match(gnc).interpretation(
+    IS_LAST.interpretation(
         Name.last.inflected()
-    ),
-    IS_FIRST.match(gnc).interpretation(
+    ).match(gnc),
+    IS_FIRST.interpretation(
         Name.first.inflected()
-    )
+    ).match(gnc)
 )
 
 gnc = gnc_relation()
 
 TITLE_FIRST_LAST = rule(
-    TITLE_FIRST.match(gnc).interpretation(
+    TITLE_FIRST.interpretation(
         Name.first.inflected()
-    ),
-    TITLE_LAST.match(gnc).interpretation(
+    ).match(gnc),
+    TITLE_LAST.interpretation(
         Name.last.inflected()
-    )
+    ).match(gnc)
 )
 
 gnc = gnc_relation()
 
 TITLE_LAST_FIRST = rule(
-    TITLE_LAST.match(gnc).interpretation(
+    TITLE_LAST.interpretation(
         Name.last.inflected()
-    ),
-    TITLE_FIRST.match(gnc).interpretation(
+    ).match(gnc),
+    TITLE_FIRST.interpretation(
         Name.first.inflected()
-    )
+    ).match(gnc)
 )
 
 
@@ -203,42 +204,40 @@ LAST_ABBR_FIRST_MIDDLE = rule(
 gnc = gnc_relation()
 
 TITLE_FIRST_MIDDLE = rule(
-    TITLE_FIRST.match(gnc).interpretation(
+    TITLE_FIRST.interpretation(
         Name.first.inflected()
-    ),
-    TITLE_MIDDLE.match(gnc).interpretation(
+    ).match(gnc),
+    TITLE_MIDDLE.interpretation(
         Name.middle.inflected()
-    )
+    ).match(gnc)
 )
 
-gnc1 = gnc_relation()
-gnc2 = gnc_relation()
+gnc = gnc_relation()
 
 TITLE_FIRST_MIDDLE_LAST = rule(
-    TITLE_FIRST.match(gnc1).interpretation(
+    TITLE_FIRST.interpretation(
         Name.first.inflected()
-    ),
-    TITLE_MIDDLE.match(gnc2).interpretation(
+    ).match(gnc),
+    TITLE_MIDDLE.interpretation(
         Name.middle.inflected()
-    ),
-    TITLE_LAST.match(gnc1, gnc2).interpretation(
+    ).match(gnc),
+    TITLE_LAST.interpretation(
         Name.last.inflected()
-    )
+    ).match(gnc)
 )
 
-gnc1 = gnc_relation()
-gnc2 = gnc_relation()
+gnc = gnc_relation()
 
 TITLE_LAST_FIRST_MIDDLE = rule(
-    TITLE_LAST.match(gnc1, gnc2).interpretation(
+    TITLE_LAST.interpretation(
         Name.last.inflected()
-    ),
-    TITLE_FIRST.match(gnc1).interpretation(
+    ).match(gnc),
+    TITLE_FIRST.interpretation(
         Name.first.inflected()
-    ),
-    TITLE_MIDDLE.match(gnc2).interpretation(
+    ).match(gnc),
+    TITLE_MIDDLE.interpretation(
         Name.middle.inflected()
-    )
+    ).match(gnc)
 )
 
 
@@ -267,7 +266,7 @@ JUST_LAST = rule(
     )
 )
 
-NAME_ = or_(
+NAME = or_(
     FIRST_LAST,
     LAST_FIRST,
     TITLE_FIRST_LAST,
@@ -284,8 +283,6 @@ NAME_ = or_(
 
     JUST_FIRST,
     JUST_LAST,
-)
-
-NAME = NAME_.interpretation(
+).interpretation(
     Name
 )

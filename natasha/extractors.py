@@ -7,15 +7,15 @@ from yargy import Parser
 
 from .utils import Record
 from .preprocess import normalize_text
-from .markup import format_markup
+from .markup import format_markup_css
 
 from .grammars.name import NAME
 from .grammars.date import DATE
 from .grammars.money import MONEY
 from .grammars.location import LOCATION
-from .grammars.address import ADDRESS, ComplexGorodPipeline
-from .grammars.organisation import ORGANISATION, OrganisationTypePipeline
-from .grammars.person import PERSON, PositionsPipeline
+from .grammars.address import ADDRESS
+from .grammars.organisation import ORGANISATION
+from .grammars.person import PERSON
 
 
 def serialize(match):
@@ -54,14 +54,14 @@ class Matches(Record):
 
     def _repr_html_(self):
         spans = [_.span for _ in self.matches]
-        return ''.join(format_markup(self.text, spans))
+        return ''.join(format_markup_css(self.text, spans))
 
 
 class Extractor(Record):
     __attributes__ = ['parser']
 
-    def __init__(self, rule, pipelines=()):
-        self.parser = Parser(rule, pipelines=pipelines)
+    def __init__(self, rule):
+        self.parser = Parser(rule)
 
     def __call__(self, text):
         text = normalize_text(text)
@@ -91,23 +91,14 @@ class LocationExtractor(Extractor):
 
 class AddressExtractor(Extractor):
     def __init__(self):
-        super(AddressExtractor, self).__init__(
-            ADDRESS,
-            [ComplexGorodPipeline()]
-        )
+        super(AddressExtractor, self).__init__(ADDRESS)
 
 
 class OrganisationExtractor(Extractor):
     def __init__(self):
-        super(OrganisationExtractor, self).__init__(
-            ORGANISATION,
-            [OrganisationTypePipeline()]
-        )
+        super(OrganisationExtractor, self).__init__(ORGANISATION)
 
 
 class PersonExtractor(Extractor):
     def __init__(self):
-        super(PersonExtractor, self).__init__(
-            PERSON,
-            [PositionsPipeline()]
-        )
+        super(PersonExtractor, self).__init__(PERSON)

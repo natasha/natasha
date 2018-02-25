@@ -1,5 +1,5 @@
 # common
-git+https://github.com/bureaucratic-labs/yargy.git#egg=yargy
+git+https://github.com/natasha/yargy.git#egg=yargy
 
 # dev
 pytest==3.2.1

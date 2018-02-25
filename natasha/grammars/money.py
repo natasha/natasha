@@ -4,12 +4,14 @@ from __future__ import unicode_literals
 from yargy import (
     rule,
     and_, or_,
-    fact
 )
+from yargy.interpretation import fact
 from yargy.predicates import (
-    eq, in_,
-    gram, normalized, caseless,
-    dictionary)
+    eq, in_, in_caseless,
+    gram, type,
+    normalized, caseless,
+    dictionary
+)
 
 
 Money = fact(
@@ -48,7 +50,7 @@ CURRENCY = or_(
     Money.currency
 )
 
-INT = gram('INT')
+INT = type('INT')
 
 AMWORD = rule(
     or_(
@@ -56,7 +58,11 @@ AMWORD = rule(
             'тысяча',
             'миллион'
         }),
-        eq('т')
+        eq('т'),
+        in_caseless({
+            'тыс',
+            'млн'
+        })
     ),
     eq('.').optional()
 )
