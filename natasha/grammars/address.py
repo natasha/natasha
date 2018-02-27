@@ -680,7 +680,8 @@ SIMPLE = dictionary({
 
 GOROD_ABBR = in_caseless({
     'спб',
-    'мск'
+    'мск',
+    'нск'   # Новосибирск
 })
 
 GOROD_NAME = or_(
