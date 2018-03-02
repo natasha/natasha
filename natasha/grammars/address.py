@@ -400,7 +400,10 @@ AUTO_OKRUG = or_(
         ),
         rule(
             caseless('хмао'),
-            rule('-', caseless('югра')).optional()
+        ).interpretation(Region.name),
+        rule(
+            caseless('хмао'),
+            '-', caseless('югра')
         ).interpretation(Region.name),
     ),
     rule(
