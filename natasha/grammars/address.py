@@ -864,7 +864,20 @@ POSELOK_WORDS = or_(
     rule(
         normalized('рабочий'),
         normalized('посёлок')
-    )
+    ),
+    rule(
+        caseless('пгт'),
+        DOT.optional()
+    ),
+    rule(
+        caseless('п'), DOT, caseless('г'), DOT, caseless('т'),
+        DOT.optional()
+    ),
+    rule(
+        normalized('посёлок'),
+        normalized('городского'),
+        normalized('типа'),
+    ),
 ).interpretation(
     Settlement.type.const('посёлок')
 )
