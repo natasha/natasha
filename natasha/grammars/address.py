@@ -392,10 +392,19 @@ BURAT = rule(
 
 AUTO_OKRUG = or_(
     rule(AUTO_OKRUG_NAME, AUTO_OKRUG_WORDS),
-    rule(
-        HANTI,
-        AUTO_OKRUG_WORDS,
-        '-', normalized('югра')
+    or_(
+        rule(
+            HANTI,
+            AUTO_OKRUG_WORDS,
+            '-', normalized('югра')
+        ),
+        rule(
+            caseless('хмао'),
+        ).interpretation(Region.name),
+        rule(
+            caseless('хмао'),
+            '-', caseless('югра')
+        ).interpretation(Region.name),
     ),
     rule(
         BURAT,

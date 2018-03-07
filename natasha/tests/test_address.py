@@ -73,6 +73,25 @@ tests = [
         ])
     ],
     [
+        '628000, ХМАО-Югра, г.Ханты-Мансийск, ул. Ледовая , д.19',
+        Address(parts=[
+            Index(value='628000'),
+            Region(name='ХМАО-Югра', type=None),
+            Settlement(name='Ханты-Мансийск', type='город'),
+            Street(name='Ледовая', type='улица'),
+            Building(number='19', type='дом')
+        ])
+    ],
+    [
+        'ХМАО г.Нижневартовск пер.Ягельный 17',
+        Address(parts=[
+            Region(name='ХМАО', type=None),
+            Settlement(name='Нижневартовск', type='город'),
+            Street(name='Ягельный', type='переулок'),
+            Building(number='17', type=None)
+        ])
+    ],
+    [
         'Белгородская обл, пгт Борисовка,ул. Рудого д160',
         Address(parts=[
             Region(name='Белгородская', type='область'),
