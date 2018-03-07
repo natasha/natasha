@@ -90,7 +90,35 @@ tests = [
             Street(name='Ягельный', type='переулок'),
             Building(number='17', type=None)
         ])
-    ]
+    ],
+    [
+        'Белгородская обл, пгт Борисовка,ул. Рудого д160',
+        Address(parts=[
+            Region(name='Белгородская', type='область'),
+            Settlement(name='Борисовка', type='посёлок'),
+            Street(name='Рудого', type='улица'),
+            Building(number='160', type='дом')
+        ])
+    ],
+    [
+        'Самарская область, п.г.т. Алексеевка, ул. Ульяновская д 21',
+        Address(parts=[
+            Region(name='Самарская', type='область'),
+            Settlement(name='Алексеевка', type='посёлок'),
+            Street(name='Ульяновская', type='улица'),
+            Building(number='21', type='дом')
+        ])
+
+    ],
+    [
+        'Мурманская обл поселок городского типа Молочный, ул.Гальченко д.11',
+        Address(parts=[
+            Region(name='Мурманская', type='область'),
+            Settlement(name='Молочный', type='посёлок'),
+            Street(name='Гальченко', type='улица'),
+            Building(number='11', type='дом')
+        ])
+    ],
 ]
 
 
