@@ -8,25 +8,24 @@ from yargy import (
 from yargy.interpretation import fact
 from yargy.predicates import (
     eq, length_eq,
-    gram,
+    gram, tag,
     is_single, is_capitalized
 )
 from yargy.predicates.bank import DictionaryPredicate as dictionary
 from yargy.relations import gnc_relation
 
-from natasha.data import load_lines
+from natasha.data import load_dict
 
 
 Name = fact(
     'Name',
-    ['first', 'last', 'middle', 'nick']
+    ['first', 'middle', 'last', 'nick']
 )
 
 
-FIRST_DICT = set(load_lines('first.txt'))
-MAYBE_FIRST_DICT = set(load_lines('maybe_first.txt'))
-LAST_DICT = set(load_lines('last.txt'))
-MAYBE_LAST_DICT = set(load_lines('maybe_last.txt'))
+FIRST_DICT = set(load_dict('first.txt'))
+MAYBE_FIRST_DICT = set(load_dict('maybe_first.txt'))
+LAST_DICT = set(load_dict('last.txt'))
 
 
 ##########
@@ -36,54 +35,90 @@ MAYBE_LAST_DICT = set(load_lines('maybe_last.txt'))
 ###########
 
 
-IS_FIRST = dictionary(FIRST_DICT)
+IN_FIRST = dictionary(FIRST_DICT)
+IN_MAYBE_FIRST = dictionary(MAYBE_FIRST_DICT)
+IN_LAST = dictionary(LAST_DICT)
 
-MAYBE_FIRST = or_(
-    and_(
-        gram('Name'),
-        not_(gram('Abbr'))  # А. Леонидов
-    ),
-    dictionary(MAYBE_FIRST_DICT)
+gnc = gnc_relation()
+
+
+########
+#
+#   FIRST
+#
+########
+
+
+TITLE = is_capitalized()
+
+NOUN = gram('NOUN')
+CRF = tag('I')
+
+ABBR = gram('Abbr')
+SURN = gram('Surn')
+NAME = and_(
+    gram('Name'),
+    not_(ABBR)
 )
-
-TITLE_FIRST = and_(
-    or_(
-        IS_FIRST,
-        MAYBE_FIRST
-    ),
-    is_capitalized()
-)
-
-TITLE_FIRST_ABBR = and_(
-    length_eq(1),
-    is_capitalized()
-)
-
-TITLE_MIDDLE = and_(
+PATR = and_(
     gram('Patr'),
-    not_(gram('Abbr')),  # Фил О’Рейли -> "О" is Patr
-    is_capitalized()
+    not_(ABBR)
 )
 
-TITLE_MIDDLE_ABBR = and_(
-    length_eq(1),
-    is_capitalized()
-)
-
-IS_LAST = dictionary(LAST_DICT)
-
-MAYBE_LAST = or_(
-    gram('Surn'),
-    dictionary(MAYBE_LAST_DICT)
-)
-
-TITLE_LAST = and_(
+FIRST = and_(
+    CRF,
     or_(
-        IS_LAST,
-        MAYBE_LAST
-    ),
-    is_capitalized()
-)
+        NAME,
+        IN_MAYBE_FIRST,
+        IN_FIRST
+    )
+).interpretation(
+    Name.first.inflected()
+).match(gnc)
+
+FIRST_ABBR = and_(
+    ABBR,
+    TITLE
+).interpretation(
+    Name.first
+).match(gnc)
+
+
+##########
+#
+#   LAST
+#
+#########
+
+
+LAST = and_(
+    CRF,
+    or_(
+        SURN,
+        IN_LAST
+    )
+).interpretation(
+    Name.last.inflected()
+).match(gnc)
+
+
+########
+#
+#   MIDDLE
+#
+#########
+
+
+MIDDLE = PATR.interpretation(
+    Name.middle.inflected()
+).match(gnc)
+
+MIDDLE_ABBR = and_(
+    ABBR,
+    TITLE
+).interpretation(
+    Name.middle
+).match(gnc)
 
 
 #########
@@ -93,48 +128,14 @@ TITLE_LAST = and_(
 #########
 
 
-gnc = gnc_relation()
-
 FIRST_LAST = rule(
-    IS_FIRST.interpretation(
-        Name.first.inflected()
-    ).match(gnc),
-    IS_LAST.interpretation(
-        Name.last.inflected()
-    ).match(gnc)
+    FIRST,
+    LAST
 )
-
-gnc = gnc_relation()
 
 LAST_FIRST = rule(
-    IS_LAST.interpretation(
-        Name.last.inflected()
-    ).match(gnc),
-    IS_FIRST.interpretation(
-        Name.first.inflected()
-    ).match(gnc)
-)
-
-gnc = gnc_relation()
-
-TITLE_FIRST_LAST = rule(
-    TITLE_FIRST.interpretation(
-        Name.first.inflected()
-    ).match(gnc),
-    TITLE_LAST.interpretation(
-        Name.last.inflected()
-    ).match(gnc)
-)
-
-gnc = gnc_relation()
-
-TITLE_LAST_FIRST = rule(
-    TITLE_LAST.interpretation(
-        Name.last.inflected()
-    ).match(gnc),
-    TITLE_FIRST.interpretation(
-        Name.first.inflected()
-    ).match(gnc)
+    LAST,
+    FIRST
 )
 
 
@@ -146,50 +147,30 @@ TITLE_LAST_FIRST = rule(
 
 
 ABBR_FIRST_LAST = rule(
-    TITLE_FIRST_ABBR.interpretation(
-        Name.first
-    ),
+    FIRST_ABBR,
     '.',
-    TITLE_LAST.interpretation(
-        Name.last.inflected()
-    )
+    LAST
 )
 
 LAST_ABBR_FIRST = rule(
-    TITLE_LAST.interpretation(
-        Name.last.inflected()
-    ),
-    TITLE_FIRST_ABBR.interpretation(
-        Name.first
-    ),
+    LAST,
+    FIRST_ABBR,
     '.',
 )
 
 ABBR_FIRST_MIDDLE_LAST = rule(
-    TITLE_FIRST_ABBR.interpretation(
-        Name.first
-    ),
+    FIRST_ABBR,
     '.',
-    TITLE_MIDDLE_ABBR.interpretation(
-        Name.middle
-    ),
+    MIDDLE_ABBR,
     '.',
-    TITLE_LAST.interpretation(
-        Name.last.inflected()
-    )
+    LAST
 )
 
 LAST_ABBR_FIRST_MIDDLE = rule(
-    TITLE_LAST.interpretation(
-        Name.last.inflected()
-    ),
-    TITLE_FIRST_ABBR.interpretation(
-        Name.first
-    ),
+    LAST,
+    FIRST_ABBR,
     '.',
-    TITLE_MIDDLE_ABBR.interpretation(
-        Name.middle
-    ),
+    MIDDLE_ABBR,
     '.'
 )
 
@@ -201,43 +182,21 @@ LAST_ABBR_FIRST_MIDDLE = rule(
 #############
 
 
-gnc = gnc_relation()
-
-TITLE_FIRST_MIDDLE = rule(
-    TITLE_FIRST.interpretation(
-        Name.first.inflected()
-    ).match(gnc),
-    TITLE_MIDDLE.interpretation(
-        Name.middle.inflected()
-    ).match(gnc)
+FIRST_MIDDLE = rule(
+    FIRST,
+    MIDDLE
 )
 
-gnc = gnc_relation()
-
-TITLE_FIRST_MIDDLE_LAST = rule(
-    TITLE_FIRST.interpretation(
-        Name.first.inflected()
-    ).match(gnc),
-    TITLE_MIDDLE.interpretation(
-        Name.middle.inflected()
-    ).match(gnc),
-    TITLE_LAST.interpretation(
-        Name.last.inflected()
-    ).match(gnc)
+FIRST_MIDDLE_LAST = rule(
+    FIRST,
+    MIDDLE,
+    LAST
 )
 
-gnc = gnc_relation()
-
-TITLE_LAST_FIRST_MIDDLE = rule(
-    TITLE_LAST.interpretation(
-        Name.last.inflected()
-    ).match(gnc),
-    TITLE_FIRST.interpretation(
-        Name.first.inflected()
-    ).match(gnc),
-    TITLE_MIDDLE.interpretation(
-        Name.middle.inflected()
-    ).match(gnc)
+LAST_FIRST_MIDDLE = rule(
+    LAST,
+    FIRST,
+    MIDDLE
 )
 
 
@@ -248,41 +207,54 @@ TITLE_LAST_FIRST_MIDDLE = rule(
 #############
 
 
-JUST_FIRST = rule(
-    and_(
-        IS_FIRST,
-        is_single(),
-    ).interpretation(
-        Name.first.inflected()
-    )
-)
+JUST_FIRST = FIRST
 
-JUST_LAST = rule(
-    and_(
-        IS_LAST,
-        is_single(),
-    ).interpretation(
-        Name.last.inflected()
-    )
-)
+JUST_LAST = LAST
+
+
+########
+#
+#    FULL
+#
+########
+
 
 NAME = or_(
     FIRST_LAST,
     LAST_FIRST,
-    TITLE_FIRST_LAST,
-    TITLE_LAST_FIRST,
 
     ABBR_FIRST_LAST,
     LAST_ABBR_FIRST,
     ABBR_FIRST_MIDDLE_LAST,
     LAST_ABBR_FIRST_MIDDLE,
 
-    TITLE_FIRST_MIDDLE,
-    TITLE_FIRST_MIDDLE_LAST,
-    TITLE_LAST_FIRST_MIDDLE,
+    FIRST_MIDDLE,
+    FIRST_MIDDLE_LAST,
+    LAST_FIRST_MIDDLE,
 
     JUST_FIRST,
     JUST_LAST,
 ).interpretation(
     Name
+)
+
+
+from yargy.rule.transformators import RuleTransformator
+from yargy.rule.constructors import Rule
+from yargy.predicates.constructors import AndPredicate
+
+
+class StripCrfTransformator(RuleTransformator):
+    def visit_term(self, item):
+        if isinstance(item, Rule):
+            return self.visit(item)
+        elif isinstance(item, AndPredicate):
+            predicates = [_ for _ in item.predicates if _ != CRF]
+            return AndPredicate(predicates)
+        else:
+            return item
+
+
+SIMPLE_NAME = NAME.transform(
+    StripCrfTransformator
 )

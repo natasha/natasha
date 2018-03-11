@@ -1,33 +1,98 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
+import re
+
 from yargy import (
     rule,
     and_, or_,
 )
-from yargy.interpretation import fact
+from yargy.interpretation import (
+    fact,
+    const
+)
 from yargy.predicates import (
-    eq, in_, in_caseless,
+    eq, length_eq,
+    in_, in_caseless,
     gram, type,
-    normalized, caseless,
-    dictionary
+    normalized, caseless, dictionary
+)
+
+from natasha.utils import Record
+
+from natasha.dsl import (
+    Normalizable,
+    money as dsl
 )
 
 
 Money = fact(
     'Money',
-    ['amount', 'range', 'currency']
+    ['integer', 'fraction', 'multiplier', 'currency', 'coins']
 )
+class Money(Money, Normalizable):
+    @property
+    def normalized(self):
+        amount = self.integer
+        if self.fraction:
+            amount += self.fraction / 100
+        if self.multiplier:
+            amount *= self.multiplier
+        if self.coins:
+            amount += self.coins / 100
+        return dsl.Money(amount, self.currency)
+
+
+Rate = fact(
+    'Rate',
+    ['money', 'period']
+)
+class Rate(Rate, Normalizable):
+    @property
+    def normalized(self):
+        return dsl.Rate(
+            self.money.normalized,
+            self.period
+        )
+
+
+Range = fact(
+    'Range',
+    ['min', 'max']
+)
+class Range(Range, Normalizable):
+    @property
+    def normalized(self):
+        min = self.min.normalized
+        max = self.max.normalized
+        if not min.currency:
+            min.currency = max.currency
+        return dsl.Range(min, max)
+
+
+DOT = eq('.')
+INT = type('INT')
+
+
+########
+#
+#   CURRENCY
+#
+##########
 
 
 EURO = or_(
     normalized('евро'),
     eq('€')
+).interpretation(
+    const(dsl.EURO)
 )
 
 DOLLARS = or_(
     normalized('доллар'),
     eq('$')
+).interpretation(
+    const(dsl.DOLLARS)
 )
 
 RUBLES = or_(
@@ -38,109 +103,284 @@ RUBLES = or_(
             caseless('р'),
             eq('₽')
         ),
-        eq('.').optional()
+        DOT.optional()
     )
+).interpretation(
+    const(dsl.RUBLES)
 )
 
 CURRENCY = or_(
-    rule(EURO),
-    rule(DOLLARS),
+    EURO,
+    DOLLARS,
     RUBLES
 ).interpretation(
     Money.currency
 )
 
-INT = type('INT')
-
-AMWORD = rule(
-    or_(
-        dictionary({
-            'тысяча',
-            'миллион'
-        }),
-        eq('т'),
-        in_caseless({
-            'тыс',
-            'млн'
-        })
-    ),
-    eq('.').optional()
+KOPEIKA = or_(
+    rule(normalized('копейка')),
+    rule(
+        or_(
+            caseless('коп'),
+            caseless('к')
+        ),
+        DOT.optional()
+    )
 )
 
-SEP = in_({',', '.'})
-
-AMOUNT_ = or_(
-    rule(INT),
-    rule(INT, INT),
-    rule(INT, INT, INT),
-    rule(INT, SEP, INT),
-    rule(INT, SEP, INT, SEP, INT),
+CENT = or_(
+    normalized('цент'),
+    eq('¢')
 )
 
-FRACTION_AMOUN = rule(
-    AMOUNT_,
-    SEP,
-    INT
+EUROCENT = normalized('евроцент')
+
+COINS_CURRENCY = or_(
+    KOPEIKA,
+    rule(CENT),
+    rule(EUROCENT)
 )
 
-AMOUNT = or_(
-    AMOUNT_,
-    rule(AMOUNT_, AMWORD),
-    FRACTION_AMOUN,
-    rule(FRACTION_AMOUN, AMWORD)
+
+############
+#
+#  MULTIPLIER
+#
+##########
+
+
+MILLIARD = or_(
+    rule(caseless('млрд'), DOT.optional()),
+    rule(normalized('миллиард'))
 ).interpretation(
-    Money.amount
+    const(10**9)
 )
 
-RANGE_OT = rule(
-    eq('от'),
-    AMOUNT
+MILLION = or_(
+    rule(caseless('млн'), DOT.optional()),
+    rule(normalized('миллион'))
+).interpretation(
+    const(10**6)
 )
 
-RANGE_DO = rule(
-    eq('до'),
-    AMOUNT
+THOUSAND = or_(
+    rule(caseless('т'), DOT),
+    rule(caseless('тыс'), DOT.optional()),
+    rule(normalized('тысяча'))
+).interpretation(
+    const(10**3)
 )
 
-RANGE = or_(
-    RANGE_OT,
-    RANGE_DO,
+MULTIPLIER = or_(
+    MILLIARD,
+    MILLION,
+    THOUSAND
+).interpretation(
+    Money.multiplier
+)
+
+
+########
+#
+#  NUMERAL
+#
+#######
+
+
+NUMR = or_(
+    gram('NUMR'),
+    # https://github.com/OpenCorpora/opencorpora/issues/818
+    dictionary({
+        'ноль',
+        'один'
+    }),
+)
+
+MODIFIER = in_caseless({
+    'целых',
+    'сотых',
+    'десятых'
+})
+
+PART = or_(
     rule(
-        RANGE_OT,
-        RANGE_DO
+        or_(
+            INT,
+            NUMR,
+            MODIFIER
+        )
     ),
-    rule(
-        AMOUNT_,
-        eq('-'),
-        AMOUNT_
+    MILLIARD,
+    MILLION,
+    THOUSAND,
+    CURRENCY,
+    COINS_CURRENCY
+)
+
+BOUND = in_('()//')
+
+NUMERAL = rule(
+    BOUND,
+    PART.repeatable(),
+    BOUND
+)
+
+
+#######
+#
+#   AMOUNT
+#
+########
+
+
+def normalize_integer(value):
+    integer = re.sub('[\s.,]+', '', value)
+    return int(integer)
+
+
+PART = and_(
+    INT,
+    length_eq(3)
+)
+
+SEP = in_(',.')
+
+INTEGER = or_(
+    rule(INT),
+    rule(INT, PART),
+    rule(INT, PART, PART),
+    rule(INT, SEP, PART),
+    rule(INT, SEP, PART, SEP, PART),
+).interpretation(
+    Money.integer.custom(normalize_integer)
+)
+
+FRACTION = and_(
+    INT,
+    or_(
+        length_eq(1),
+        length_eq(2)
     )
 ).interpretation(
-    Money.range
+    Money.fraction.custom(int)
 )
 
-TIME = rule(
-    or_(
-        eq('/'),
-        eq('в')
+AMOUNT = rule(
+    INTEGER,
+    rule(
+        SEP,
+        FRACTION
     ).optional(),
-    dictionary({
-        'сутки',
-        'час',
-        'смена'
-    })
+    MULTIPLIER.optional(),
+    NUMERAL.optional()
 )
+
+COINS_INTEGER = and_(
+    INT,
+    or_(
+        length_eq(1),
+        length_eq(2)
+    )
+).interpretation(
+    Money.coins.custom(int)
+)
+
+COINS_AMOUNT = rule(
+    COINS_INTEGER,
+    NUMERAL.optional()
+)
+
+
+#########
+#
+#   MONEY
+#
+###########
+
 
 MONEY = rule(
-    or_(
-        AMOUNT,
-        RANGE,
-        rule(RANGE, CURRENCY),
-        rule(RANGE, CURRENCY, TIME),
-        rule(RANGE, AMWORD, CURRENCY),
-        rule(RANGE, AMWORD, CURRENCY, TIME),
-        rule(AMOUNT, CURRENCY),
-        rule(AMOUNT, CURRENCY, TIME),
-    )
+    AMOUNT,
+    CURRENCY,
+    COINS_AMOUNT.optional(),
+    COINS_CURRENCY.optional()
 ).interpretation(
     Money
 )
+
+
+###########
+#
+#   RATE
+#
+##########
+
+
+RATE_MONEY = MONEY.interpretation(
+    Rate.money
+)
+
+PERIODS = {
+    'день': dsl.DAY,
+    'сутки': dsl.DAY,
+    'час': dsl.HOUR,
+    'смена': dsl.SHIFT
+}
+
+PERIOD = dictionary(
+    PERIODS
+).interpretation(
+    Rate.period.normalized().custom(PERIODS.__getitem__)
+)
+
+PER = or_(
+    eq('/'),
+    in_caseless({'в', 'за'})
+)
+
+RATE = rule(
+    RATE_MONEY,
+    PER,
+    PERIOD
+).interpretation(
+    Rate
+)
+
+
+#######
+#
+#   RANGE
+#
+########
+
+
+DASH = eq('-')
+
+RANGE_MONEY = rule(
+    AMOUNT,
+    CURRENCY.optional()
+).interpretation(
+    Money
+)
+
+RANGE_MIN = rule(
+    eq('от').optional(),
+    RANGE_MONEY.interpretation(
+        Range.min
+    )
+)
+
+RANGE_MAX = rule(
+    eq('до').optional(),
+    RANGE_MONEY.interpretation(
+        Range.max
+    )
+)
+
+RANGE = rule(
+    RANGE_MIN,
+    DASH.optional(),
+    RANGE_MAX
+).interpretation(
+    Range
+)
+

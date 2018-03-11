@@ -25,8 +25,9 @@ from yargy.relations import (
 from yargy.pipelines import morph_pipeline
 from yargy.tokenizer import QUOTES
 
-from natasha.grammars.name import NAME
-from natasha.grammars.person import PERSON
+from .name import SIMPLE_NAME
+from .person import POSITION_NAME
+
 
 
 from yargy.rule.transformators import RuleTransformator
@@ -37,8 +38,8 @@ class StripInterpretationTransformator(RuleTransformator):
         return self.visit(item.rule)
 
 
-NAME_ = NAME.transform(StripInterpretationTransformator)
-PERSON_ = PERSON.transform(StripInterpretationTransformator)
+NAME = SIMPLE_NAME.transform(StripInterpretationTransformator)
+PERSON = POSITION_NAME.transform(StripInterpretationTransformator)
 
 
 Organisation = fact('Organisation', ['name'])
@@ -198,8 +199,8 @@ NAMED = rule(
         rule(caseless('им'), eq('.').optional()),
     ),
     or_(
-        NAME_,
-        PERSON_,
+        NAME,
+        PERSON,
     ),
 )
 

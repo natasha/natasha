@@ -9,18 +9,35 @@ from .utils import Record
 from .preprocess import normalize_text
 from .markup import format_markup_css
 
-from .grammars.name import NAME
+from .tokenizer import (
+    TOKENIZER,
+    NAME_TOKENIZER,
+    STREET_TOKENIZER
+)
+
+from .grammars.name import (
+    SIMPLE_NAME,
+    NAME
+)
 from .grammars.date import DATE
-from .grammars.money import MONEY
+from .grammars.money import (
+    MONEY,
+    RATE as MONEY_RATE,
+    RANGE as MONEY_RANGE
+)
 from .grammars.location import LOCATION
 from .grammars.address import ADDRESS
 from .grammars.organisation import ORGANISATION
 from .grammars.person import PERSON
 
+from .dsl import can_be_normalized
+
 
 def serialize(match):
     span = match.span
     fact = match.fact
+    if can_be_normalized(fact):
+        fact = fact.normalized
     type = fact.__class__.__name__
     return OrderedDict([
         ('type', type),
@@ -57,11 +74,9 @@ class Matches(Record):
         return ''.join(format_markup_css(self.text, spans))
 
 
-class Extractor(Record):
-    __attributes__ = ['parser']
-
-    def __init__(self, rule):
-        self.parser = Parser(rule)
+class Extractor(object):
+    def __init__(self, rule, tokenizer=TOKENIZER):
+        self.parser = Parser(rule, tokenizer=tokenizer)
 
     def __call__(self, text):
         text = normalize_text(text)
@@ -71,7 +86,23 @@ class Extractor(Record):
 
 class NamesExtractor(Extractor):
     def __init__(self):
-        super(NamesExtractor, self).__init__(NAME)
+        super(NamesExtractor, self).__init__(
+            CRF_NAME,
+            tokenizer=NAME_TOKENIZER
+        )
+
+
+class SimpleNamesExtractor(Extractor):
+    def __init__(self):
+        super(SimpleNamesExtractor, self).__init__(SIMPLE_NAME)
+
+
+class PersonExtractor(Extractor):
+    def __init__(self):
+        super(PersonExtractor, self).__init__(
+            PERSON,
+            tokenizer=NAME_TOKENIZER
+        )
 
 
 class DatesExtractor(Extractor):
@@ -84,21 +115,29 @@ class MoneyExtractor(Extractor):
         super(MoneyExtractor, self).__init__(MONEY)
 
 
+class MoneyRateExtractor(Extractor):
+    def __init__(self):
+        super(MoneyRateExtractor, self).__init__(MONEY_RATE)
+
+
+class MoneyRangeExtractor(Extractor):
+    def __init__(self):
+        super(MoneyRangeExtractor, self).__init__(MONEY_RANGE)
+
+
+class AddressExtractor(Extractor):
+    def __init__(self):
+        super(AddressExtractor, self).__init__(
+            ADDRESS,
+            tokenizer=STREET_TOKENIZER
+        )
+
+
 class LocationExtractor(Extractor):
     def __init__(self):
         super(LocationExtractor, self).__init__(LOCATION)
 
 
-class AddressExtractor(Extractor):
-    def __init__(self):
-        super(AddressExtractor, self).__init__(ADDRESS)
-
-
 class OrganisationExtractor(Extractor):
     def __init__(self):
         super(OrganisationExtractor, self).__init__(ORGANISATION)
-
-
-class PersonExtractor(Extractor):
-    def __init__(self):
-        super(PersonExtractor, self).__init__(PERSON)

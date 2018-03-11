@@ -10,24 +10,8 @@ from yargy.predicates import gram
 from yargy.pipelines import morph_pipeline
 
 from .name import (
-    Name,
-
-    FIRST_LAST,
-    LAST_FIRST,
-    TITLE_FIRST_LAST,
-    TITLE_LAST_FIRST,
-
-    ABBR_FIRST_LAST,
-    LAST_ABBR_FIRST,
-    ABBR_FIRST_MIDDLE_LAST,
-    LAST_ABBR_FIRST_MIDDLE,
-
-    TITLE_FIRST_MIDDLE,
-    TITLE_FIRST_MIDDLE_LAST,
-    TITLE_LAST_FIRST_MIDDLE,
-
-    JUST_FIRST,
-    JUST_LAST
+    NAME,
+    SIMPLE_NAME
 )
 
 
@@ -348,41 +332,22 @@ POSITION = rule(
     Person.position
 )
 
-COMPLEX = or_(
-    FIRST_LAST,
-    LAST_FIRST,
-    TITLE_FIRST_LAST,
-    TITLE_LAST_FIRST,
-
-    ABBR_FIRST_LAST,
-    LAST_ABBR_FIRST,
-    ABBR_FIRST_MIDDLE_LAST,
-    LAST_ABBR_FIRST_MIDDLE,
-
-    TITLE_FIRST_MIDDLE,
-    TITLE_FIRST_MIDDLE_LAST,
-    TITLE_LAST_FIRST_MIDDLE,
-).interpretation(
-    Name
-).interpretation(
+NAME = NAME.interpretation(
     Person.name
 )
 
-SIMPLE = or_(
-    JUST_FIRST,
-    JUST_LAST
-).interpretation(
-    Name
-).interpretation(
+SIMPLE_NAME = SIMPLE_NAME.interpretation(
     Person.name
+)
+
+POSITION_NAME = rule(
+    POSITION,
+    SIMPLE_NAME
 )
 
 PERSON = or_(
-    rule(
-        POSITION.optional(),
-        COMPLEX
-    ),
-    SIMPLE
+    POSITION_NAME,
+    NAME
 ).interpretation(
     Person
 )
