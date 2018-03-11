@@ -22,7 +22,7 @@ class Model(object):
         self.transitions = transitions
         self.state_features = state_features
 
-        
+
 def parse_model(data):
     transitions = {}
     for a, b, weight in data[0]:
@@ -110,7 +110,6 @@ class CrfTagger(object):
             yield token.tagged(label)
 
 
-
 ############
 #
 #   STREET
@@ -163,7 +162,7 @@ def get_street_token_features(tokens, index):
         yield '-1:norm=' + get_normalized(token)
     else:
         yield 'BOS'
-        
+
     if index < len(tokens) - 1:
         token = tokens[index + 1]
         yield '+1:shape=' + get_shape(token)

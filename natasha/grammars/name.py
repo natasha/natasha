@@ -16,6 +16,10 @@ from yargy.relations import gnc_relation
 
 from natasha.data import load_dict
 
+from yargy.rule.transformators import RuleTransformator
+from yargy.rule.constructors import Rule
+from yargy.predicates.constructors import AndPredicate
+
 
 Name = fact(
     'Name',
@@ -237,11 +241,6 @@ NAME = or_(
 ).interpretation(
     Name
 )
-
-
-from yargy.rule.transformators import RuleTransformator
-from yargy.rule.constructors import Rule
-from yargy.predicates.constructors import AndPredicate
 
 
 class StripCrfTransformator(RuleTransformator):

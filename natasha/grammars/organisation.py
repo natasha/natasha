@@ -28,8 +28,6 @@ from yargy.tokenizer import QUOTES
 from .name import SIMPLE_NAME
 from .person import POSITION_NAME
 
-
-
 from yargy.rule.transformators import RuleTransformator
 
 

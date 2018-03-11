@@ -30,6 +30,8 @@ Money = fact(
     'Money',
     ['integer', 'fraction', 'multiplier', 'currency', 'coins']
 )
+
+
 class Money(Money, Normalizable):
     @property
     def normalized(self):
@@ -47,6 +49,8 @@ Rate = fact(
     'Rate',
     ['money', 'period']
 )
+
+
 class Rate(Rate, Normalizable):
     @property
     def normalized(self):
@@ -60,6 +64,8 @@ Range = fact(
     'Range',
     ['min', 'max']
 )
+
+
 class Range(Range, Normalizable):
     @property
     def normalized(self):
@@ -383,4 +389,3 @@ RANGE = rule(
 ).interpretation(
     Range
 )
-
