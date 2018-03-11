@@ -87,7 +87,7 @@ class Extractor(object):
 class NamesExtractor(Extractor):
     def __init__(self):
         super(NamesExtractor, self).__init__(
-            CRF_NAME,
+            NAME,
             tokenizer=NAME_TOKENIZER
         )
 
