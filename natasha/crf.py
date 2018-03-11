@@ -1,8 +1,9 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
-import json
 from collections import Counter
+
+from .data import load_json
 
 
 ##########
@@ -31,11 +32,6 @@ def parse_model(data):
     for feature, label, weight in data[1]:
         state_features[feature, LABELS.index(label)] = weight
     return Model(transitions, state_features)
-
-
-def load_json(path):
-    with open(path) as file:
-        return json.load(file)
 
 
 def load_model(path):

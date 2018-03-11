@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import os
+import json
 
 from io import open
 
@@ -35,3 +36,8 @@ def load_dict(filename):
             line = line.rstrip('\n')
             line = maybe_strip_comment(line)
             yield line
+
+
+def load_json(path):
+    with open(path, encoding='utf-8') as file:
+        return json.load(file)
