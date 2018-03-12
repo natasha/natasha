@@ -1279,7 +1279,7 @@ NAME = rule(
     NAME
 )
 
-CRF = tag('I').repeatable()
+ADDRESS_CRF = tag('I').repeatable()
 
 NAME = or_(
     NAME,
@@ -1288,7 +1288,7 @@ NAME = or_(
     rule(ANUM, NAME),
     rule(INT, DASH.optional(), NAME),
     rule(NAME, DASH, INT),
-    CRF
+    ADDRESS_CRF
 )
 
 ADDRESS_NAME = NAME
