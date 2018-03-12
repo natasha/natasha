@@ -1,8 +1,11 @@
 
 from .extractors import (
     NamesExtractor,
+    SimpleNamesExtractor,
     DatesExtractor,
     MoneyExtractor,
+    MoneyRateExtractor,
+    MoneyRangeExtractor,
     LocationExtractor,
     AddressExtractor,
     OrganisationExtractor,

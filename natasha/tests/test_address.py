@@ -15,6 +15,7 @@ from natasha.grammars.address import (
 def extractor():
     return AddressExtractor()
 
+
 tests = [
     [
         'Россия, Вологодская обл. г. Череповец, пр.Победы 93 б',
@@ -48,6 +49,7 @@ tests = [
     [
         'Россия, 129110, г.Москва, Олимпийский проспект, 22',
         Address(parts=[
+            Country(name='Россия'),
             Index(value='129110'),
             Settlement(name='Москва', type='город'),
             Street(name='Олимпийский', type='проспект'),
@@ -92,7 +94,7 @@ tests = [
         ])
     ],
     [
-        'Белгородская обл, пгт Борисовка,ул. Рудого д160',
+        'Белгородская обл, пгт Борисовка,ул. Рудого д.160',
         Address(parts=[
             Region(name='Белгородская', type='область'),
             Settlement(name='Борисовка', type='посёлок'),
@@ -101,7 +103,7 @@ tests = [
         ])
     ],
     [
-        'Самарская область, п.г.т. Алексеевка, ул. Ульяновская д 21',
+        'Самарская область, п.г.т. Алексеевка, ул. Ульяновская д. 21',
         Address(parts=[
             Region(name='Самарская', type='область'),
             Settlement(name='Алексеевка', type='посёлок'),
@@ -119,6 +121,28 @@ tests = [
             Building(number='11', type='дом')
         ])
     ],
+    [
+        'ул. Народного Ополчения д. 9к.3',
+        Address(parts=[
+            Street(name='Народного Ополчения', type='улица'),
+            Building(number='9к', type='дом')
+        ])
+    ],
+    [
+        'ул. Б. Пироговская, д.37/430',
+        Address(parts=[
+            Street(name='Б. Пироговская', type='улица'),
+            Building(number='37/430', type='дом')
+        ])
+    ],
+    [
+        'г. Таганрог, ул. Шило, 247/1',
+        Address(parts=[
+            Settlement(name='Таганрог', type='город'),
+            Street(name='Шило', type='улица'),
+            Building(number='247/1', type=None)
+        ])
+    ]
 ]
 
 
@@ -128,11 +152,3 @@ def test_extractor(extractor, test):
     etalon = test[1:]
     guess = [_.fact for _ in extractor(text)]
     assert guess == etalon
-
-
-# TODO from pzz
-# ул. Народного Ополчения д. 9к.3
-# В п. 14
-# Садовническая наб, вл.77стр1
-# ул. Б. Пироговская, д.37/430 корп В
-# ул.Б. Серпуховская ,вл.46, к.9

@@ -35,21 +35,21 @@ MONTHS = {
 
 
 MONTH_NAME = dictionary(MONTHS).interpretation(
-    Date.month.normalized()
+    Date.month.normalized().custom(MONTHS.__getitem__)
 )
 
 MONTH = and_(
     gte(1),
     lte(12)
 ).interpretation(
-    Date.month
+    Date.month.custom(int)
 )
 
 DAY = and_(
     gte(1),
     lte(31)
 ).interpretation(
-    Date.day
+    Date.day.custom(int)
 )
 
 YEAR_WORD = or_(
@@ -58,17 +58,17 @@ YEAR_WORD = or_(
 )
 
 YEAR = and_(
-    gte(1900),
+    gte(1000),
     lte(2100)
 ).interpretation(
-    Date.year
+    Date.year.custom(int)
 )
 
 YEAR_SHORT = and_(
     gte(0),
     lte(99)
 ).interpretation(
-    Date.year
+    Date.year.custom(lambda _: 1900 + int(_))
 )
 
 DATE = or_(

@@ -3,13 +3,13 @@ from __future__ import unicode_literals
 
 import pytest
 
-from natasha import NamesExtractor
+from natasha import SimpleNamesExtractor
 from natasha.grammars.name import Name
 
 
 @pytest.fixture(scope='module')
 def extractor():
-    return NamesExtractor()
+    return SimpleNamesExtractor()
 
 
 tests = [
@@ -40,15 +40,11 @@ tests = [
     ],
     [
         'МОНИНОЙ Нине Гафуровне',
-        Name(first='нина', last='монина', middle='гафуровна', nick=None)
+        Name(first='нина', last='монина', middle='гафуровна')
     ],
     [
         'АЗЫЕВОЙ ГАЛИНЕ АЛЕКСАНДРОВНЕ',
-        Name(first='галина', last='азыева', middle='александровна', nick=None)
-    ],
-    [
-        'президент Франции Николя Саркози',
-        Name(first='николя', last='саркози', middle=None, nick=None)
+        Name(first='галина', last='азыева', middle='александровна')
     ],
     [
         'В. И. Ленин',
@@ -58,8 +54,7 @@ tests = [
     # TODO
     # С одной версией словарей получается горбачёв, с другой горбачев
     # ['М.С. Горбачевым', Name(first='М', last='горбачёв', middle='С')],
-    # ['Лев', Name(first='левый')]
-    # ['ВОВ', None]
+
     # ['Ахмат-Хаджи Кадырова', Name(first='ахмат-хаджи', last='кадыров')],
 ]
 

@@ -7,7 +7,7 @@ from yargy import (
 )
 from yargy.interpretation import fact, attribute
 from yargy.predicates import (
-    eq, lte, gte, gram, type,
+    eq, lte, gte, gram, type, tag,
     length_eq,
     in_, in_caseless, dictionary,
     normalized, caseless,
@@ -1257,7 +1257,8 @@ COMPLEX = or_(
 
 # TODO
 EXCEPTION = dictionary({
-    'арбат'
+    'арбат',
+    'варварка'
 })
 
 MAYBE_NAME = or_(
@@ -1278,6 +1279,8 @@ NAME = rule(
     NAME
 )
 
+ADDRESS_CRF = tag('I').repeatable()
+
 NAME = or_(
     NAME,
     ANUM,
@@ -1285,6 +1288,7 @@ NAME = or_(
     rule(ANUM, NAME),
     rule(INT, DASH.optional(), NAME),
     rule(NAME, DASH, INT),
+    ADDRESS_CRF
 )
 
 ADDRESS_NAME = NAME
@@ -1395,7 +1399,11 @@ PROEZD = or_(
 
 PEREULOK_WORDS = or_(
     rule(
-        in_caseless({'п', 'пер'}),
+        caseless('п'),
+        DOT
+    ),
+    rule(
+        caseless('пер'),
         DOT.optional()
     ),
     rule(normalized('переулок'))
@@ -1460,7 +1468,7 @@ PLOSHAD = or_(
 SHOSSE_WORDS = or_(
     rule(
         caseless('ш'),
-        DOT.optional()
+        DOT
     ),
     rule(normalized('шоссе'))
 ).interpretation(
@@ -1474,6 +1482,73 @@ SHOSSE_NAME = ADDRESS_NAME.interpretation(
 SHOSSE = or_(
     rule(SHOSSE_WORDS, SHOSSE_NAME),
     rule(SHOSSE_NAME, SHOSSE_WORDS)
+).interpretation(
+    Street
+)
+
+
+########
+#
+#  NABEREG
+#
+##########
+
+
+NABEREG_WORDS = or_(
+    rule(
+        caseless('наб'),
+        DOT.optional()
+    ),
+    rule(normalized('набережная'))
+).interpretation(
+    Street.type.const('набережная')
+)
+
+NABEREG_NAME = ADDRESS_NAME.interpretation(
+    Street.name
+)
+
+NABEREG = or_(
+    rule(NABEREG_WORDS, NABEREG_NAME),
+    rule(NABEREG_NAME, NABEREG_WORDS)
+).interpretation(
+    Street
+)
+
+
+########
+#
+#  BULVAR
+#
+##########
+
+
+BULVAR_WORDS = or_(
+    rule(
+        caseless('б'),
+        '-',
+        caseless('р')
+    ),
+    rule(
+        caseless('б'),
+        DOT
+    ),
+    rule(
+        caseless('бул'),
+        DOT.optional()
+    ),
+    rule(normalized('бульвар'))
+).interpretation(
+    Street.type.const('бульвар')
+)
+
+BULVAR_NAME = ADDRESS_NAME.interpretation(
+    Street.name
+)
+
+BULVAR = or_(
+    rule(BULVAR_WORDS, BULVAR_NAME),
+    rule(BULVAR_NAME, BULVAR_WORDS)
 ).interpretation(
     Street
 )
@@ -1500,7 +1575,7 @@ VALUE = rule(
     LETTER.optional()
 )
 
-SEP = in_({'/', '\\', '-'})
+SEP = in_(r'/\-')
 
 VALUE = or_(
     rule(VALUE),
@@ -1525,7 +1600,7 @@ DOM_WORDS = or_(
     rule(normalized('дом')),
     rule(
         caseless('д'),
-        DOT.optional()
+        DOT
     )
 ).interpretation(
     Building.type.const('дом')
@@ -1708,58 +1783,38 @@ STREET_LEVEL = or_(
     PROEZD,
     PEREULOK,
     PLOSHAD,
-    SHOSSE
+    SHOSSE,
+    NABEREG,
+    BULVAR
 )
 OFIS_LEVEL = or_(
     OFIS,
     KVARTIRA
 )
 
-SEP = in_({',', ';'})
+PRE_STREET_LEVEL = or_(
+    INDEX,
+    COUNTRY,
+    OBLAST_LEVEL,
+    RAION,
+    GOROD_LEVEL
+)
+
+POST_STREET_LEVEL = or_(
+    KORPUS,
+    STROENIE,
+    OFIS_LEVEL
+)
+
+SEP = in_(',;')
 
 ADDRESS = rule(
     rule(
-        INDEX.interpretation(
+        PRE_STREET_LEVEL.interpretation(
             Address.parts
         ),
         SEP.optional()
-    ).optional(),
-
-    rule(
-        COUNTRY.interpretation(
-            Address.parts
-        ),
-        SEP.optional()
-    ).optional(),
-
-    rule(
-        OBLAST_LEVEL.interpretation(
-            Address.parts
-        ),
-        SEP.optional()
-    ).optional(),
-
-    rule(
-        RAION.interpretation(
-            Address.parts
-        ),
-        SEP.optional()
-    ).optional(),
-
-    rule(
-        GOROD_LEVEL.interpretation(
-            Address.parts
-        ),
-        SEP.optional()
-    ).optional(),
-
-    # Москва, Зеленоград
-    rule(
-        GOROD_LEVEL.interpretation(
-            Address.parts
-        ),
-        SEP.optional()
-    ).optional(),
+    ).optional().repeatable(),
 
     STREET_LEVEL.interpretation(
         Address.parts
@@ -1771,24 +1826,10 @@ ADDRESS = rule(
 
     rule(
         SEP.optional(),
-        KORPUS.interpretation(
+        POST_STREET_LEVEL.interpretation(
             Address.parts
         ),
-    ).optional(),
-
-    rule(
-        SEP.optional(),
-        STROENIE.interpretation(
-            Address.parts
-        ),
-    ).optional(),
-
-    rule(
-        SEP.optional(),
-        OFIS_LEVEL.interpretation(
-            Address.parts
-        ),
-    ).optional()
+    ).optional().repeatable(),
 ).interpretation(
     Address
 )
