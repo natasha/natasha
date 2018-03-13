@@ -65,8 +65,8 @@ class Range(Record):
     @property
     def as_json(self):
         return OrderedDict([
-            ('min', self.min),
-            ('max', self.max)
+            ('min', self.min.as_json),
+            ('max', self.max.as_json)
         ])
 
     def __str__(self):
