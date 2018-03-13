@@ -37,7 +37,8 @@ setup(
     packages=find_packages(),
     package_data={
         'natasha': [
-            'data/*',
+            'data/dicts/*',
+            'data/models/*',
         ]
     },
     install_requires=[
