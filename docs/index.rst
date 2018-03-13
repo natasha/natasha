@@ -14,7 +14,7 @@ recognition <https://en.wikipedia.org/wiki/Named-entity_recognition>`__)
 Natasha имеет лаконичный интерфейс. Доступны экстракторы для имён,
 адресов, сумм денег, дат и некоторых других сущностей.
 
-.. code:: ipython3
+.. code:: python
 
     from natasha import (
         NamesExtractor,
@@ -24,7 +24,7 @@ Natasha имеет лаконичный интерфейс. Доступны э�
 
 Экстрактор принимает на вход текст и возвращается список метчей:
 
-.. code:: ipython3
+.. code:: python
 
     extractor = NamesExtractor()
     text = '''
@@ -68,7 +68,7 @@ Natasha имеет лаконичный интерфейс. Доступны э�
 Каждый метч имеет два основных атрибута: ``span`` и ``fact``. ``span``
 определяет границы метча:
 
-.. code:: ipython3
+.. code:: python
 
     for match in matches:
         start, stop = match.span
@@ -84,7 +84,7 @@ Natasha имеет лаконичный интерфейс. Доступны э�
 
 В ``fact`` находится объект с атрибутами:
 
-.. code:: ipython3
+.. code:: python
 
     for index, match in enumerate(matches):
         print(index, match.fact)
@@ -99,7 +99,7 @@ Natasha имеет лаконичный интерфейс. Доступны э�
 
 Разные экстракторы возвращают разные типы объектов:
 
-.. code:: ipython3
+.. code:: python
 
     extractor = DatesExtractor()
     text = '''
@@ -140,7 +140,7 @@ Natasha имеет лаконичный интерфейс. Доступны э�
 
 
 
-.. code:: ipython3
+.. code:: python
 
     for index, match in enumerate(matches):
         print(index, match.fact)
@@ -156,7 +156,7 @@ Natasha имеет лаконичный интерфейс. Доступны э�
 У некоторых сущностей есть дополнительные атрибуты, например, у сумм
 есть атрибут ``normalized``:
 
-.. code:: ipython3
+.. code:: python
 
     extractor = MoneyExtractor()
     text = 'В 1995 году стоимость 1 доллара была около 800 рублей 50 копеек'''
@@ -185,7 +185,7 @@ Natasha имеет лаконичный интерфейс. Доступны э�
 
 
 
-.. code:: ipython3
+.. code:: python
 
     for index, match in enumerate(matches):
         print(index, repr(match.fact.normalized))
@@ -200,7 +200,7 @@ Natasha имеет лаконичный интерфейс. Доступны э�
 Справочник
 ----------
 
-.. code:: ipython3
+.. code:: python
 
     from natasha import (
         NamesExtractor,
@@ -227,7 +227,7 @@ Natasha имеет лаконичный интерфейс. Доступны э�
 NamesExtractor
 ~~~~~~~~~~~~~~
 
-.. code:: ipython3
+.. code:: python
 
     extractor = NamesExtractor()
     
@@ -306,7 +306,7 @@ SimpleNamesExtractor
 ``SimpleNames`` не использует CRF, его стоит применять, когда известно,
 что в строке только имена.
 
-.. code:: ipython3
+.. code:: python
 
     extractor = SimpleNamesExtractor()
     
@@ -372,7 +372,7 @@ SimpleNamesExtractor
 PersonExtractor
 ~~~~~~~~~~~~~~~
 
-.. code:: ipython3
+.. code:: python
 
     extractor = PersonExtractor()
     
@@ -424,7 +424,7 @@ LocationExtractor
 **WARN!** формат результатов скорее всего будет меняться, и вообще
 качество сейчас не очень
 
-.. code:: ipython3
+.. code:: python
 
     extractor = LocationExtractor()
     
@@ -476,7 +476,7 @@ LocationExtractor
 AddressExtractor
 ~~~~~~~~~~~~~~~~
 
-.. code:: ipython3
+.. code:: python
 
     extractor = AddressExtractor()
     
@@ -1177,7 +1177,7 @@ OrganisationExtractor
 **WARN!** формат результатов скорее всего будет меняться, и вообще
 качество сейчас не очень
 
-.. code:: ipython3
+.. code:: python
 
     extractor = OrganisationExtractor()
     
@@ -1224,7 +1224,7 @@ OrganisationExtractor
 DatesExtractor
 ~~~~~~~~~~~~~~
 
-.. code:: ipython3
+.. code:: python
 
     extractor = DatesExtractor()
     
@@ -1284,7 +1284,7 @@ DatesExtractor
 MoneyExtractor
 ~~~~~~~~~~~~~~
 
-.. code:: ipython3
+.. code:: python
 
     extractor = MoneyExtractor()
     
@@ -1357,7 +1357,7 @@ MoneyRateExtractor
 **WARN!** формат результатов скорее всего будет меняться, и вообще
 качество сейчас не очень
 
-.. code:: ipython3
+.. code:: python
 
     extractor = MoneyRateExtractor()
     
@@ -1409,7 +1409,7 @@ MoneyRangeExtractor
 **WARN!** формат результатов скорее всего будет меняться, и вообще
 качество сейчас не очень
 
-.. code:: ipython3
+.. code:: python
 
     extractor = MoneyRangeExtractor()
     
