@@ -44,11 +44,17 @@ for match in matches:
 
 Про атрибуты объекта `match` и другие типы экстракторов написано в [документации](http://natasha.readthedocs.io/ru/latest/).
 
-# Дополнительная информация
+# Демо поиска упоминаний
 
-- [Демо поиска упоминаний](https://b-labs.pro/natasha/)
-- [Telegram-конференция](https://telegram.me/natural_language_processing), где можно найти ответы на все вопросы (на самом деле нет)
+https://natasha.github.io/demo/
+<img src="https://i.imgur.com/4i4sreZ.png">
 
 # Лицензия
 
 Исходный код распространяется под лицензией MIT.
+
+# Поддержка
+
+- Telegram-конференция — https://telegram.me/natural_language_processing. Там можно найти ответы на все вопросы (на самом деле нет)
+- Таск-трекер — https://github.com/natasha/natasha/issues
+- Коммерческая поддержка — http://lab.alexkuk.ru/natasha
