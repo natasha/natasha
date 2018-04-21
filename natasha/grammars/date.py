@@ -79,7 +79,7 @@ ERA_YEAR = and_(
 )
 
 ERA_WORD = rule(
-    eq('до').optional(),
+    eq('до'),
     or_(
         rule('н', eq('.'), 'э', eq('.').optional()),
         rule(normalized('наша'), normalized('эра'))
