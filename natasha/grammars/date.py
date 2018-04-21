@@ -71,6 +71,21 @@ YEAR_SHORT = and_(
     Date.year.custom(lambda _: 1900 + int(_))
 )
 
+ERA_YEAR = and_(
+    gte(1),
+    lte(100000)
+).interpretation(
+    Date.year.custom(int)
+)
+
+ERA_WORD = rule(
+    eq('до').optional(),
+    or_(
+        rule('н', eq('.'), 'э', eq('.').optional()),
+        rule(normalized('наша'), normalized('эра'))
+    )
+)
+
 DATE = or_(
     rule(
         DAY,
@@ -102,6 +117,11 @@ DATE = or_(
         YEAR,
         YEAR_WORD.optional()
     ),
+    rule(
+        ERA_YEAR,
+        YEAR_WORD,
+        ERA_WORD,
+    )
 ).interpretation(
     Date
 )
