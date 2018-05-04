@@ -56,16 +56,17 @@ tests = [
         Date(
             year=2017,
             month=5,
-            day=9
+            day=9,
+            current_era=True,
         )
     ],
     [
         '5000 год до н.э.',
-        Date(year=5000)
+        Date(year=5000, current_era=False)
     ],
     [
         '100 г. до нашей эры',
-        Date(year=100)
+        Date(year=100, current_era=False)
     ]
 ]
 
