@@ -5,7 +5,7 @@ from yargy import (
     rule,
     and_, or_
 )
-from yargy.interpretation import fact
+from yargy.interpretation import fact, attribute
 from yargy.predicates import (
     eq, gte, lte,
     dictionary, normalized,
@@ -14,7 +14,7 @@ from yargy.predicates import (
 
 Date = fact(
     'Date',
-    ['year', 'month', 'day']
+    ['year', 'month', 'day', attribute('current_era', True)]
 )
 
 
@@ -84,6 +84,8 @@ ERA_WORD = rule(
         rule('н', eq('.'), 'э', eq('.').optional()),
         rule(normalized('наша'), normalized('эра'))
     )
+).interpretation(
+    Date.current_era.const(False)
 )
 
 DATE = or_(
