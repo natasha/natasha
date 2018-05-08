@@ -7,7 +7,7 @@ from yargy import (
 )
 from yargy.interpretation import fact, attribute
 from yargy.predicates import (
-    eq, gte, lte,
+    eq, gte, lte, length_eq,
     dictionary, normalized,
 )
 
@@ -65,6 +65,7 @@ YEAR = and_(
 )
 
 YEAR_SHORT = and_(
+    length_eq(2),
     gte(0),
     lte(99)
 ).interpretation(
