@@ -244,6 +244,11 @@ def normalize_integer(value):
     return int(integer)
 
 
+def normalize_fraction(value):
+    fraction = value.ljust(2, '0')
+    return int(fraction)
+
+
 PART = and_(
     INT,
     length_eq(3)
@@ -268,7 +273,7 @@ FRACTION = and_(
         length_eq(2)
     )
 ).interpretation(
-    Money.fraction.custom(int)
+    Money.fraction.custom(normalize_fraction)
 )
 
 AMOUNT = rule(
