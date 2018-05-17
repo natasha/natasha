@@ -9,10 +9,16 @@ from .utils import Record
 from .preprocess import normalize_text
 from .markup import format_markup_css
 
-from .tokenizer import (
-    TOKENIZER,
-    NAME_TOKENIZER,
-    STREET_TOKENIZER
+from .tokenizer import TOKENIZER
+
+from .crf import (
+    CrfTagger,
+
+    STREET_MODEL,
+    get_street_features,
+
+    NAME_MODEL,
+    get_name_features
 )
 
 from .grammars.name import (
@@ -75,8 +81,8 @@ class Matches(Record):
 
 
 class Extractor(object):
-    def __init__(self, rule, tokenizer=TOKENIZER):
-        self.parser = Parser(rule, tokenizer=tokenizer)
+    def __init__(self, rule, tokenizer=TOKENIZER, tagger=None):
+        self.parser = Parser(rule, tokenizer=tokenizer, tagger=tagger)
 
     def __call__(self, text):
         text = normalize_text(text)
@@ -86,9 +92,13 @@ class Extractor(object):
 
 class NamesExtractor(Extractor):
     def __init__(self):
+        tagger = CrfTagger(
+            NAME_MODEL,
+            get_name_features
+        )
         super(NamesExtractor, self).__init__(
             NAME,
-            tokenizer=NAME_TOKENIZER
+            tagger=tagger
         )
 
 
@@ -99,9 +109,13 @@ class SimpleNamesExtractor(Extractor):
 
 class PersonExtractor(Extractor):
     def __init__(self):
+        tagger = CrfTagger(
+            NAME_MODEL,
+            get_name_features
+        )
         super(PersonExtractor, self).__init__(
             PERSON,
-            tokenizer=NAME_TOKENIZER
+            tagger=tagger
         )
 
 
@@ -127,9 +141,13 @@ class MoneyRangeExtractor(Extractor):
 
 class AddressExtractor(Extractor):
     def __init__(self):
+        tagger = CrfTagger(
+            STREET_MODEL,
+            get_street_features
+        )
         super(AddressExtractor, self).__init__(
             ADDRESS,
-            tokenizer=STREET_TOKENIZER
+            tagger=tagger
         )
 
 

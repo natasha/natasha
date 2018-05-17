@@ -325,9 +325,9 @@ WHERE = or_(
     rule(GENT, GENT, GENT, GENT, GENT),
 )
 
-POSITION = rule(
+POSITION = or_(
     POSITION,
-    WHERE.optional()
+    rule(POSITION, WHERE)
 ).interpretation(
     Person.position
 )

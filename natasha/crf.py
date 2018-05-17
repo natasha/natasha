@@ -3,7 +3,16 @@ from __future__ import unicode_literals
 
 from collections import Counter
 
-from .data import load_json
+from yargy.tagger import Tagger
+
+from .data import (
+    load_json,
+    get_model_path
+)
+
+
+NAME_MODEL = get_model_path('name.crf.json')
+STREET_MODEL = get_model_path('street.crf.json')
 
 
 ##########
@@ -89,7 +98,7 @@ def viterbi(features, model):
     return [LABELS[_] for _ in reversed(labels)]
 
 
-class CrfTagger(object):
+class CrfTagger(Tagger):
     def __init__(self, path, get_features):
         self.model = load_model(path)
         self.get_features = get_features
