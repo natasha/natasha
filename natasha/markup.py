@@ -36,8 +36,7 @@ def format_markup_css(text, spans):
 }
 
 .markup > mark {
-    line-height: 1;
-    display: inline-block;
+    padding: 0.15em;
     border-radius: 0.25em;
     border: 1px solid #fdf07c;
     background: #ffffc2;
