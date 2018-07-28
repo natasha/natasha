@@ -7,7 +7,7 @@ from yargy import Parser
 
 from .utils import Record
 from .preprocess import normalize_text
-from .markup import format_markup_css
+from .markup import get_markup_notebook
 
 from .tokenizer import TOKENIZER
 
@@ -77,7 +77,8 @@ class Matches(Record):
 
     def _repr_html_(self):
         spans = [_.span for _ in self.matches]
-        return ''.join(format_markup_css(self.text, spans))
+        markup = get_markup_notebook(self.text, spans)
+        return ''.join(markup.as_html)
 
 
 class Extractor(object):
