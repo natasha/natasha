@@ -175,6 +175,15 @@ QUOTED = rule(
     in_(QUOTES),
 )
 
+TRIPLE_QUOTED = rule(
+    TYPE,
+    in_(QUOTES),
+    not_(in_(QUOTES)).repeatable(),
+    in_(QUOTES),
+    not_(in_(QUOTES)).repeatable(),
+    in_(QUOTES),
+)
+
 QUOTED_WITH_ADJF_PREFIX = rule(
     ADJF_PREFIX,
     QUOTED,
@@ -225,6 +234,7 @@ KNOWN = rule(
 )
 
 ORGANISATION_ = or_(
+    TRIPLE_QUOTED,
     QUOTED,
     QUOTED_WITH_ADJF_PREFIX,
     BASIC,
