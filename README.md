@@ -3,7 +3,7 @@
 
 ![CI](https://github.com/natasha/natasha/workflows/CI/badge.svg) [![codecov](https://codecov.io/gh/natasha/natasha/branch/master/graph/badge.svg)](https://codecov.io/gh/natasha/natasha)
 
-Natasha solves basic NLP tasks for Russian language: tokenization, sentence segmentation, word embedding, morphology tagging, lemmatization, phrase normalization, syntax parsing, NER tagging, fact extraction. Quality on every task is similar or better then current SOTAs for Russian language on news articles, see <a href="https://github.com/natasha/naeval">Naeval reports</a>. Natasha is not a research project, underlying technologies are built for production. We pay attention to model size, RAM usage and performance. Models run on CPU, use Numpy for inference.
+Natasha solves basic NLP tasks for Russian language: tokenization, sentence segmentation, word embedding, morphology tagging, lemmatization, phrase normalization, syntax parsing, NER tagging, fact extraction. Quality on every task is similar or better then current SOTAs for Russian language on news articles, see <a href="https://github.com/natasha/natasha#evaluation">evaluation section</a>. Natasha is not a research project, underlying technologies are built for production. We pay attention to model size, RAM usage and performance. Models run on CPU, use Numpy for inference.
 
 Natasha integrates libraries from <a href="https://github.com/natasha">Natasha project</a> under one convenient API:
 
@@ -46,6 +46,13 @@ For more examples and explanation see [Natasha documentation](http://nbviewer.ju
 )
 
 
+#######
+#
+#  INIT
+#
+#####
+
+
 >>> segmenter = Segmenter()
 >>> morph_vocab = MorphVocab()
 
@@ -58,6 +65,15 @@ For more examples and explanation see [Natasha documentation](http://nbviewer.ju
 
 >>> text = 'Посол Израиля на Украине Йоэль Лион признался, что пришел в шок, узнав о решении властей Львовской области объявить 2019 год годом лидера запрещенной в России Организации украинских националистов (ОУН) Степана Бандеры. Свое заявление он разместил в Twitter. «Я не могу понять, как прославление тех, кто непосредственно принимал участие в ужасных антисемитских преступлениях, помогает бороться с антисемитизмом и ксенофобией. Украина не должна забывать о преступлениях, совершенных против украинских евреев, и никоим образом не отмечать их через почитание их исполнителей», — написал дипломат. 11 декабря Львовский областной совет принял решение провозгласить 2019 год в регионе годом Степана Бандеры в связи с празднованием 110-летия со дня рождения лидера ОУН (Бандера родился 1 января 1909 года). В июле аналогичное решение принял Житомирский областной совет. В начале месяца с предложением к президенту страны Петру Порошенко вернуть Бандере звание Героя Украины обратились депутаты Верховной Рады. Парламентарии уверены, что признание Бандеры национальным героем поможет в борьбе с подрывной деятельностью против Украины в информационном поле, а также остановит «распространение мифов, созданных российской пропагандой». Степан Бандера (1909-1959) был одним из лидеров Организации украинских националистов, выступающей за создание независимого государства на территориях с украиноязычным населением. В 2010 году в период президентства Виктора Ющенко Бандера был посмертно признан Героем Украины, однако впоследствии это решение было отменено судом. '
 >>> doc = Doc(text)
+
+
+#######
+#
+#  SEGMENT
+#
+#####
+
+
 >>> doc.segment(segmenter)
 >>> display(doc.tokens[:5])
 >>> display(doc.sents[:5])
@@ -72,7 +88,14 @@ For more examples and explanation see [Natasha documentation](http://nbviewer.ju
  DocSent(start=425, stop=592, text='Украина не должна забывать о преступлениях, совер..., tokens=[...]),
  DocSent(start=593, stop=798, text='11 декабря Львовский областной совет принял решен..., tokens=[...])]
 
-# Notice new fields in DocToken
+
+#######
+#
+#   MORPH
+#
+#####
+
+
 >>> doc.tag_morph(morph_tagger)
 >>> display(doc.tokens[:5])
 >>> doc.sents[0].morph.print()
@@ -91,6 +114,14 @@ For more examples and explanation see [Natasha documentation](http://nbviewer.ju
                    , PUNCT
                  что SCONJ
 ...
+
+
+######
+#
+#  LEMMA
+#
+#######
+
 
 >>> for token in doc.tokens:
 >>>     token.lemmatize(morph_vocab)
@@ -117,6 +148,14 @@ For more examples and explanation see [Natasha documentation](http://nbviewer.ju
  'узнав': 'узнать',
  'о': 'о',
 ...
+
+
+#######
+#
+#  SYNTAX
+#
+######
+
 
 >>> doc.parse_syntax(syntax_parser)
 >>> display(doc.tokens[:5])
@@ -163,6 +202,14 @@ For more examples and explanation see [Natasha documentation](http://nbviewer.ju
 │         └► Бандеры       flat:name
 └──────────► .             punct
 ...
+
+
+#######
+#
+#   NER
+#
+######
+
 
 >>> doc.tag_ner(ner_tagger)
 >>> display(doc.spans[:5])
@@ -214,10 +261,14 @@ PER────              LOC────                     ORG────
                              LOC────                                  
 было отменено судом. 
 
+#######
+#
+#   PHRAISE NORM
+#
+#######
+
 >>> for span in doc.spans:
 >>>    span.normalize(morph_vocab)
-
-# Notice new field normal in DocSpan
 >>> display(doc.spans[:5])
 >>> {_.text: _.normal for _ in doc.spans if _.text != _.normal}
 [DocSpan(start=6, stop=13, type='LOC', text='Израиля', tokens=[...], normal='Израиль'),
@@ -239,10 +290,17 @@ PER────              LOC────                     ORG────
  'Организации украинских националистов': 'Организация украинских националистов',
  'Виктора Ющенко': 'Виктор Ющенко'}
 
+
+#######
+#
+#  FACT
+#
+######
+
+
 >>> for span in doc.spans:
 >>>    if span.type == PER:
 >>>        span.extract_fact(names_extractor)
-
 >>> {_.normal: _.fact for _ in doc.spans if _.type == PER}
 {'Йоэль Лион': Name(
      first='Йоэль',
@@ -267,6 +325,8 @@ PER────              LOC────                     ORG────
 ```
 
 ## Evaluation
+
+### Segmentation
 
 Natasha uses <a href="https://github.com/natasha/razdel">Razdel</a> for text segmentation.
 
@@ -334,6 +394,8 @@ Natasha uses <a href="https://github.com/natasha/razdel">Razdel</a> for text seg
   </tbody>
 </table>
 <!--- sent --->
+
+### Embedding
 
 Natasha uses <a href="https://github.com/natasha/navec">Navec pretrained embeddings</a>.
 
@@ -420,6 +482,8 @@ Natasha uses <a href="https://github.com/natasha/navec">Navec pretrained embeddi
 </table>
 <!--- emb1 --->
 
+### Morphology
+
 Natasha uses <a href="https://github.com/natasha/slovnet#morphology">Slovnet morphology tagger</a>.
 
 `accuracy` — accuracy on news dataset, see <a href="https://github.com/natasha/slovnet#morphology-1">Slovnet evaluation section</a> for more.
@@ -481,6 +545,8 @@ Natasha uses <a href="https://github.com/natasha/slovnet#morphology">Slovnet mor
 </table>
 <!--- morph1 --->
 
+### Syntax
+
 Natasha uses <a href="https://github.com/natasha/slovnet#syntax">Slovnet syntax parser</a>.
 
 `uas`, `las` — accuracy on news dataset, see <a href="https://github.com/natasha/slovnet#syntax-1">Slovnet evaluation section</a> for more.
@@ -538,6 +604,8 @@ Natasha uses <a href="https://github.com/natasha/slovnet#syntax">Slovnet syntax 
   </tbody>
 </table>
 <!--- syntax1 --->
+
+### NER
 
 Natasha uses <a href="https://github.com/natasha/slovnet#ner">Slovnet NER tagger</a>.
 
