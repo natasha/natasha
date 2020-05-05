@@ -261,11 +261,13 @@ PER────              LOC────                     ORG────
                              LOC────                                  
 было отменено судом. 
 
+
 #######
 #
-#   PHRAISE NORM
+#   PHRASE NORM
 #
 #######
+
 
 >>> for span in doc.spans:
 >>>    span.normalize(morph_vocab)
