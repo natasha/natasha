@@ -12,7 +12,7 @@ with open('requirements/main.txt') as file:
 
 setup(
     name='natasha',
-    version='1.0.0',
+    version='1.1.0',
 
     description='Named-entity recognition for russian language',
     long_description=description,
