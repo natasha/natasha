@@ -1,5 +1,3 @@
-# coding: utf-8
-from __future__ import unicode_literals
 
 from yargy import (
     rule,
@@ -7,43 +5,41 @@ from yargy import (
 )
 from yargy.interpretation import fact
 from yargy.predicates import (
-    eq, length_eq,
-    gram, tag,
-    is_single, is_capitalized
+    gram,
+    is_capitalized
 )
 from yargy.predicates.bank import DictionaryPredicate as dictionary
-from yargy.relations import gnc_relation
 
-from natasha.data import load_dict
-
-from yargy.rule.transformators import RuleTransformator
-from yargy.rule.constructors import Rule
-from yargy.predicates.constructors import AndPredicate
+from natasha.data import (
+    FIRST, MAYBE_FIRST, LAST,
+    load_dict
+)
 
 
 Name = fact(
     'Name',
-    ['first', 'middle', 'last', 'nick']
+    ['first', 'last', 'middle']
 )
 
 
-FIRST_DICT = set(load_dict('first.txt'))
-MAYBE_FIRST_DICT = set(load_dict('maybe_first.txt'))
-LAST_DICT = set(load_dict('last.txt'))
+class Name(Name):
+    @property
+    def obj(self):
+        from natasha.extractors import Name
+        return Name(self.first, self.last, self.middle)
 
 
-##########
-#
-#  COMPONENTS
-#
-###########
-
+FIRST_DICT = {
+    item
+    for path in (FIRST, MAYBE_FIRST)
+    for item in load_dict(path)
+}
+LAST_DICT = set(load_dict(LAST))
 
 IN_FIRST = dictionary(FIRST_DICT)
-IN_MAYBE_FIRST = dictionary(MAYBE_FIRST_DICT)
 IN_LAST = dictionary(LAST_DICT)
 
-gnc = gnc_relation()
+TITLE = is_capitalized()
 
 
 ########
@@ -53,13 +49,7 @@ gnc = gnc_relation()
 ########
 
 
-TITLE = is_capitalized()
-
-NOUN = gram('NOUN')
-NAME_CRF = tag('I')
-
 ABBR = gram('Abbr')
-SURN = gram('Surn')
 NAME = and_(
     gram('Name'),
     not_(ABBR)
@@ -69,23 +59,19 @@ PATR = and_(
     not_(ABBR)
 )
 
-FIRST = and_(
-    NAME_CRF,
-    or_(
-        NAME,
-        IN_MAYBE_FIRST,
-        IN_FIRST
-    )
+FIRST = or_(
+    NAME,
+    IN_FIRST
 ).interpretation(
-    Name.first.inflected()
-).match(gnc)
+    Name.first
+)
 
 FIRST_ABBR = and_(
     ABBR,
     TITLE
 ).interpretation(
     Name.first
-).match(gnc)
+)
 
 
 ##########
@@ -95,15 +81,19 @@ FIRST_ABBR = and_(
 #########
 
 
-LAST = and_(
-    NAME_CRF,
-    or_(
-        SURN,
-        IN_LAST
-    )
+SURN = gram('Surn')
+
+LAST = or_(
+    SURN,
+    IN_LAST
 ).interpretation(
-    Name.last.inflected()
-).match(gnc)
+    Name.last
+)
+
+MAYBE_LAST = and_(
+    TITLE,
+    not_(ABBR)
+).interpretation(Name.last)
 
 
 ########
@@ -114,15 +104,15 @@ LAST = and_(
 
 
 MIDDLE = PATR.interpretation(
-    Name.middle.inflected()
-).match(gnc)
+    Name.middle
+)
 
 MIDDLE_ABBR = and_(
     ABBR,
     TITLE
 ).interpretation(
     Name.middle
-).match(gnc)
+)
 
 
 #########
@@ -134,11 +124,11 @@ MIDDLE_ABBR = and_(
 
 FIRST_LAST = rule(
     FIRST,
-    LAST
+    MAYBE_LAST
 )
 
 LAST_FIRST = rule(
-    LAST,
+    MAYBE_LAST,
     FIRST
 )
 
@@ -153,11 +143,11 @@ LAST_FIRST = rule(
 ABBR_FIRST_LAST = rule(
     FIRST_ABBR,
     '.',
-    LAST
+    MAYBE_LAST
 )
 
 LAST_ABBR_FIRST = rule(
-    LAST,
+    MAYBE_LAST,
     FIRST_ABBR,
     '.',
 )
@@ -167,11 +157,11 @@ ABBR_FIRST_MIDDLE_LAST = rule(
     '.',
     MIDDLE_ABBR,
     '.',
-    LAST
+    MAYBE_LAST
 )
 
 LAST_ABBR_FIRST_MIDDLE = rule(
-    LAST,
+    MAYBE_LAST,
     FIRST_ABBR,
     '.',
     MIDDLE_ABBR,
@@ -194,11 +184,11 @@ FIRST_MIDDLE = rule(
 FIRST_MIDDLE_LAST = rule(
     FIRST,
     MIDDLE,
-    LAST
+    MAYBE_LAST
 )
 
 LAST_FIRST_MIDDLE = rule(
-    LAST,
+    MAYBE_LAST,
     FIRST,
     MIDDLE
 )
@@ -240,20 +230,4 @@ NAME = or_(
     JUST_LAST,
 ).interpretation(
     Name
-)
-
-
-class StripCrfTransformator(RuleTransformator):
-    def visit_term(self, item):
-        if isinstance(item, Rule):
-            return self.visit(item)
-        elif isinstance(item, AndPredicate):
-            predicates = [_ for _ in item.predicates if _ != NAME_CRF]
-            return AndPredicate(predicates)
-        else:
-            return item
-
-
-SIMPLE_NAME = NAME.transform(
-    StripCrfTransformator
 )

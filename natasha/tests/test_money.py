@@ -1,14 +1,5 @@
-# coding: utf-8
-from __future__ import unicode_literals
 
 import pytest
-
-from natasha import MoneyExtractor
-
-
-@pytest.fixture(scope='module')
-def extractor():
-    return MoneyExtractor()
 
 
 tests = [
@@ -22,68 +13,65 @@ tests = [
     ],
     [
         '420 долларов',
-        '420 USD'
+        '420.00 USD'
     ],
     [
         '20 млн руб',
-        '20000000 RUB'],
+        '20000000.00 RUB'],
     [
         '20 000 долларов',
-        '20000 USD'
+        '20000.00 USD'
     ],
     [
         '2,2 млн.руб.',
-        '2200000.0 RUB'
+        '2200000.00 RUB'
     ],
     [
         '2,20 млн.руб.',
-        '2200000.0 RUB'
+        '2200000.00 RUB'
     ],
     [
         '2,02 млн.руб.',
-        '2020000.0 RUB'
+        '2020000.00 RUB'
     ],
     [
         '20 тыс руб',
-        '20000 RUB'
+        '20000.00 RUB'
     ],
     [
         '20 т. р.',
-        '20000 RUB'
+        '20000.00 RUB'
     ],
     [
         '2 200 000 руб.',
-        '2200000 RUB'
+        '2200000.00 RUB'
     ],
     [
         '20.000 руб.',
-        '20000 RUB'
+        '20000.00 RUB'
     ],
     [
         '20,000 руб',
-        '20000 RUB'
+        '20000.00 RUB'
     ],
     [
         '20,00 руб',
-        '20 RUB'
+        '20.00 RUB'
     ],
     [
         '124 451 рубль 50 копеек',
-        '124451.5 RUB',
+        '124451.50 RUB',
     ],
     [
-        ('881 913 (Восемьсот восемьдесят одна '
-         'тысяча девятьсот тринадцать) руб. 98 коп.'),
+        '881 913 (Восемьсот восемьдесят одна тысяча девятьсот тринадцать) руб. 98 коп.',
         '881913.98 RUB'
     ]
 ]
 
 
 @pytest.mark.parametrize('test', tests)
-def test_extractor(extractor, test):
-    line, etalon = test
-    matches = list(extractor(line))
-    assert len(matches) == 1
-    fact = matches[0].fact
-    guess = str(fact.normalized)
-    assert guess == etalon
+def test_extractor(money_extractor, test):
+    text, target = test
+    fact = money_extractor.find(text).fact
+    pred = '{fact.amount:0.2f} {fact.currency}'.format(fact=fact)
+    assert pred == target

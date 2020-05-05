@@ -1,11 +1,9 @@
-# coding: utf-8
-from __future__ import unicode_literals
 
 from yargy import (
     rule,
     and_, or_
 )
-from yargy.interpretation import fact, attribute
+from yargy.interpretation import fact
 from yargy.predicates import (
     eq, gte, lte, length_eq,
     dictionary, normalized,
@@ -14,8 +12,15 @@ from yargy.predicates import (
 
 Date = fact(
     'Date',
-    ['year', 'month', 'day', attribute('current_era', True)]
+    ['year', 'month', 'day']
 )
+
+
+class Date(Date):
+    @property
+    def obj(self):
+        from natasha.extractors import Date
+        return Date(self.year, self.month, self.day)
 
 
 MONTHS = {
@@ -72,23 +77,6 @@ YEAR_SHORT = and_(
     Date.year.custom(lambda _: 1900 + int(_))
 )
 
-ERA_YEAR = and_(
-    gte(1),
-    lte(100000)
-).interpretation(
-    Date.year.custom(int)
-)
-
-ERA_WORD = rule(
-    eq('до'),
-    or_(
-        rule('н', eq('.'), 'э', eq('.').optional()),
-        rule(normalized('наша'), normalized('эра'))
-    )
-).interpretation(
-    Date.current_era.const(False)
-)
-
 DATE = or_(
     rule(
         DAY,
@@ -120,11 +108,6 @@ DATE = or_(
         YEAR,
         YEAR_WORD.optional()
     ),
-    rule(
-        ERA_YEAR,
-        YEAR_WORD,
-        ERA_WORD,
-    )
 ).interpretation(
     Date
 )

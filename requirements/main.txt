@@ -1,0 +1,8 @@
+pymorphy2
+intervaltree>=3
+
+razdel
+navec
+slovnet
+yargy
+ipymarkup

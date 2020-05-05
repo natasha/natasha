@@ -1,5 +1,3 @@
-# coding: utf-8
-from __future__ import unicode_literals, division
 
 import re
 
@@ -18,12 +16,11 @@ from yargy.predicates import (
     normalized, caseless, dictionary
 )
 
-from natasha.utils import Record
 
-from natasha.dsl import (
-    Normalizable,
-    money as dsl
-)
+class Currency:
+    RUBLES = 'RUB'
+    DOLLARS = 'USD'
+    EURO = 'EUR'
 
 
 Money = fact(
@@ -32,9 +29,9 @@ Money = fact(
 )
 
 
-class Money(Money, Normalizable):
+class Money(Money):
     @property
-    def normalized(self):
+    def amount(self):
         amount = self.integer
         if self.fraction:
             amount += self.fraction / 100
@@ -42,38 +39,12 @@ class Money(Money, Normalizable):
             amount *= self.multiplier
         if self.coins:
             amount += self.coins / 100
-        return dsl.Money(amount, self.currency)
+        return amount
 
-
-Rate = fact(
-    'Rate',
-    ['money', 'period']
-)
-
-
-class Rate(Rate, Normalizable):
     @property
-    def normalized(self):
-        return dsl.Rate(
-            self.money.normalized,
-            self.period
-        )
-
-
-Range = fact(
-    'Range',
-    ['min', 'max']
-)
-
-
-class Range(Range, Normalizable):
-    @property
-    def normalized(self):
-        min = self.min.normalized
-        max = self.max.normalized
-        if not min.currency:
-            min.currency = max.currency
-        return dsl.Range(min, max)
+    def obj(self):
+        from natasha.extractors import Money
+        return Money(self.amount, self.currency)
 
 
 DOT = eq('.')
@@ -91,14 +62,14 @@ EURO = or_(
     normalized('евро'),
     eq('€')
 ).interpretation(
-    const(dsl.EURO)
+    const(Currency.EURO)
 )
 
 DOLLARS = or_(
     normalized('доллар'),
     eq('$')
 ).interpretation(
-    const(dsl.DOLLARS)
+    const(Currency.DOLLARS)
 )
 
 RUBLES = or_(
@@ -112,7 +83,7 @@ RUBLES = or_(
         DOT.optional()
     )
 ).interpretation(
-    const(dsl.RUBLES)
+    const(Currency.RUBLES)
 )
 
 CURRENCY = or_(
@@ -240,7 +211,7 @@ NUMERAL = rule(
 
 
 def normalize_integer(value):
-    integer = re.sub('[\s.,]+', '', value)
+    integer = re.sub(r'[\s.,]+', '', value)
     return int(integer)
 
 
@@ -316,81 +287,4 @@ MONEY = rule(
     COINS_CURRENCY.optional()
 ).interpretation(
     Money
-)
-
-
-###########
-#
-#   RATE
-#
-##########
-
-
-RATE_MONEY = MONEY.interpretation(
-    Rate.money
-)
-
-PERIODS = {
-    'день': dsl.DAY,
-    'сутки': dsl.DAY,
-    'час': dsl.HOUR,
-    'смена': dsl.SHIFT
-}
-
-PERIOD = dictionary(
-    PERIODS
-).interpretation(
-    Rate.period.normalized().custom(PERIODS.__getitem__)
-)
-
-PER = or_(
-    eq('/'),
-    in_caseless({'в', 'за'})
-)
-
-RATE = rule(
-    RATE_MONEY,
-    PER,
-    PERIOD
-).interpretation(
-    Rate
-)
-
-
-#######
-#
-#   RANGE
-#
-########
-
-
-DASH = eq('-')
-
-RANGE_MONEY = rule(
-    AMOUNT,
-    CURRENCY.optional()
-).interpretation(
-    Money
-)
-
-RANGE_MIN = rule(
-    eq('от').optional(),
-    RANGE_MONEY.interpretation(
-        Range.min
-    )
-)
-
-RANGE_MAX = rule(
-    eq('до').optional(),
-    RANGE_MONEY.interpretation(
-        Range.max
-    )
-)
-
-RANGE = rule(
-    RANGE_MIN,
-    DASH.optional(),
-    RANGE_MAX
-).interpretation(
-    Range
 )

@@ -1,0 +1,5 @@
+pytest==5.2.2
+pytest-cov==2.8.1
+pytest-flakes==4.0.0
+pytest-pep8==1.0.6
+nbval==0.9.5
