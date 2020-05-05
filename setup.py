@@ -32,5 +32,12 @@ setup(
     keywords='natural language processing, russian',
 
     packages=find_packages(),
+    package_data={
+        'natasha': [
+            'data/dict/*.txt',
+            'data/emb/*.tar',
+            'data/model/*.tar',
+        ]
+    },
     install_requires=requirements
 )
