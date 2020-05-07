@@ -288,12 +288,14 @@ def envelop_sent_spans(spans, sents):
 
 
 def clear_envelopes(doc):
-    for sent in doc.sents:
-        sent.tokens = None
-        sent.spans = None
+    if doc.sents:
+        for sent in doc.sents:
+            sent.tokens = None
+            sent.spans = None
 
-    for span in doc.spans:
-        span.tokens = None
+    if doc.spans:
+        for span in doc.spans:
+            span.tokens = None
 
 
 #####
