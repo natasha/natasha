@@ -1,7 +1,7 @@
 
 import pytest
 
-from natasha.extractors import (
+from natasha.obj import (
     AddrPart as Part,
     Addr
 )

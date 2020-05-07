@@ -43,8 +43,8 @@ class Money(Money):
 
     @property
     def obj(self):
-        from natasha.extractors import Money
-        return Money(self.amount, self.currency)
+        from natasha import obj
+        return obj.Money(self.amount, self.currency)
 
 
 DOT = eq('.')

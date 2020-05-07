@@ -88,10 +88,10 @@ class Room(Room):
 class AddrPart(AddrPart):
     @property
     def obj(self):
-        from natasha.extractors import AddrPart
+        from natasha import obj
 
         part = self.value
-        return AddrPart(part.value, part.type)
+        return obj.AddrPart(part.value, part.type)
 
 
 DASH = eq('-')

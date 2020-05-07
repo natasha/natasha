@@ -1,6 +1,7 @@
 
 from .const import ORG
 from .record import Record
+from .obj import Slot
 from .span import envelop_spans
 from .norm import normalize, syntax_normalize
 
@@ -37,9 +38,27 @@ class DocToken(Record):
         self.lemma = vocab.lemmatize(self.text, self.pos, self.feats)
 
 
+class DocFact(Record):
+    __attributes__ = ['slots']
+    __annotations__ = {
+        'slots': [Slot]
+    }
+
+    @property
+    def as_dict(self):
+        return {
+            key: value
+            for key, value in self.slots
+        }
+
+
 class DocSpan(Record):
     __attributes__ = ['start', 'stop', 'type', 'text',
                       'tokens', 'normal', 'fact']
+    __annotations__ = {
+        'tokens': [DocToken],
+        'fact': DocFact
+    }
 
     def __init__(self, start, stop, type, text,
                  tokens=None, normal=None, fact=None):
@@ -63,11 +82,16 @@ class DocSpan(Record):
     def extract_fact(self, extractor):
         match = extractor.find(self.normal)
         if match:
-            self.fact = match.fact
+            slots = list(match.fact.slots)
+            self.fact = DocFact(slots)
 
 
 class DocSent(Record):
     __attributes__ = ['start', 'stop', 'text', 'tokens', 'spans']
+    __annotations__ = {
+        'tokens': [DocToken],
+        'spans': [DocSpan]
+    }
 
     def __init__(self, start, stop, text,
                  tokens=None, spans=None):
@@ -93,6 +117,11 @@ class DocSent(Record):
 
 class Doc(Record):
     __attributes__ = ['text', 'tokens', 'spans', 'sents']
+    __annotations__ = {
+        'tokens': [DocToken],
+        'spans': [DocSpan],
+        'sents': [DocSent]
+    }
 
     def __init__(self, text, tokens=None, spans=None, sents=None):
         self.text = text

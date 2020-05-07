@@ -1,7 +1,7 @@
 
 import pytest
 
-from natasha.extractors import Name
+from natasha.obj import Name
 
 
 tests = [

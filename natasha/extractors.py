@@ -1,88 +1,10 @@
 
-from itertools import zip_longest
-
 from yargy import Parser as YargyParser
 from yargy.morph import MorphAnalyzer
 from yargy.tokenizer import MorphTokenizer
 
 from .record import Record
-
-
-#####
-#
-#  OBJS
-#
-#####
-
-
-class Obj(Record):
-    # default none values
-    def __init__(self, *args, **kwargs):
-        for key, value in zip_longest(self.__attributes__, args):
-            self.__dict__[key] = value
-        self.__dict__.update(kwargs)
-
-    # but skip undef values in repr
-    def __repr__(self):
-        name = self.__class__.__name__
-        args = ', '.join(
-            '{key}={value!r}'.format(
-                key=_,
-                value=getattr(self, _)
-            )
-            for _ in self.__attributes__
-            if getattr(self, _)
-        )
-        return '{name}({args})'.format(
-            name=name,
-            args=args
-        )
-
-    def _repr_pretty_(self, printer, cycle):
-        name = self.__class__.__name__
-        if cycle:
-            printer.text('{name}(...)'.format(name=name))
-        else:
-            printer.text('{name}('.format(name=name))
-
-            pairs = []
-            for key in self.__attributes__:
-                value = getattr(self, key)
-                if value:
-                    pairs.append([key, value])
-
-            size = len(pairs)
-            if size:
-                with printer.indent(4):
-                    printer.break_()
-                    for index, (key, value) in enumerate(pairs):
-                        printer.text(key + '=')
-                        printer.pretty(value)
-                        if index < size - 1:
-                            printer.text(',')
-                            printer.break_()
-                printer.break_()
-            printer.text(')')
-
-
-class Name(Obj):
-    __attributes__ = ['first', 'last', 'middle']
-
-
-class Date(Obj):
-    __attributes__ = ['year', 'month', 'day']
-
-
-class Money(Obj):
-    __attributes__ = ['amount', 'currency']
-
-
-class AddrPart(Obj):
-    __attributes__ = ['value', 'type']
-
-
-class Addr(Obj):
-    __attributes__ = ['parts']
+from . import obj
 
 
 #######
@@ -159,4 +81,4 @@ class AddrExtractor(Extractor):
         start = matches[0].start
         stop = matches[-1].stop
         parts = [_.fact for _ in matches]
-        return Match(start, stop, Addr(parts))
+        return Match(start, stop, obj.Addr(parts))

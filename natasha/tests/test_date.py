@@ -1,7 +1,7 @@
 
 import pytest
 
-from natasha.extractors import Date
+from natasha.obj import Date
 
 
 tests = [

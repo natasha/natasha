@@ -25,8 +25,8 @@ Name = fact(
 class Name(Name):
     @property
     def obj(self):
-        from natasha.extractors import Name
-        return Name(self.first, self.last, self.middle)
+        from natasha import obj
+        return obj.Name(self.first, self.last, self.middle)
 
 
 FIRST_DICT = {

@@ -19,8 +19,8 @@ Date = fact(
 class Date(Date):
     @property
     def obj(self):
-        from natasha.extractors import Date
-        return Date(self.year, self.month, self.day)
+        from natasha import obj
+        return obj.Date(self.year, self.month, self.day)
 
 
 MONTHS = {
