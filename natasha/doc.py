@@ -1,7 +1,7 @@
 
 from .const import ORG
 from .record import Record
-from .span import index_spans, query_spans_index
+from .span import envelop_spans
 from .norm import normalize, syntax_normalize
 
 
@@ -124,6 +124,18 @@ class Doc(Record):
     def ner(self):
         return ner_markup(self.text, self.spans)
 
+    def envelop_span_tokens(self):
+        envelop_span_tokens(self.tokens, self.spans)
+
+    def envelop_sent_spans(self):
+        envelop_sent_spans(self.spans, self.sents)
+
+    def envelop_sent_tokens(self):
+        envelop_sent_tokens(self.tokens, self.sents)
+
+    def clear_envelopes(self):
+        clear_envelopes(self)
+
 
 #######
 #
@@ -132,13 +144,9 @@ class Doc(Record):
 #######
 
 
-def adapt_token(token, offset):
+def adapt_token(token):
     start, stop, text = token
-    return DocToken(
-        offset + start,
-        offset + stop,
-        text
-    )
+    return DocToken(start, stop, text)
 
 
 def adapt_sent(sent):
@@ -147,15 +155,9 @@ def adapt_sent(sent):
 
 
 def segment_doc(doc, segmenter):
-    doc.tokens, doc.sents = [], []
-    for sent in segmenter.sentenize(doc.text):
-        sent = adapt_sent(sent)
-        doc.sents.append(sent)
-        sent.tokens = []
-        for token in segmenter.tokenize(sent.text):
-            token = adapt_token(token, sent.start)
-            doc.tokens.append(token)
-            sent.tokens.append(token)
+    doc.tokens = [adapt_token(_) for _ in segmenter.tokenize(doc.text)]
+    doc.sents = [adapt_sent(_) for _ in segmenter.sentenize(doc.text)]
+    doc.envelop_sent_tokens()
 
 
 #######
@@ -227,14 +229,42 @@ def tag_ner_doc(doc, tagger):
     markup = tagger(doc.text)
     doc.spans = list(adapt_spans(doc, markup.spans))
 
-    # envelope tokens < spans < sents
-    index = index_spans(doc.tokens)
-    for span in doc.spans:
-        span.tokens = query_spans_index(index, span)
+    doc.envelop_span_tokens()
+    doc.envelop_sent_spans()
 
-    index = index_spans(doc.spans)
+
+######
+#
+#   ENVELOP
+#
+#####
+
+
+def envelop_span_tokens(tokens, spans):
+    groups = envelop_spans(tokens, spans)
+    for group, span in zip(groups, spans):
+        span.tokens = group
+
+
+def envelop_sent_tokens(tokens, sents):
+    groups = envelop_spans(tokens, sents)
+    for group, sent in zip(groups, sents):
+        sent.tokens = group
+
+
+def envelop_sent_spans(spans, sents):
+    groups = envelop_spans(spans, sents)
+    for group, sent in zip(groups, sents):
+        sent.spans = group
+
+
+def clear_envelopes(doc):
     for sent in doc.sents:
-        sent.spans = query_spans_index(index, sent)
+        sent.tokens = None
+        sent.spans = None
+
+    for span in doc.spans:
+        span.tokens = None
 
 
 #####

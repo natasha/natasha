@@ -1,6 +1,4 @@
 
-from intervaltree import IntervalTree
-
 from .record import Record
 
 
@@ -22,15 +20,36 @@ def offset_spans(spans, offset):
         )
 
 
-def index_spans(spans):
-    index = IntervalTree()
-    for span in spans:
-        index.addi(span.start, span.stop, span)
-    return index
+def append_sentinel(items, sentinel=None):
+    for item in items:
+        yield item
+    yield sentinel
 
 
-def query_spans_index(index, span):
-    return [
-        _.data
-        for _ in sorted(index.envelop(span.start, span.stop))
-    ]
+def envelop_spans(spans, envelopes):
+    if not spans or not envelopes:
+        return
+
+    spans = append_sentinel(spans)
+    span = next(spans)
+
+    envelopes = append_sentinel(envelopes)
+    envelope = next(envelopes)
+
+    buffer = []
+    while span and envelope:
+        if span.start < envelope.start:
+            span = next(spans)
+
+        elif span.stop <= envelope.stop:
+            buffer.append(span)
+            span = next(spans)
+
+        else:
+            if buffer:
+                yield buffer
+                buffer = []
+            envelope = next(envelopes)
+
+    if buffer:
+        yield buffer
