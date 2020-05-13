@@ -28,5 +28,8 @@ class Segmenter(Record):
             yield adapt_token(token)
 
     def sentenize(self, text):
+        if not text:
+            return  # razdel return empty sent
+
         for sent in sentenize(text):
             yield adapt_sent(sent)

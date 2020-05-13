@@ -255,6 +255,10 @@ def adapt_spans(doc, spans):
 
 
 def tag_ner_doc(doc, tagger):
+    if not doc.text.strip():
+        doc.spans = []
+        return
+
     markup = tagger(doc.text)
     doc.spans = list(adapt_spans(doc, markup.spans))
 
