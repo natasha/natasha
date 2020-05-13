@@ -303,26 +303,19 @@ PER────              LOC────                     ORG────
 >>> for span in doc.spans:
 >>>    if span.type == PER:
 >>>        span.extract_fact(names_extractor)
->>> {_.normal: _.fact for _ in doc.spans if _.type == PER}
-{'Йоэль Лион': Name(
-     first='Йоэль',
-     last='Лион'
- ),
- 'Степан Бандера': Name(
-     first='Степан',
-     last='Бандера'
- ),
- 'Петр Порошенко': Name(
-     first='Петр',
-     last='Порошенко'
- ),
- 'Бандера': Name(
-     last='Бандера'
- ),
- 'Виктор Ющенко': Name(
-     first='Виктор',
-     last='Ющенко'
- )}
+
+>>> display(doc.spans[:5])
+>>> {_.normal: _.fact.as_dict for _ in doc.spans if _.type == PER}
+[DocSpan(start=6, stop=13, type='LOC', text='Израиля', tokens=[...], normal='Израиль'),
+ DocSpan(start=17, stop=24, type='LOC', text='Украине', tokens=[...], normal='Украина'),
+ DocSpan(start=25, stop=35, type='PER', text='Йоэль Лион', tokens=[...], normal='Йоэль Лион', fact=DocFact(slots=[...])),
+ DocSpan(start=89, stop=106, type='LOC', text='Львовской области', tokens=[...], normal='Львовская область'),
+ DocSpan(start=152, stop=158, type='LOC', text='России', tokens=[...], normal='Россия')]
+{'Йоэль Лион': {'first': 'Йоэль', 'last': 'Лион'},
+ 'Степан Бандера': {'first': 'Степан', 'last': 'Бандера'},
+ 'Петр Порошенко': {'first': 'Петр', 'last': 'Порошенко'},
+ 'Бандера': {'last': 'Бандера'},
+ 'Виктор Ющенко': {'first': 'Виктор', 'last': 'Ющенко'}}
 
 ```
 
