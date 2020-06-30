@@ -331,7 +331,7 @@ PER────              LOC────                     ORG────
 
 - Chat — https://telegram.me/natural_language_processing
 - Issues — https://github.com/natasha/natasha/issues
-- Commercial support — http://lab.alexkuk.ru
+- Commercial support — https://lab.alexkuk.ru
 
 ## Development
 
