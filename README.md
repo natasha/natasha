@@ -321,11 +321,11 @@ PER────              LOC────                     ORG────
 
 ## Evaluation
 
-* Segmentation — <a href="https://github.com/natasha/razdel#quality-performance">Razdel evalualtion section</a>.
-* Embedding — <a href="https://github.com/natasha/navec#evaluation">Navec evalualtion section</a>.
-* Morphology — <a href="https://github.com/natasha/slovnet#morphology-1">Slovnet Morph evaluation section</a>.
-* Syntax — <a href="https://github.com/natasha/slovnet#syntax-1">Slovnet Syntax evaluation section</a>.
-* NER — <a href="https://github.com/natasha/slovnet#ner-1">Slovnet NER evaluation section</a>.
+* Segmentation — <a href="https://github.com/natasha/razdel#quality-performance">Razdel evalualtion section</a>
+* Embedding — <a href="https://github.com/natasha/navec#evaluation">Navec evalualtion section</a>
+* Morphology — <a href="https://github.com/natasha/slovnet#morphology-1">Slovnet Morph evaluation section</a>
+* Syntax — <a href="https://github.com/natasha/slovnet#syntax-1">Slovnet Syntax evaluation section</a>
+* NER — <a href="https://github.com/natasha/slovnet#ner-1">Slovnet NER evaluation section</a>
 
 ## Support
 
