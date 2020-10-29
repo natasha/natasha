@@ -17,4 +17,4 @@ from .extractors import AddrExtractor  # noqa
 from .doc import Doc  # noqa
 
 
-__version__ = '1.3.0'
+__version__ = '1.4.0'
