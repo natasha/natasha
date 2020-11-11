@@ -74,7 +74,7 @@ YEAR_SHORT = and_(
     gte(0),
     lte(99)
 ).interpretation(
-    Date.year.custom(lambda _: 1900 + int(_) if int(_) > 50 else 2000 + int(_))
+    Date.year.custom(lambda _: 1900 + int(_) if int(_) > 30 else 2000 + int(_))
 )
 
 DATE = or_(
