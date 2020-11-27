@@ -27,8 +27,6 @@ $ pip install natasha
 
 ## Usage
 
-For more examples and explanation see [Natasha documentation](http://nbviewer.jupyter.org/github/natasha/natasha/blob/master/docs.ipynb).
-
 ```python
 >>> from natasha import (
     Segmenter,
@@ -318,6 +316,12 @@ PER────              LOC────                     ORG────
  'Виктор Ющенко': {'first': 'Виктор', 'last': 'Ющенко'}}
 
 ```
+
+## Documentation
+
+* <a href="http://nbviewer.jupyter.org/github/natasha/natasha/blob/master/docs.ipynb">Examples with description + reference</a>
+* <a href="https://habr.com/ru/post/516098/#natasha">Natasha section in longread on Natasha project</a> (in Russian) 
+* <a href="https://youtu.be/-7XT_U6hVvk?t=951">Natasha section of Datafest 2020 talk</a> (in Russian)
 
 ## Evaluation
 
