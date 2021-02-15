@@ -27,6 +27,8 @@ $ pip install natasha
 
 ## Usage
 
+Import, initialize modules, build `Doc` object.
+
 ```python
 >>> from natasha import (
     Segmenter,
@@ -44,13 +46,6 @@ $ pip install natasha
 )
 
 
-#######
-#
-#  INIT
-#
-#####
-
-
 >>> segmenter = Segmenter()
 >>> morph_vocab = MorphVocab()
 
@@ -63,18 +58,16 @@ $ pip install natasha
 
 >>> text = 'Посол Израиля на Украине Йоэль Лион признался, что пришел в шок, узнав о решении властей Львовской области объявить 2019 год годом лидера запрещенной в России Организации украинских националистов (ОУН) Степана Бандеры. Свое заявление он разместил в Twitter. «Я не могу понять, как прославление тех, кто непосредственно принимал участие в ужасных антисемитских преступлениях, помогает бороться с антисемитизмом и ксенофобией. Украина не должна забывать о преступлениях, совершенных против украинских евреев, и никоим образом не отмечать их через почитание их исполнителей», — написал дипломат. 11 декабря Львовский областной совет принял решение провозгласить 2019 год в регионе годом Степана Бандеры в связи с празднованием 110-летия со дня рождения лидера ОУН (Бандера родился 1 января 1909 года). В июле аналогичное решение принял Житомирский областной совет. В начале месяца с предложением к президенту страны Петру Порошенко вернуть Бандере звание Героя Украины обратились депутаты Верховной Рады. Парламентарии уверены, что признание Бандеры национальным героем поможет в борьбе с подрывной деятельностью против Украины в информационном поле, а также остановит «распространение мифов, созданных российской пропагандой». Степан Бандера (1909-1959) был одним из лидеров Организации украинских националистов, выступающей за создание независимого государства на территориях с украиноязычным населением. В 2010 году в период президентства Виктора Ющенко Бандера был посмертно признан Героем Украины, однако впоследствии это решение было отменено судом. '
 >>> doc = Doc(text)
+```
 
+### Segmentation
 
-#######
-#
-#  SEGMENT
-#
-#####
+Split text into tokens and sentencies. Defines `tokens` and `sents` properties of `doc`. Uses <a href="https://github.com/natasha/razdel">Razdel</a> internally.
 
-
+```python
 >>> doc.segment(segmenter)
->>> display(doc.tokens[:5])
->>> display(doc.sents[:5])
+>>> print(doc.tokens[:5])
+>>> print(doc.sents[:5])
 [DocToken(stop=5, text='Посол'),
  DocToken(start=6, stop=13, text='Израиля'),
  DocToken(start=14, stop=16, text='на'),
@@ -85,17 +78,17 @@ $ pip install natasha
  DocSent(start=258, stop=424, text='«Я не могу понять, как прославление тех, кто непо..., tokens=[...]),
  DocSent(start=425, stop=592, text='Украина не должна забывать о преступлениях, совер..., tokens=[...]),
  DocSent(start=593, stop=798, text='11 декабря Львовский областной совет принял решен..., tokens=[...])]
+```
 
+### Morphology
 
-#######
-#
-#   MORPH
-#
-#####
+For every token extract rich morphology tags. Depends on <a href="#Segmentation">segmentation</a> step. Defines `pos` and `feats` properties of `doc.tokens`. Uses <a href="https://github.com/natasha/slovnet">Slovnet</a> model internally.
 
+Call `morph.print()` to visualize morphology markup.
 
+```python
 >>> doc.tag_morph(morph_tagger)
->>> display(doc.tokens[:5])
+>>> print(doc.tokens[:5])
 >>> doc.sents[0].morph.print()
 [DocToken(stop=5, text='Посол', pos='NOUN', feats=<Anim,Nom,Masc,Sing>),
  DocToken(start=6, stop=13, text='Израиля', pos='PROPN', feats=<Inan,Gen,Masc,Sing>),
@@ -112,19 +105,17 @@ $ pip install natasha
                    , PUNCT
                  что SCONJ
 ...
+```
 
+### Lemmatization
 
-######
-#
-#  LEMMA
-#
-#######
+Lemmatize every token. Depends on <a href="#Morphology">morphology</a> step. Defines `lemma` property of `doc.tokens`. Uses <a href="https://pymorphy2.readthedocs.io/en/stable/">Pymorphy</a> internally.
 
-
+```python
 >>> for token in doc.tokens:
 >>>     token.lemmatize(morph_vocab)
     
->>> display(doc.tokens[:5])
+>>> print(doc.tokens[:5])
 >>> {_.text: _.lemma for _ in doc.tokens}
 [DocToken(stop=5, text='Посол', pos='NOUN', feats=<Anim,Nom,Masc,Sing>, lemma='посол'),
  DocToken(start=6, stop=13, text='Израиля', pos='PROPN', feats=<Inan,Gen,Masc,Sing>, lemma='израиль'),
@@ -146,17 +137,17 @@ $ pip install natasha
  'узнав': 'узнать',
  'о': 'о',
 ...
+```
 
+### Syntax
 
-#######
-#
-#  SYNTAX
-#
-######
+For every sentence run syntax analyzer. Depends on <a href="#Segmentation">segmentation</a> step. Defines `id`, `head_id`, `rel` properties of `doc.tokens`. Uses <a href="https://github.com/natasha/slovnet">Slovnet</a> model internally. 
 
+Use `syntax.print()` to visualize syntax markup. Uses <a href="https://github.com/natasha/ipymarkup">Ipymarkup</a> internally.
 
+```python
 >>> doc.parse_syntax(syntax_parser)
->>> display(doc.tokens[:5])
+>>> print(doc.tokens[:5])
 >>> doc.sents[0].syntax.print()
 [DocToken(stop=5, text='Посол', id='1_1', head_id='1_7', rel='nsubj', pos='NOUN', feats=<Anim,Nom,Masc,Sing>),
  DocToken(start=6, stop=13, text='Израиля', id='1_2', head_id='1_1', rel='nmod', pos='PROPN', feats=<Inan,Gen,Masc,Sing>),
@@ -200,17 +191,17 @@ $ pip install natasha
 │         └► Бандеры       flat:name
 └──────────► .             punct
 ...
+```
 
+### NER
 
-#######
-#
-#   NER
-#
-######
+Extract standart named entities: names, locations, organizations. Depends on <a href="#Segmentation">segmentation</a> step. Defines `spans` property of `doc`. Uses <a href="https://github.com/natasha/slovnet">Slovnet</a> model internally. 
 
+Call `ner.print()` to visualize NER markup. Uses <a href="https://github.com/natasha/ipymarkup">Ipymarkup</a> internally.
 
+```python
 >>> doc.tag_ner(ner_tagger)
->>> display(doc.spans[:5])
+>>> print(doc.spans[:5])
 >>> doc.ner.print()
 [DocSpan(start=6, stop=13, type='LOC', text='Израиля', tokens=[...]),
  DocSpan(start=17, stop=24, type='LOC', text='Украине', tokens=[...]),
@@ -258,18 +249,18 @@ PER────              LOC────                     ORG────
 был посмертно признан Героем Украины, однако впоследствии это решение 
                              LOC────                                  
 было отменено судом. 
+```
 
+### Named entity normalization
 
-#######
-#
-#   PHRASE NORM
-#
-#######
+For every NER span apply normalization procedure. Depends on <a href="#NER">NER</a>, <a href="#Morphology">morphology</a> and <a href="#Syntax">syntax</a> steps. Defines `normal` property of `doc.spans`.
 
+One can not just lemmatize every token inside entity span, otherwise "Организации украинских националистов" would become "Организация украинские националисты". Natasha uses syntax dependencies to produce correct "Организация украинских националистов".
 
+```python
 >>> for span in doc.spans:
 >>>    span.normalize(morph_vocab)
->>> display(doc.spans[:5])
+>>> print(doc.spans[:5])
 >>> {_.text: _.normal for _ in doc.spans if _.text != _.normal}
 [DocSpan(start=6, stop=13, type='LOC', text='Израиля', tokens=[...], normal='Израиль'),
  DocSpan(start=17, stop=24, type='LOC', text='Украине', tokens=[...], normal='Украина'),
@@ -289,20 +280,20 @@ PER────              LOC────                     ORG────
  'Бандеры': 'Бандера',
  'Организации украинских националистов': 'Организация украинских националистов',
  'Виктора Ющенко': 'Виктор Ющенко'}
+```
 
+### Named entity parsing
 
-#######
-#
-#  FACT
-#
-######
+Parse `PER` named entities into firstname, surname and patronymic. Depends on <a href="#NER">NER</a> step. Defines `normal` property of `doc.spans`. Uses <a href="https://github.com/natasha/yargy">Yargy-parser</a> internally.
 
+Natasha also has built in extractors for <a href="https://nbviewer.jupyter.org/github/natasha/natasha/blob/master/docs.ipynb#DatesExtractor">dates</a>, <a href="https://nbviewer.jupyter.org/github/natasha/natasha/blob/master/docs.ipynb#MoneyExtractor">money</a>, <a href="https://nbviewer.jupyter.org/github/natasha/natasha/blob/master/docs.ipynb#AddrExtractor">address</a>.
 
+```python
 >>> for span in doc.spans:
 >>>    if span.type == PER:
 >>>        span.extract_fact(names_extractor)
 
->>> display(doc.spans[:5])
+>>> print(doc.spans[:5])
 >>> {_.normal: _.fact.as_dict for _ in doc.spans if _.type == PER}
 [DocSpan(start=6, stop=13, type='LOC', text='Израиля', tokens=[...], normal='Израиль'),
  DocSpan(start=17, stop=24, type='LOC', text='Украине', tokens=[...], normal='Украина'),
@@ -314,7 +305,6 @@ PER────              LOC────                     ORG────
  'Петр Порошенко': {'first': 'Петр', 'last': 'Порошенко'},
  'Бандера': {'last': 'Бандера'},
  'Виктор Ющенко': {'first': 'Виктор', 'last': 'Ющенко'}}
-
 ```
 
 ## Documentation
