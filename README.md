@@ -284,7 +284,7 @@ One can not just lemmatize every token inside entity span, otherwise "Орган
 
 ### Named entity parsing
 
-Parse `PER` named entities into firstname, surname and patronymic. Depends on <a href="#NER">NER</a> step. Defines `normal` property of `doc.spans`. Uses <a href="https://github.com/natasha/yargy">Yargy-parser</a> internally.
+Parse `PER` named entities into firstname, surname and patronymic. Depends on <a href="#NER">NER</a> step. Defines `fact` property of `doc.spans`. Uses <a href="https://github.com/natasha/yargy">Yargy-parser</a> internally.
 
 Natasha also has built in extractors for <a href="https://nbviewer.jupyter.org/github/natasha/natasha/blob/master/docs.ipynb#DatesExtractor">dates</a>, <a href="https://nbviewer.jupyter.org/github/natasha/natasha/blob/master/docs.ipynb#MoneyExtractor">money</a>, <a href="https://nbviewer.jupyter.org/github/natasha/natasha/blob/master/docs.ipynb#AddrExtractor">address</a>.
 
