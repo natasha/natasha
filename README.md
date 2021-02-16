@@ -82,7 +82,7 @@ Split text into tokens and sentencies. Defines `tokens` and `sents` properties o
 
 ### Morphology
 
-For every token extract rich morphology tags. Depends on <a href="#Segmentation">segmentation</a> step. Defines `pos` and `feats` properties of `doc.tokens`. Uses <a href="https://github.com/natasha/slovnet">Slovnet</a> model internally.
+For every token extract rich morphology tags. Depends on <a href="#Segmentation">segmentation</a> step. Defines `pos` and `feats` properties of `doc.tokens`. Uses <a href="https://github.com/natasha/slovnet#morphology">Slovnet morphology model</a> internally.
 
 Call `morph.print()` to visualize morphology markup.
 
@@ -141,7 +141,7 @@ Lemmatize every token. Depends on <a href="#Morphology">morphology</a> step. Def
 
 ### Syntax
 
-For every sentence run syntax analyzer. Depends on <a href="#Segmentation">segmentation</a> step. Defines `id`, `head_id`, `rel` properties of `doc.tokens`. Uses <a href="https://github.com/natasha/slovnet">Slovnet</a> model internally. 
+For every sentence run syntax analyzer. Depends on <a href="#Segmentation">segmentation</a> step. Defines `id`, `head_id`, `rel` properties of `doc.tokens`. Uses <a href="https://github.com/natasha/slovnet#syntax">Slovnet syntax model</a> internally. 
 
 Use `syntax.print()` to visualize syntax markup. Uses <a href="https://github.com/natasha/ipymarkup">Ipymarkup</a> internally.
 
@@ -195,7 +195,7 @@ Use `syntax.print()` to visualize syntax markup. Uses <a href="https://github.co
 
 ### NER
 
-Extract standart named entities: names, locations, organizations. Depends on <a href="#Segmentation">segmentation</a> step. Defines `spans` property of `doc`. Uses <a href="https://github.com/natasha/slovnet">Slovnet</a> model internally. 
+Extract standart named entities: names, locations, organizations. Depends on <a href="#Segmentation">segmentation</a> step. Defines `spans` property of `doc`. Uses <a href="https://github.com/natasha/slovnet#ner">Slovnet NER model</a> internally. 
 
 Call `ner.print()` to visualize NER markup. Uses <a href="https://github.com/natasha/ipymarkup">Ipymarkup</a> internally.
 
