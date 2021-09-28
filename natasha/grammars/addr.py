@@ -27,6 +27,10 @@ Region = fact(
     'Region',
     ['name', 'type']
 )
+Raion = fact(
+    'Raion',
+    ['name', 'type']
+)
 Settlement = fact(
     'Settlement',
     ['name', 'type']
@@ -66,6 +70,10 @@ class Country(Country):
 
 
 class Region(Region):
+    value = value('name')
+
+
+class Raion(Raion):
     value = value('name')
 
 
@@ -469,7 +477,7 @@ RAION_WORDS = or_(
     rule(caseless('р'), '-', in_caseless({'он', 'н'})),
     rule(normalized('район'))
 ).interpretation(
-    Region.type.const('район')
+    Raion.type.const('район')
 )
 
 RAION_SIMPLE_NAME = and_(
@@ -497,14 +505,14 @@ RAION_NAME = or_(
     rule(RAION_SIMPLE_NAME),
     RAION_COMPLEX_NAME
 ).interpretation(
-    Region.name
+    Raion.name
 )
 
 RAION = rule(
     RAION_NAME,
     RAION_WORDS
 ).interpretation(
-    Region
+    Raion
 )
 
 
@@ -1817,6 +1825,8 @@ ADDR_PART = or_(
     KRAI,
     OBLAST,
     AUTO_OKRUG,
+
+    RAION,
 
     GOROD,
     DEREVNYA,
