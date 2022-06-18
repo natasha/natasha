@@ -77,12 +77,18 @@ YEAR_SHORT = and_(
     Date.year.custom(lambda _: 1900 + int(_))
 )
 
+SEPARATOR = or_(
+    eq('.'),
+    eq('/'),
+    eq('-')
+)
+
 DATE = or_(
     rule(
         DAY,
-        '.',
+        SEPARATOR,
         MONTH,
-        '.',
+        SEPARATOR,
         or_(
             YEAR,
             YEAR_SHORT
