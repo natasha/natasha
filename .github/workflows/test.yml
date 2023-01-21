@@ -1,4 +1,4 @@
-name: CI
+name: Test
 
 on: [push, pull_request]
 
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8]
+        python-version: [3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -20,4 +20,3 @@ jobs:
       run: pip install -r requirements/ci.txt
     - name: Test
       run: make test
-    - uses: codecov/codecov-action@v1
