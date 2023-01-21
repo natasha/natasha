@@ -1,7 +1,7 @@
 
 <img src="https://github.com/natasha/natasha-logos/blob/master/natasha.svg">
 
-![CI](https://github.com/natasha/natasha/workflows/CI/badge.svg) [![codecov](https://codecov.io/gh/natasha/natasha/branch/master/graph/badge.svg)](https://codecov.io/gh/natasha/natasha)
+![CI](https://github.com/natasha/yargy/actions/workflows/test.yml/badge.svg)
 
 Natasha solves basic NLP tasks for Russian language: tokenization, sentence segmentation, word embedding, morphology tagging, lemmatization, phrase normalization, syntax parsing, NER tagging, fact extraction. Quality on every task is similar or better then current SOTAs for Russian language on news articles, see <a href="https://github.com/natasha/natasha#evaluation">evaluation section</a>. Natasha is not a research project, underlying technologies are built for production. We pay attention to model size, RAM usage and performance. Models run on CPU, use Numpy for inference.
 
@@ -19,7 +19,7 @@ Natasha integrates libraries from <a href="https://github.com/natasha">Natasha p
 
 ## Install
 
-Natasha supports Python 3.5+ and PyPy3:
+Natasha supports Python 3.7+ and PyPy3:
 
 ```bash
 $ pip install natasha
@@ -323,24 +323,40 @@ Natasha also has built in extractors for <a href="https://nbviewer.jupyter.org/g
 
 ## Support
 
-- Chat — https://telegram.me/natural_language_processing
+- Chat — https://t.me/natural_language_processing
 - Issues — https://github.com/natasha/natasha/issues
 - Commercial support — https://lab.alexkuk.ru
 
 ## Development
 
-Tests:
+Dev env
+
+```bash
+python -m venv ~/.venvs/natasha-natasha
+source ~/.venvs/natasha-natasha/bin/activate
+
+pip install -r requirements/dev.txt
+pip install -e .
+
+python -m ipykernel install --user --name natasha-natasha
+```
+
+Test
 
 ```bash
 make test
 ```
 
-Package:
+Release
 
 ```bash
-make version
+# Update setup.py version
+
+git commit -am 'Up version'
+git tag v0.15.1
+
 git push
 git push --tags
 
-make clean package publish
+# Github Action builds dist and publishes to PyPi
 ```

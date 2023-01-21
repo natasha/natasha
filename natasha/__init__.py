@@ -15,6 +15,3 @@ from .extractors import MoneyExtractor  # noqa
 from .extractors import AddrExtractor  # noqa
 
 from .doc import Doc  # noqa
-
-
-__version__ = '1.4.0'

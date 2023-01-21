@@ -1,26 +1,11 @@
 
 test:
-	pytest -vv --pep8 --flakes natasha \
-		--cov-report term-missing --cov-report xml \
-		--nbval-lax --current-env docs.ipynb \
-		--cov-config setup.cfg --cov natasha
+	flake8 natasha tests
+	pytest -vv tests
 
-package:
-	python setup.py sdist bdist_wheel
-
-version:
-	bumpversion minor
-
-publish:
-	twine upload dist/*
-
-clean:
-	find . \
-		-name '*.pyc' \
-		-o -name __pycache__ \
-		-o -name .ipynb_checkpoints \
-		-o -name .DS_Store \
-		| xargs rm -rf
-
-	rm -rf dist/ build/ .pytest_cache/ .cache/ \
-		*.egg-info/ coverage.xml .coverage
+exec-docs:
+	python -m nbconvert \
+		--ExecutePreprocessor.kernel_name=python3 \
+		--ClearMetadataPreprocessor.enabled=True \
+		--execute --to notebook --inplace \
+		docs.ipynb
