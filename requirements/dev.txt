@@ -1,0 +1,4 @@
+ipykernel
+nbconvert
+pytest
+flake8
