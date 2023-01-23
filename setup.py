@@ -39,7 +39,7 @@ setup(
         'pymorphy2',
         'razdel>=0.5.0',
         'navec>=0.9.0',
-        'slovnet>=0.3.0',
+        'slovnet>=0.6.0',
         'yargy>=0.14.0',
         'ipymarkup>=0.8.0',
     ]
