@@ -27,7 +27,9 @@ setup(
     ],
     keywords='natural language processing, russian',
 
-    packages=find_packages(),
+    packages=find_packages(
+        exclude=['tests']
+    ),
     package_data={
         'natasha': [
             'data/dict/*.txt',
