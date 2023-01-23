@@ -347,6 +347,12 @@ Test
 make test
 ```
 
+Docs
+
+```bash
+make exec-docs
+```
+
 Release
 
 ```bash
