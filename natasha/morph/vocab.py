@@ -1,7 +1,7 @@
 
 from functools import lru_cache
 
-from pymorphy2.analyzer import (
+from pymorphy3.analyzer import (
     Parse as PymorphyParse,
     MorphAnalyzer as PymorphyAnalyzer
 )
