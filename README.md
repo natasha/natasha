@@ -19,7 +19,7 @@ Natasha integrates libraries from <a href="https://github.com/natasha">Natasha p
 
 ## Install
 
-Natasha supports Python 3.7+ and PyPy3:
+Natasha supports Python 3.7-3.11 and PyPy3:
 
 ```bash
 $ pip install natasha
@@ -109,7 +109,7 @@ Call `morph.print()` to visualize morphology markup.
 
 ### Lemmatization
 
-Lemmatize every token. Depends on <a href="#Morphology">morphology</a> step. Defines `lemma` property of `doc.tokens`. Uses <a href="https://pymorphy2.readthedocs.io/en/stable/">Pymorphy</a> internally.
+Lemmatize every token. Depends on <a href="#Morphology">morphology</a> step. Defines `lemma` property of `doc.tokens`. Uses <a href="https://github.com/no-plagiarism/pymorphy3">Pymorphy3</a> internally.
 
 ```python
 >>> for token in doc.tokens:
