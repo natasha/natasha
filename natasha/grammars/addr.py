@@ -1834,8 +1834,8 @@ ADDR_PART = or_(
     POSELOK,
 
     STREET,
-    PROSPEKT,
     PROEZD,
+    PROSPEKT,
     PEREULOK,
     PLOSHAD,
     SHOSSE,
