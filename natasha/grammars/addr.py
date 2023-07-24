@@ -1727,7 +1727,7 @@ STROENIE_VALUE = ADDR_VALUE.interpretation(
 
 STROENIE = rule(
     STROENIE_WORDS,
-    ADDR_VALUE
+    STROENIE_VALUE
 ).interpretation(
     Building
 )
@@ -1834,8 +1834,8 @@ ADDR_PART = or_(
     POSELOK,
 
     STREET,
-    PROSPEKT,
     PROEZD,
+    PROSPEKT,
     PEREULOK,
     PLOSHAD,
     SHOSSE,
