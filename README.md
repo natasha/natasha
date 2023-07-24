@@ -359,7 +359,7 @@ Release
 # Update setup.py version
 
 git commit -am 'Up version'
-git tag v1.5.0
+git tag v1.6.0
 
 git push
 git push --tags
