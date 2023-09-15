@@ -11,7 +11,7 @@ from yargy.predicates import (
 from yargy.predicates.bank import DictionaryPredicate as dictionary
 
 from natasha.data import (
-    FIRST, MAYBE_FIRST, LAST,
+    FIRST, MAYBE_FIRST, LAST, MIDDLE,
     load_dict
 )
 
@@ -35,9 +35,11 @@ FIRST_DICT = {
     for item in load_dict(path)
 }
 LAST_DICT = set(load_dict(LAST))
+MIDDLE_DICT = set(load_dict(MIDDLE))
 
 IN_FIRST = dictionary(FIRST_DICT)
 IN_LAST = dictionary(LAST_DICT)
+IN_MIDDLE = dictionary(MIDDLE_DICT)
 
 TITLE = is_capitalized()
 
@@ -103,7 +105,14 @@ MAYBE_LAST = and_(
 #########
 
 
-MIDDLE = PATR.interpretation(
+MIDDLE = and_(
+    PATR,
+    IN_MIDDLE
+).interpretation(
+    Name.middle
+)
+
+MAYBE_MIDDLE = PATR.interpretation(
     Name.middle
 )
 
@@ -124,10 +133,20 @@ MIDDLE_ABBR = and_(
 
 FIRST_LAST = rule(
     FIRST,
+    LAST
+)
+
+FIRST_MAYBE_LAST = rule(
+    FIRST,
     MAYBE_LAST
 )
 
 LAST_FIRST = rule(
+    LAST,
+    FIRST
+)
+
+MAYBE_LAST_FIRST = rule(
     MAYBE_LAST,
     FIRST
 )
@@ -187,12 +206,17 @@ FIRST_MIDDLE_LAST = rule(
     MAYBE_LAST
 )
 
+LAST_FIRST_MAYBE_MIDDLE = rule(
+    MAYBE_LAST,
+    FIRST,
+    MAYBE_MIDDLE
+)
+
 LAST_FIRST_MIDDLE = rule(
     MAYBE_LAST,
     FIRST,
     MIDDLE
 )
-
 
 ##############
 #
@@ -216,6 +240,10 @@ JUST_LAST = LAST
 NAME = or_(
     FIRST_LAST,
     LAST_FIRST,
+    FIRST_MIDDLE,
+
+    FIRST_MAYBE_LAST,
+    MAYBE_LAST_FIRST,
 
     ABBR_FIRST_LAST,
     LAST_ABBR_FIRST,
@@ -225,6 +253,7 @@ NAME = or_(
     FIRST_MIDDLE,
     FIRST_MIDDLE_LAST,
     LAST_FIRST_MIDDLE,
+    LAST_FIRST_MAYBE_MIDDLE,
 
     JUST_FIRST,
     JUST_LAST,
