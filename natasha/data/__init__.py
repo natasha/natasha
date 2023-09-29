@@ -10,6 +10,7 @@ EMB_DIR = join(DATA_DIR, 'emb')
 FIRST = join(DICT_DIR, 'first.txt')
 LAST = join(DICT_DIR, 'last.txt')
 MAYBE_FIRST = join(DICT_DIR, 'maybe_first.txt')
+MIDDLE = join(DICT_DIR, 'middle.txt')
 
 NEWS_EMBEDDING = join(EMB_DIR, 'navec_news_v1_1B_250K_300d_100q.tar')
 
