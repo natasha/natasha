@@ -3,7 +3,7 @@
 
 ![CI](https://github.com/natasha/yargy/actions/workflows/test.yml/badge.svg)
 
-Natasha solves basic NLP tasks for Russian language: tokenization, sentence segmentation, word embedding, morphology tagging, lemmatization, phrase normalization, syntax parsing, NER tagging, fact extraction. Quality on every task is similar or better then current SOTAs for Russian language on news articles, see <a href="https://github.com/natasha/natasha#evaluation">evaluation section</a>. Natasha is not a research project, underlying technologies are built for production. We pay attention to model size, RAM usage and performance. Models run on CPU, use Numpy for inference.
+Natasha solves basic NLP tasks for Russian language: tokenization, sentence segmentation, word embedding, morphology tagging, lemmatization, phrase normalization, syntax parsing, NER tagging, fact extraction. Quality on every task is similar or better than current SOTAs for Russian language on news articles, see <a href="https://github.com/natasha/natasha#evaluation">evaluation section</a>. Natasha is not a research project, underlying technologies are built for production. We pay attention to model size, RAM usage and performance. Models run on CPU, use Numpy for inference.
 
 Natasha integrates libraries from <a href="https://github.com/natasha">Natasha project</a> under one convenient API:
 
