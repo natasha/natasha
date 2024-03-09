@@ -1,7 +1,16 @@
 
+
 from collections import OrderedDict
 
-
+"""
+- This function is used to parse an annotation (or type hint) for a data attribute. 
+It takes one argument, annotation, which is typically a type hint for a data attribute.
+- It determines the type, whether the attribute can be repeated (list), 
+and whether the type is a subclass of the Record class.
+- The function returns a tuple containing three values: the determined type, 
+a boolean indicating if the attribute is repeatable, 
+and a boolean indicating if the type is a subclass of the Record class.
+"""
 def parse_annotation(annotation):
     type = annotation or str
 
@@ -14,7 +23,10 @@ def parse_annotation(annotation):
 
     return type, repeatable, is_record
 
-
+"""
+Contains several special methods and attributes that help with 
+record initialization, representation, comparison, and JSON conversion.
+"""
 class Record(object):
     __attributes__ = []
     __annotations__ = {}
@@ -24,6 +36,7 @@ class Record(object):
             self.__dict__[key] = value
         self.__dict__.update(kwargs)
 
+    #Compares two records for equality.
     def __eq__(self, other):
         return (
             type(self) == type(other)
@@ -33,15 +46,19 @@ class Record(object):
             )
         )
 
+    #Compares two records for inequality.
     def __ne__(self, other):
         return not self == other
 
+    #Iterates over the attributes of the record.
     def __iter__(self):
         return (getattr(self, _) for _ in self.__attributes__)
 
+    #Returns a hash value for the record.
     def __hash__(self):
         return hash(tuple(self))
 
+    #Generates a string representation of the record.
     def __repr__(self):
         name = self.__class__.__name__
         args = ', '.join(
@@ -56,6 +73,7 @@ class Record(object):
             args=args
         )
 
+    #Customizes the pretty representation of the record.
     def _repr_pretty_(self, printer, cycle):
         name = self.__class__.__name__
         if cycle:
@@ -78,8 +96,10 @@ class Record(object):
             printer.text(')')
 
     @property
+    #Converts a record instance to an ordered dictionary suitable for JSON serialization.
     def as_json(self):
         data = OrderedDict()
+        #iterates over the attributes, processes their values, and stores them in the ordered dictionary.
         for key in self.__attributes__:
             annotation = self.__annotations__.get(key)
             _, repeatable, is_record = parse_annotation(annotation)
@@ -97,8 +117,13 @@ class Record(object):
         return data
 
     @classmethod
+    #Constructs a record instance from a JSON-like data dictionary.
     def from_json(cls, data):
         args = []
+        """
+        iterates over the attributes specified in the __attributes__ list, 
+        processes their values, and constructs a record instance with the values
+        """
         for key in cls.__attributes__:
             annotation = cls.__annotations__.get(key)
             type, repeatable, is_record = parse_annotation(annotation)
