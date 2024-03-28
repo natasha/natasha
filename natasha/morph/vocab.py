@@ -128,7 +128,7 @@ def ud_feats(tag):
 
 def oc_grams(grams):
     for gram in grams:
-        yield UD_OC_FEATS[gram]
+        yield UD_OC_FEATS.get(gram, gram)
 
 
 class MorphForm(PymorphyParse):
