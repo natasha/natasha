@@ -226,6 +226,13 @@ RESPUBLIKA_ADJF = or_(
         caseless('кабардино'),
         DASH.optional(),
         normalized('балкарский')
+    ),
+    rule(
+        or_(
+            normalized('донецкий'),
+            normalized('луганский')
+        ),
+        normalized('народный')
     )
 ).interpretation(
     Region.name
@@ -266,6 +273,8 @@ RESPUBLIKA_ABBR = in_caseless({
     'кбр',
     'кчр',
     'рт',  # Татарстан
+    'днр',
+    'лнр'
 }).interpretation(
     Region.name  # TODO type
 )
@@ -339,6 +348,7 @@ OBLAST_NAME = dictionary({
     'вологодский',
     'воронежский',
     'горьковский',
+    'запорожский',
     'ивановский',
     'ивановский',
     'иркутский',
@@ -377,6 +387,7 @@ OBLAST_NAME = dictionary({
     'тульский',
     'тюменский',
     'ульяновский',
+    'херсонский',
     'челябинский',
     'читинский',
     'ярославский',
@@ -736,7 +747,13 @@ SIMPLE = dictionary({
     'балашов',
     'юрга',
     'кропоткин',
-    'клин'
+    'клин',
+    'донецк',
+    'луганск',
+    'запорожье',
+    'херсон',
+    'мелитополь',
+    'геническ'
 })
 
 GOROD_ABBR = in_caseless({
