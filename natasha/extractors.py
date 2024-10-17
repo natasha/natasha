@@ -13,7 +13,8 @@ from . import obj
 #
 ######
 
-
+#extends the functionality of YargyParser
+#used for text parsing
 class Parser(YargyParser):
     def __init__(self, rule, morph):
         # wraps pymorphy subclass
@@ -24,30 +25,38 @@ class Parser(YargyParser):
         tokenizer = MorphTokenizer(morph=morph)
         YargyParser.__init__(self, rule, tokenizer=tokenizer)
 
-
+#inherits from local class Record
+#represents a matching result from parsing text
 class Match(Record):
+    #start token, stop token, information to process
     __attributes__ = ['start', 'stop', 'fact']
 
 
 def adapt_match(match):
-    start, stop = match.span
-    fact = match.fact.obj
+    start, stop = match.span #start position, end position of text
+    fact = match.fact.obj #parsed object or fact
     return Match(start, stop, fact)
 
-
+#extracts information from match input and returns 'Match' object
 class Extractor:
+    #nitialized with a parsing rule and a morph parameter
     def __init__(self, rule, morph):
         self.parser = Parser(rule, morph)
 
+    #iterates over matches found in input and yields them as Match objects
     def __call__(self, text):
         for match in self.parser.findall(text):
             yield adapt_match(match)
 
+    #finds first match in input text and returns it as Match object
     def find(self, text):
         match = self.parser.find(text)
         if match:
             return adapt_match(match)
 
+"""
+SUBCLASSES OF EXTRACTOR THAT EXTRACT SPECIFIC TYPES OF INFORMATION
+"""
 
 class NamesExtractor(Extractor):
     def __init__(self, morph):
@@ -66,7 +75,10 @@ class MoneyExtractor(Extractor):
         from .grammars.money import MONEY
         Extractor.__init__(self, MONEY, morph)
 
-
+"""
+overrides the find method to extract address information
+collects multiple matches, sorts them, and combines them into a single Match object representing an address
+"""
 class AddrExtractor(Extractor):
     def __init__(self, morph):
         from .grammars.addr import ADDR_PART
