@@ -1,6 +1,8 @@
 
 import re
 
+import pytest
+
 from natasha import PER, Doc
 
 
@@ -209,3 +211,17 @@ def test_doc(segmenter, morph_vocab,
         if _.fact
     }
     assert facts == FACTS
+
+
+def test_tag_morph_rejects_morph_vocab(segmenter, morph_vocab):
+    doc = Doc('Съешь еще этих мягких французских булочек')
+    doc.segment(segmenter)
+    with pytest.raises(TypeError, match='tag_morph.*MorphVocab'):
+        doc.tag_morph(morph_vocab)
+
+
+def test_parse_syntax_rejects_morph_vocab(segmenter, morph_vocab):
+    doc = Doc('Съешь еще этих мягких французских булочек')
+    doc.segment(segmenter)
+    with pytest.raises(TypeError, match='parse_syntax.*MorphVocab'):
+        doc.parse_syntax(morph_vocab)

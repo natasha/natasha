@@ -207,6 +207,14 @@ def inject_morph(targets, sources):
 
 
 def tag_morph_doc(doc, tagger):
+    if not hasattr(tagger, 'map'):
+        raise TypeError(
+            'Doc.tag_morph() expects a morph tagger such as '
+            'NewsMorphTagger, got %s. '
+            'MorphVocab is used by Span.normalize() and '
+            'DocToken.lemmatize(), not by Doc.tag_morph().'
+            % type(tagger).__name__
+        )
     chunk = [sent_words(_) for _ in doc.sents]
     markups = tagger.map(chunk)
     for sent, markup in zip(doc.sents, markups):
@@ -234,6 +242,12 @@ def inject_syntax(targets, sources):
 
 
 def parse_syntax_doc(doc, parser):
+    if not hasattr(parser, 'map'):
+        raise TypeError(
+            'Doc.parse_syntax() expects a syntax parser such as '
+            'NewsSyntaxParser, got %s.'
+            % type(parser).__name__
+        )
     chunk = [sent_words(_) for _ in doc.sents]
     markups = parser.map(chunk)
     for sent_id, (sent, markup) in enumerate(zip(doc.sents, markups), 1):
