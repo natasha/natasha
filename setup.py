@@ -38,6 +38,7 @@ setup(
         ]
     },
     install_requires=[
+        'setuptools<82',
         'pymorphy2',
         'razdel>=0.5.0',
         'navec>=0.9.0',
