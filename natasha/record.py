@@ -26,7 +26,7 @@ class Record(object):
 
     def __eq__(self, other):
         return (
-            type(self) == type(other)
+            isinstance(self) == isinstance(other)
             and all(
                 (getattr(self, _) == getattr(other, _))
                 for _ in self.__attributes__
