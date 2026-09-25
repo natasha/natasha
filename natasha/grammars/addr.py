@@ -2448,6 +2448,35 @@ BULVAR = or_(
 )
 
 
+########
+#
+#  TUPIK
+#
+##########
+
+
+TUPIK_WORDS = or_(
+    rule(
+        in_caseless({'туп'}),
+        DOT.optional()
+    ),
+    rule(normalized('тупик'))
+).interpretation(
+    Street.type.const('Тупик')
+)
+
+TUPIK_NAME = ADDR_NAME.interpretation(
+    Street.name
+)
+
+TUPIK = or_(
+    rule(TUPIK_WORDS, TUPIK_NAME),
+    rule(TUPIK_NAME, TUPIK_WORDS)
+).interpretation(
+    Street
+)
+
+
 ##############
 #
 #   ADDR VALUE
@@ -3128,6 +3157,7 @@ ADDR_PART = or_(
     SHOSSE,
     NABEREG,
     BULVAR,
+    TUPIK,
 
     GARAG,
     DOM,
