@@ -39,6 +39,7 @@ setup(
     },
     install_requires=[
         'pymorphy2',
+        'setuptools',  # pymorphy2 imports pkg_resources (shipped with setuptools)
         'razdel>=0.5.0',
         'navec>=0.9.0',
         'slovnet>=0.6.0',
