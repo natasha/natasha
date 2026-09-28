@@ -1,6 +1,8 @@
 
 import re
 
+import pytest
+
 from natasha import PER, Doc
 
 
@@ -209,3 +211,18 @@ def test_doc(segmenter, morph_vocab,
         if _.fact
     }
     assert facts == FACTS
+
+
+def test_tag_morph_rejects_non_tagger():
+    # Regression for #142: passing a MorphVocab (or any object without a
+    # `map` method) to `Doc.tag_morph` raised a confusing
+    # `AttributeError: 'MorphVocab' object has no attribute 'map'`.
+    doc = Doc('тест')
+    doc.tokens = []
+    doc.sents = []
+
+    class FakeVocab:
+        pass
+
+    with pytest.raises(TypeError, match='morph tagger'):
+        doc.tag_morph(FakeVocab())
