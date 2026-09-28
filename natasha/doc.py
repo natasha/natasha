@@ -207,6 +207,12 @@ def inject_morph(targets, sources):
 
 
 def tag_morph_doc(doc, tagger):
+    if not hasattr(tagger, 'map'):
+        raise TypeError(
+            'tag_morph expects a morph tagger (e.g. NewsMorphTagger), got %s. '
+            'Use doc.tag_morph(tagger); to lemmatize tokens, call '
+            'token.lemmatize(vocab).' % type(tagger).__name__
+        )
     chunk = [sent_words(_) for _ in doc.sents]
     markups = tagger.map(chunk)
     for sent, markup in zip(doc.sents, markups):
