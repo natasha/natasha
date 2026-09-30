@@ -38,6 +38,7 @@ setup(
         ]
     },
     install_requires=[
+        'setuptools<82',
         'pymorphy2',
         'setuptools',  # pymorphy2 imports pkg_resources (shipped with setuptools)
         'razdel>=0.5.0',
