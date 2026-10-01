@@ -2570,7 +2570,7 @@ DOM_WORDS = or_(
 
 
 DOM_VALUE = or_(
-    INT.interpretation(Building.number)
+    ADDR_VALUE.interpretation(Building.number)
 ).interpretation(
     Building.number
 )
