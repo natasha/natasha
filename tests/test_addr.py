@@ -195,3 +195,10 @@ def test_extractor(addr_extractor, test):
     text, target = test
     pred = addr_extractor.find(text).fact
     assert pred == target
+
+
+def test_street_is_distinct_fact():
+    from natasha.grammars.addr import Street, Settlement
+
+    # Street must be its own fact type, not a Settlement subtype.
+    assert not issubclass(Street, Settlement)

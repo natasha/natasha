@@ -100,7 +100,7 @@ class Settlement(Settlement):
 class Sodrugestvo(Settlement):
     value = value('name')
 
-class Street(Settlement):
+class Street(Street):
     value = value('name')
 
 
