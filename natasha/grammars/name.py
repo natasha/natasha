@@ -230,6 +230,55 @@ JUST_FIRST = FIRST
 JUST_LAST = LAST
 
 
+##############
+#
+#  DOUBLE LAST
+#
+##############
+
+
+# A surname part used inside a compound (hyphenated) surname. Unlike ``LAST``
+# this does not carry a ``Name.last`` interpretation on its own, so the two
+# halves can be joined into a single hyphenated value.
+SURNAME_PART = or_(
+    SURN,
+    IN_LAST,
+    and_(TITLE, not_(ABBR))
+)
+
+# Double surnames written with a hyphen, e.g. "Мамин-Сибиряк",
+# "Салтыков-Щедрин".
+LAST_DOUBLE = rule(
+    SURNAME_PART,
+    '-',
+    SURNAME_PART
+).interpretation(
+    Name.last
+)
+
+FIRST_LAST_DOUBLE = rule(
+    FIRST,
+    LAST_DOUBLE
+)
+
+LAST_DOUBLE_FIRST = rule(
+    LAST_DOUBLE,
+    FIRST
+)
+
+FIRST_MIDDLE_LAST_DOUBLE = rule(
+    FIRST,
+    MIDDLE,
+    LAST_DOUBLE
+)
+
+LAST_DOUBLE_FIRST_MIDDLE = rule(
+    LAST_DOUBLE,
+    FIRST,
+    MIDDLE
+)
+
+
 ########
 #
 #    FULL
@@ -238,6 +287,12 @@ JUST_LAST = LAST
 
 
 NAME = or_(
+    FIRST_MIDDLE_LAST_DOUBLE,
+    LAST_DOUBLE_FIRST_MIDDLE,
+    FIRST_LAST_DOUBLE,
+    LAST_DOUBLE_FIRST,
+    LAST_DOUBLE,
+
     FIRST_LAST,
     LAST_FIRST,
     FIRST_MIDDLE,
